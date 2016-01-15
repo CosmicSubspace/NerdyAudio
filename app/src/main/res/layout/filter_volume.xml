@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filter_volume_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardElevation="2dp"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/filter_volume_layout">
+
+        <Button
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/filter_volume_close"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_close_black_36dp"/>
+
+        <TextView
+            android:id="@+id/filter_volume_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volume"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            style="@style/filter_title"/>
+
+        <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_volume_seekbar"
+            android:layout_below="@+id/filter_volume_title"
+            android:layout_toLeftOf="@+id/filter_volume_value" />
+
+        <TextView
+            android:id="@+id/filter_volume_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volume"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/filter_volume_seekbar"
+            android:layout_alignTop="@+id/filter_volume_seekbar"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Warning: This may cause clipping."
+            android:textColor="#A00000"
+            android:id="@+id/filter_volume_warning"
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/filter_volume_seekbar" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

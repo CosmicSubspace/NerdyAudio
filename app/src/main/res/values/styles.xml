@@ -1,0 +1,39 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+
+
+
+    <style name="marquee_set">
+        <item name="android:ellipsize"> marquee </item>
+        <item name="android:singleLine"> true </item>
+        <item name="android:fadingEdge"> horizontal </item>
+        <item name="android:marqueeRepeatLimit"> marquee_forever </item>
+        <item name="android:scrollHorizontally"> true </item>
+
+    </style>
+    <style name="singleline_cutstart">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">start</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="filter_title">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/colorDarkPrimaryText</item>
+    </style>
+
+</resources>
