@@ -4,16 +4,22 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.Switch;
 
+import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.Waveform;
 
 /**
  * Created by Chan on 2015-12-10.
  */
-public class WaveformView extends View {
+public class WaveformView extends View{
     int w, h;
     Waveform wf;
     Paint pt;
@@ -144,5 +150,9 @@ public class WaveformView extends View {
         this.w = w;
         this.h = h;
     }
+
+
+
+
 
 }

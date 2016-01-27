@@ -25,7 +25,7 @@ public class VisualizationView extends SurfaceView implements SurfaceHolder.Call
         sh=getHolder();
         sh.addCallback(this);
     }
-    public VisualsRenderThread getRenderer(){
+    public VisualsRenderThread getRenderThread(){
         return vr;
     }
 

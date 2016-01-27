@@ -1,7 +1,12 @@
 package com.chancorp.audiofornerds.visuals;
 
 import android.graphics.Canvas;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.VisualizationBuffer;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
@@ -58,5 +63,10 @@ public abstract class BaseRenderer {
         if (ap != null) {
             return ap.getCurrentFrame();
         }else return 0;
+    }
+
+    public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.visuals_setting_waveform, container, false);
+        return v;
     }
 }

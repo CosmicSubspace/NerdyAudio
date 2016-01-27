@@ -47,6 +47,9 @@ public class VisualsRenderThread extends Thread{
         this.maxFPS=maxFPS;
         this.minDelay=(int)(1000.0f/maxFPS);
     }
+    public BaseRenderer getRenderer(){
+        return renderer;
+    }
     @Override
     public void run(){
         while (active) {
