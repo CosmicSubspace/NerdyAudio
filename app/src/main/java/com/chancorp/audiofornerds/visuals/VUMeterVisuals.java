@@ -163,7 +163,7 @@ public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarCha
             historyTV.setText(Integer.toString(historySize));
         }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
             setRange(progress*10);
-            historyTV.setText(Integer.toString(range));
+            lengthTV.setText(Integer.toString(range));
         }else{
             Log.w(LOG_TAG,"I think I'm not the only seekbar around here....");
         }

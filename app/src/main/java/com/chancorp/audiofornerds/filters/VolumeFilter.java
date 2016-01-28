@@ -10,19 +10,15 @@ import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
 
-/**
- * Created by Chan on 2015-12-18.
- */
 public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
-    FilterManager fm;
-    View mainView;
+
     SeekBar sb;
     TextView valueText, warningText;
     Button closeBtn;
     float multiplier=1.0f;
     int progress=100;
     public VolumeFilter(FilterManager fm){
-        this.fm=fm;
+        super(fm);
     }
     @Override
     public void filter(float[] data) { //We use the existing array so that GC won't have to suffer from all those arrays.
@@ -33,7 +29,7 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
 
     @Override
     public String getName() {
-        return null;
+        return "Volume Filter";
     }
 
     @Override
@@ -80,8 +76,7 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.filter_volume_close){
-            fm.deleteFilter(this);
-            ((LinearLayout)closeBtn.getParent().getParent().getParent()).removeView(mainView);
+            deleteSelf();
         }
     }
 }

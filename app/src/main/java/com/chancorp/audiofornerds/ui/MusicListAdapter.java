@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Chan on 2015-12-19.
  */
 public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myViewHolder> {
-    private ArrayList<MusicInformation> dataset; //TODO change to list or class instance
+    private ArrayList<MusicInformation> dataset;
 
     public static final String LOG_TAG="CS_AFN";
 

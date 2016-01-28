@@ -15,8 +15,10 @@ class PlayThread extends Thread{
     SoundFile sf;
     AudioPlayer ap; //TODO BAD PRACTICE!!!
     boolean stop=false;
-    protected PlayThread(AudioPlayer ap){
+    FilterManager fm;
+    protected PlayThread(AudioPlayer ap, FilterManager fm){
         this.ap=ap;
+        this.fm=fm;
     }
     public void run() {
         sf=new SoundFile();
@@ -25,7 +27,7 @@ class PlayThread extends Thread{
                 @Override
                 public void feed(short[] buff) {
                     if (stop) return;
-                    short[] filtered=FilterManager.getInstance().filterAll(buff);//TODO getinstance() may slow down perf.
+                    short[] filtered=fm.filterAll(buff);
                     if (ap.bfl!=null) ap.bfl.feed(filtered);
 
                     while (ap.isPaused()){

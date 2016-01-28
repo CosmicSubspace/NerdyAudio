@@ -99,7 +99,7 @@ this.c=ctxt;
                     sumData.add(0L);
                     Log.d(LOG_TAG, "Adding bar. (number " + sumData.size() + ", " + currentTimeInSeconds + " seconds)");
                 }
-                sumData.set(currentBar, sumData.get(currentBar) + Math.abs(buff[i])); //TODO Linear average instead of RMS to better fit actual waveform
+                sumData.set(currentBar, sumData.get(currentBar) + Math.abs(buff[i]));
                 if (maxAmp < buff[i]) maxAmp = buff[i];
             }
             currentSample++;

@@ -19,7 +19,7 @@ public class VisualizationBuffer implements BufferFeedListener {
     int numChannels = 2;
     //int bufferSize = 2048;
     long maximumBufferSize=48000*20*2;
-    //TODO make sure that left/right desynchronization never occurrs.
+
 
     static VisualizationBuffer inst;
 
@@ -63,6 +63,8 @@ public class VisualizationBuffer implements BufferFeedListener {
         Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
         checkRange(startFrame);
         checkRange(endFrame);
+
+        assert bufferL.size()==bufferR.size();
 
         short[] res = new short[(int) (endFrame - startFrame + 1)];
         long currentIndex = startFrame;

@@ -37,7 +37,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //TODO Setting UI
+
         View v=inflater.inflate(R.layout.tab_frag_nowplaying, container, false);
 
 

@@ -199,7 +199,7 @@ public class SpectographVisuals extends BaseRenderer{
 
                 fft.fft(x, y);
 
-                //TODO Performance improvement needed here, so we can use full-res graphs.
+
 
                 for (int i=0;i<graphPortions.length-1;i++){
                     graphPortions[i]=graphPortions[i+1];

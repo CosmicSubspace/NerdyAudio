@@ -13,10 +13,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-/**
- * Created by Chan on 2015-12-10.
- */
+//TODO I don't think Singleton is the way to do this...
+//TODO seperate this calss into a manager and a non-singleton class.
 public class Waveform implements Serializable{
+    static final long serialVersionUID = 1L;
+
     public static final String LOG_TAG="CS_AFN";
 
     private boolean isReady=false;
@@ -44,8 +45,8 @@ public String getFilename(){
             if (i.equals(getUniqueID(filename,barEvery))) return true;
         }
         return false;
-
     }
+
     public static void calculateIfDoesntExist(String filename, double barEvery,Context c, SampleProgressListener spl, WaveformReturnListener wrl){
         if (checkExistance(filename,barEvery,c)) return;
         else{
@@ -70,10 +71,10 @@ public String getFilename(){
         if (inst==null) inst=new Waveform();
         return inst;
     }
-    public static String getUniqueID(String filename, double barEvery){
+    public static String getUniqueID(String filename, double barEvery) {
         //TODO Hash this or something
         String res;
-        res=filename.replace("/","")+barEvery;
+        res = filename.replace("/", "") + barEvery;
         Log.d(LOG_TAG, "Generating Unique ID: " + res);
         return res;
     }
@@ -92,6 +93,10 @@ public String getFilename(){
     }
     protected Waveform(){
 
+    }
+
+    public float getPeak(){
+        return peak;
     }
 
     private void copy(Waveform w){

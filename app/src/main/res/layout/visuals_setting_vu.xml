@@ -51,7 +51,7 @@
             android:id="@+id/vis_vu_setting_length_seekbar"
             android:layout_toRightOf="@+id/vis_vu_setting_length_title"
             android:layout_toLeftOf="@+id/vis_vu_setting_length_value"
-            android:max="300"
+            android:max="1000"
             style="@style/vis_setting_text"/>
 
         <TextView
@@ -84,7 +84,7 @@
             android:id="@+id/vis_vu_setting_history_seekbar"
             android:layout_toRightOf="@+id/vis_vu_setting_history_title"
             android:layout_toLeftOf="@+id/vis_vu_setting_history_value"
-            android:max="1000"
+            android:max="300"
             style="@style/vis_setting_text"/>
 
         <TextView
