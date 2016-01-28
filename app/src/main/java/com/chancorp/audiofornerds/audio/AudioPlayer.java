@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
+import com.chancorp.audiofornerds.filters.FilterManager;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 import com.chancorp.audiofornerds.interfaces.CompletionListener;
@@ -130,7 +131,7 @@ public class AudioPlayer {
         mAudioTrack.play();
         // Setting thread feeding the audio samples to the audio hardware.
         // (Assumes mChannels = 1 or 2).
-        mPlayThread = new PlayThread (this) ;
+        mPlayThread = new PlayThread (this, FilterManager.getInstance()) ;
         mPlayThread.start();
     }
 
