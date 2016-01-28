@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 /**
  * Created by Chan on 2015-12-18.
  */
-public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener{
     int range = 2048;
     int drawEvery = 1;
     boolean downmix=false;
@@ -31,8 +32,8 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
 
     public void setRange(int samples) {
         this.range = samples;
-        drawEvery=range/1024;
-        if (drawEvery<1) drawEvery=1;
+        //drawEvery=range/1024;
+       // if (drawEvery<1) drawEvery=1;
         Log.i(LOG_TAG,""+range+" | "+drawEvery);
     }
 
@@ -46,30 +47,55 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
 
             long currentFrame = getCurrentFrame();
             try {
+
+                pt.setColor(Color.BLACK);
+
                 short[] pcmL = getLSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
                 short[] pcmR = getRSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
                 deleteBefore(currentFrame - range / 2 + 1);
 
                 int numberOfLinePoints = pcmL.length / drawEvery;
-                //float[] lines = new float[numberOfLinePoints * 4];
-                float[] points = new float[numberOfLinePoints];
+                float[] lines = new float[numberOfLinePoints * 4];
+                //float[] points = new float[numberOfLinePoints*2];
+                assert pcmL.length==pcmR.length;
 
                 int pcmIndex;
-                for (int i = 0; i < numberOfLinePoints - 1; i++) {
-                    pcmIndex = i * drawEvery;
-                    //lines[i * 4] = i / (float) numberOfLinePoints * w;
-                    //lines[i * 4 + 1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
-                    //lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
-                    //lines[i * 4 + 3] = (pcmL[pcmIndex + drawEvery] / 32767.0f + 1) * h / 2.0f;
-                    points[i] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
+                //TODO Performance Improvements.
+                if (downmix) {
+                    for (int i = 0; i < numberOfLinePoints - 1; i++) {
+                        pcmIndex = i * drawEvery;
+                        lines[i * 4] = i / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 1] = ((pcmL[pcmIndex]+pcmR[pcmIndex]) / 65534.0f + 1) * h / 2.0f;
+                        lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 3] = ((pcmL[pcmIndex + drawEvery]+pcmR[pcmIndex + drawEvery]) / 65534.0f + 1) * h / 2.0f;
+                        //points[i*2] = i / (float) numberOfLinePoints * w;
+                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
+                    }
+                    c.drawLines(lines, pt);
+                }else{
+                    for (int i = 0; i < numberOfLinePoints - 1; i++) {
+                        pcmIndex = i * drawEvery;
+                        lines[i * 4] = i / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 4.0f;
+                        lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 3] = (pcmL[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f;
+                        //points[i*2] = i / (float) numberOfLinePoints * w;
+                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
+                    }
+                    c.drawLines(lines, pt);
+
+                    for (int i = 0; i < numberOfLinePoints - 1; i++) {
+                        pcmIndex = i * drawEvery;
+                        lines[i * 4] = i / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 1] = (pcmR[pcmIndex] / 32767.0f + 1) * h / 4.0f+h/2.0f;
+                        lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
+                        lines[i * 4 + 3] = (pcmR[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f+h/2.0f;
+                        //points[i*2] = i / (float) numberOfLinePoints * w;
+                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
+                    }
+                    c.drawLines(lines, pt);
                 }
-
-
-                pt.setColor(Color.BLACK);
-
-
-                //c.drawLines(lines, pt);
-                c.drawPoints(points,pt);
+                //c.drawPoints(points,pt);
 
             } catch (BufferNotPresentException e) {
                 Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
@@ -86,7 +112,7 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
         s=(Switch) v.findViewById(R.id.vis_waveform_setting_stereo_switch);
         lengthTV=(TextView)v.findViewById(R.id.vis_waveform_setting_length_value);
         sb.setOnSeekBarChangeListener(this);
-        s.setOnClickListener(this);
+        s.setOnCheckedChangeListener(this);
         return v;
     }
 
@@ -114,5 +140,12 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId()==R.id.vis_waveform_setting_stereo_switch){
+            downmix=isChecked;
+        }
     }
 }

@@ -3,14 +3,23 @@ package com.chancorp.audiofornerds.visuals;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 
 /**
  * Created by Chan on 2015-12-18.
  */
-public class VUMeterVisuals extends BaseRenderer {
+public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarChangeListener{
     //TODO more technical information: peak, rms, average, etc...
     Paint pt;
     int range = 2048;
@@ -129,4 +138,46 @@ public class VUMeterVisuals extends BaseRenderer {
             }
         }
     }
+
+
+
+    SeekBar sb_hist,sb_len;
+    TextView lengthTV,historyTV;
+    public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.visuals_setting_vu, container, false);
+        sb_hist=(SeekBar)v.findViewById(R.id.vis_vu_setting_history_seekbar);
+        historyTV=(TextView)v.findViewById(R.id.vis_vu_setting_history_value);
+        sb_hist.setOnSeekBarChangeListener(this);
+
+        sb_len=(SeekBar)v.findViewById(R.id.vis_vu_setting_length_seekbar);
+        lengthTV=(TextView)v.findViewById(R.id.vis_vu_setting_length_value);
+        sb_len.setOnSeekBarChangeListener(this);
+        return v;
+    }
+
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar.getId()==R.id.vis_vu_setting_history_seekbar) {
+            setHistorySize(progress);
+            historyTV.setText(Integer.toString(historySize));
+        }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
+            setRange(progress*10);
+            historyTV.setText(Integer.toString(range));
+        }else{
+            Log.w(LOG_TAG,"I think I'm not the only seekbar around here....");
+        }
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
 }
