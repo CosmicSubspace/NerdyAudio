@@ -4,7 +4,11 @@ import android.media.AudioManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.audio.Waveform;
 
 /**
@@ -34,6 +38,7 @@ public class AutoGainFilter extends BaseFilter {
 
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
-        return null;
+        mainView = inflater.inflate(R.layout.filter_auto_gain, container, false);
+        return mainView;
     }
 }
