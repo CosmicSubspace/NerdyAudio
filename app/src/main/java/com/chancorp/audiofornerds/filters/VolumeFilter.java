@@ -14,7 +14,6 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
 
     SeekBar sb;
     TextView valueText, warningText;
-    Button closeBtn;
     float multiplier=1.0f;
     int progress=100;
     public VolumeFilter(FilterManager fm){
@@ -32,25 +31,23 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
         return "Volume Filter";
     }
 
+
     @Override
-    public View getView(LayoutInflater inflater, ViewGroup container) {
-        mainView = inflater.inflate(R.layout.filter_volume, container, false);
-        sb=(SeekBar) mainView.findViewById(R.id.filter_volume_seekbar);
+    public View getContentView(LayoutInflater inflater, ViewGroup container) {
+        View v = inflater.inflate(R.layout.filter_volume, container, false);
+        sb=(SeekBar) v.findViewById(R.id.filter_volume_seekbar);
         sb.setMax(200);
         sb.setOnSeekBarChangeListener(this);
 
-        valueText=(TextView) mainView.findViewById(R.id.filter_volume_value);
-        warningText=(TextView)mainView.findViewById(R.id.filter_volume_warning);
+        valueText=(TextView) v.findViewById(R.id.filter_volume_value);
+        warningText=(TextView)v.findViewById(R.id.filter_volume_warning);
 
         sb.setProgress(progress);
-        //onProgressChanged(null,status,false);
 
-        closeBtn=(Button) mainView.findViewById(R.id.filter_volume_close);
-        closeBtn.setOnClickListener(this);
 
-        return mainView;
+
+        return v;
     }
-
 
 
     @Override
@@ -73,10 +70,5 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
 
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId()==R.id.filter_volume_close){
-            deleteSelf();
-        }
-    }
+
 }

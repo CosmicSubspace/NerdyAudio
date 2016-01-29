@@ -37,8 +37,10 @@ public class AutoGainFilter extends BaseFilter {
     }
 
     @Override
-    public View getView(LayoutInflater inflater, ViewGroup container) {
-        mainView = inflater.inflate(R.layout.filter_auto_gain, container, false);
-        return mainView;
+    public View getContentView(LayoutInflater inflater, ViewGroup container) {
+        View v = inflater.inflate(R.layout.filter_auto_gain, container, false);
+
+        return v;
     }
+
 }
