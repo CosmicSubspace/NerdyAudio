@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="VU Meter (sorta)"
         android:id="@+id/vis_vu_setting_title"
-        style="@style/vis_setting_title"/>
+        style="@style/setting_title"/>
 <!--
     <LinearLayout
         android:orientation="horizontal"
@@ -43,7 +43,7 @@
             android:text="Sample Average"
             android:id="@+id/vis_vu_setting_length_title"
             android:layout_alignParentLeft="true"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
 
         <SeekBar
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_toRightOf="@+id/vis_vu_setting_length_title"
             android:layout_toLeftOf="@+id/vis_vu_setting_length_value"
             android:max="1000"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
             android:text="00"
             android:id="@+id/vis_vu_setting_length_value"
             android:layout_alignParentRight="true"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,7 +76,7 @@
             android:text="History Size"
             android:id="@+id/vis_vu_setting_history_title"
             android:layout_alignParentLeft="true"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
 
         <SeekBar
             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             android:layout_toRightOf="@+id/vis_vu_setting_history_title"
             android:layout_toLeftOf="@+id/vis_vu_setting_history_value"
             android:max="300"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             android:text="00"
             android:id="@+id/vis_vu_setting_history_value"
             android:layout_alignParentRight="true"
-            style="@style/vis_setting_text"/>
+            style="@style/setting_text"/>
     </RelativeLayout>
 
 

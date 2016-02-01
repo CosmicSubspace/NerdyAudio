@@ -1,5 +1,7 @@
 package com.chancorp.audiofornerds.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioDeviceInfo;
 import android.os.Handler;
@@ -60,17 +62,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button settingBtn;
     TextView statusText;
 
+    SharedPreferences sf;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Log.i(LOG_TAG,"MainActivity Created!");
+
+        Log.i(LOG_TAG, "MainActivity Created!");
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //TODO Nessasary?
+
+        sf = getPreferences(Context.MODE_PRIVATE);
 
         String[] files=fileList();
         for (String i:files){
@@ -276,10 +283,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void updateUI(){
         title.setText(qm.getCurrentMusic().getTitle());
         artist.setText(qm.getCurrentMusic().getArtist());
-
         art.setImageBitmap(qm.getCurrentMusic().getArt());
-
     }
+
     public void updateStatusString(){
         statusText.setText(qm.getStatusString());
     }
