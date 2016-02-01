@@ -19,10 +19,19 @@ import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 /**
  * Created by Chan on 2015-12-18.
  */
-public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener{
-    int range = 2048;
-    int drawEvery = 1;
-    boolean downmix=false;
+public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener{
+    int range = 2048; //Should be Synchronized.
+    int drawEvery = 1; //Should be Synchronized.
+    boolean downmix=false; //Should be Synchronized.
+
+    //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
+    boolean stateChanged=false;
+    int rangeN;
+    int drawEveryN;
+    boolean downmixN;
+
+
+
     Paint pt;
 
     public WaveformVisuals(float density) {
@@ -31,18 +40,34 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
     }
 
     public void setRange(int samples) {
-        this.range = samples;
-        //drawEvery=range/1024;
-       // if (drawEvery<1) drawEvery=1;
+        this.rangeN = samples;
+        stateChanged=true;
         Log.i(LOG_TAG,""+range+" | "+drawEvery);
     }
 
     public void drawEvery(int i) {
-        this.drawEvery = i;
+        this.drawEveryN = i;
+        stateChanged=true;
+    }
+
+    public void setDownmix(boolean downmix){
+        this.downmixN=downmix;
+        stateChanged=true;
+    }
+
+    private void syncChanges(){ //Concurrency workaround //TODO is this the best way to do this?
+        if (stateChanged){
+            Log.d(LOG_TAG,"WaveformVisuals state changed. syncing.");
+            range=rangeN;
+            drawEvery=drawEveryN;
+            downmix=downmixN;
+            stateChanged=false;
+        }
     }
 
     @Override
     public void draw(Canvas c, int w, int h) {
+        syncChanges();
         if (vb != null && ap != null) {
 
             long currentFrame = getCurrentFrame();
@@ -116,10 +141,6 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
         return v;
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -145,7 +166,7 @@ public class WaveformVisuals extends BaseRenderer  implements SeekBar.OnSeekBarC
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId()==R.id.vis_waveform_setting_stereo_switch){
-            downmix=isChecked;
+            setDownmix(buttonView.isChecked());
         }
     }
 }

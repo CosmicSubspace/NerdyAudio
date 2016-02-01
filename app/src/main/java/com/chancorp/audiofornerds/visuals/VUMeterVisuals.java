@@ -20,13 +20,18 @@ import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
  * Created by Chan on 2015-12-18.
  */
 public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarChangeListener{
-    //TODO more technical information: peak, rms, average, etc...
     Paint pt;
-    int range = 2048;
+    int range = 2048; //Should be Synchronized.
     float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory; //TODO circular buffers for performance
-    int historySize=64;
-    float textDp=16;
-    float barsDp=100;
+    int historySize=64; //Should be Synchronized.
+
+    float textDp=16; //No need for Synchronization.
+    float barsDp=100; //No need for Synchronization.
+
+    //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
+    boolean stateChanged=false;
+    int rangeN;
+    int historySizeN;
 
 
     public VUMeterVisuals(float density) {
@@ -57,16 +62,27 @@ public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarCha
     }
 
     public void setHistorySize(int size){
-        this.historySize=size;
-        initArrays();
+        this.historySizeN=size;
+        stateChanged=true;
     }
 
     public void setRange(int samples) {
-        this.range = samples;
+        this.rangeN = samples;
+        stateChanged=true;
+    }
+
+    private void syncChanges(){
+        if (stateChanged){
+            range=rangeN;
+            historySize=historySizeN;
+            initArrays();
+            stateChanged=false;
+        }
     }
 
     @Override
     public void draw(Canvas c, int w, int h) {
+        syncChanges();
         if (vb != null && ap != null) {
 
             long currentFrame = getCurrentFrame();

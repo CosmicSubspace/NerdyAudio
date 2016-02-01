@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 import com.meapsoft.FFT;
 
@@ -15,12 +16,16 @@ public class SpectrumVisuals extends BaseRenderer {
     Paint pt;
     int fftSize = 2048;
     float spacing = 0.0f;
+    float startFreq, endFreq;
     FFT fft;
+
+    AudioPlayer ap;
 
     public SpectrumVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);
+        ap=AudioPlayer.getInstance();
     }
 
     public void setFFTSize(int samples) {
@@ -35,7 +40,6 @@ public class SpectrumVisuals extends BaseRenderer {
     @Override
     public void draw(Canvas c, int w, int h) {
         if (vb != null && ap != null) {
-
             long currentFrame = getCurrentFrame();
             try {
                 short[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);

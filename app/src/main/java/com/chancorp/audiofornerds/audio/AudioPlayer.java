@@ -46,6 +46,12 @@ public class AudioPlayer {
     protected AudioPlayer(){
 
     };
+
+    public int getSampleRate(){
+        return mSampleRate;
+    }
+
+
     public synchronized void setBufferFeedListener(BufferFeedListener bfl){
         this.bfl=bfl;
     }

@@ -34,6 +34,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
         View v=inflater.inflate(R.layout.tab_frag_filters, container, false);
         lv=(LinearLayout)v.findViewById(R.id.filters_tab_filters);
         fab=(FloatingActionMenu)v.findViewById(R.id.filters_tab_fab);
+        fab.setClosedOnTouchOutside(true);
 
         fabs[0]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_1);
         fabs[0].setOnClickListener(this);
@@ -57,7 +58,8 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
         if (id==R.id.filters_tab_fab_sub_1){
             BaseFilter newFilter=new VolumeFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
-            lv.addView(newFilter.getView(getLayoutInflater(null),lv));
+            lv.addView(newFilter.getView(getLayoutInflater(null), lv));
+            //fab.close(true);
         }else if (id==R.id.filters_tab_fab_sub_2){
             BaseFilter newFilter=new AutoGainFilter(FilterManager.getInstance());
             Log.i(LOG_TAG,"BaseFilter:"+newFilter);
@@ -67,6 +69,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
             Log.i(LOG_TAG, "vvvvv:" + vvvvv);
             Log.i(LOG_TAG, "lv:" + lv);
             lv.addView(vvvvv);
+            //fab.close(true);
         }
     }
 }
