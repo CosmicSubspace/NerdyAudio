@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     VisualizationBuffer vb;
     QueueManager qm;
     FileManager fm;
+    SidebarSettings sbs;
 
     private Handler mHandler = new Handler();
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DrawerLayout dl;
     Button settingBtn;
     TextView statusText;
+    FrameLayout sideContainer;
 
     SharedPreferences sf;
 
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vb=VisualizationBuffer.getInstance();
         fm=FileManager.getInstance();
         wf=Waveform.getInstance();
+        sbs=SidebarSettings.getInstance();
 
         ap.setBufferFeedListener(vb);
 
@@ -170,14 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         statusText=(TextView)findViewById(R.id.status);
 
-
-
-
-
-
-
-
-
+        sideContainer=(FrameLayout)findViewById(R.id.drawer_container);
+        sideContainer.addView(sbs.getView(getLayoutInflater(),sideContainer,null));
 
 
 

@@ -29,10 +29,6 @@
         android:id="@+id/visuals_settings_button"
         android:background="@drawable/ic_settings_black_36dp" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/visuals_selector"
-        android:layout_below="@+id/visualization" />
+
 
 </RelativeLayout>
