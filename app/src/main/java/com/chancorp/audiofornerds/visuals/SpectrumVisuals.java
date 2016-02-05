@@ -88,4 +88,9 @@ public class SpectrumVisuals extends BaseRenderer {
 
         }
     }
+
+    @Override
+    public void release() {
+
+    }
 }

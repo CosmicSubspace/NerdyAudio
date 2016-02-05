@@ -28,6 +28,7 @@ public abstract class BaseRenderer {
     }
 
     abstract public void draw(Canvas c, int w, int h);
+    abstract public void release();
 
     public void setVisualizationBuffer(VisualizationBuffer vb) {
         this.vb = vb;

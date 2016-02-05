@@ -1,7 +1,5 @@
-package com.chancorp.audiofornerds.ui;
+package com.chancorp.audiofornerds.settings;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +7,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
-import com.chancorp.audiofornerds.settings.BaseSetting;
-import com.chancorp.audiofornerds.settings.VUMeterSettings;
-import com.chancorp.audiofornerds.settings.VisualizationSettings;
-import com.chancorp.audiofornerds.settings.WaveformVisualSettings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class SidebarSettings implements AdapterView.OnItemSelectedListener, Serializable{
@@ -43,13 +33,14 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     transient FrameLayout visual_setting_container;
 
     VisualizationSettings visualizationSettings=new VisualizationSettings();
-    VUMeterSettings vuMeterSettings=new VUMeterSettings();
-    WaveformVisualSettings waveformVisualSettings=new WaveformVisualSettings();
+    VUMeterSettings vuMeterSettings=new VUMeterSettings(this);
+    WaveformVisualSettings waveformVisualSettings=new WaveformVisualSettings(this);
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul){
         this.suls.add(sul);
     }
+    public void removeSettingsUpdateListener(SettingsUpdateListener sul){this.suls.remove(sul);}
     private SidebarSettings(){
     }
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -64,7 +55,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         //TODO retrieve view from Settings object and add it to container.
         return v;
     }
-    private void notifyUI(BaseSetting setting){
+
+    protected void notifyUI(BaseSetting setting){
         for (SettingsUpdateListener sul:this.suls){
             sul.updated(setting);
         }

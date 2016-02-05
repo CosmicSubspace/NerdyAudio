@@ -119,6 +119,12 @@ public class SpectographVisuals extends BaseRenderer{
 
         }
     }
+
+    @Override
+    public void release() {
+
+    }
+
     private int magnitudeToColor(double mag){
         int inten=(int)mag*2;
         if (inten>255) inten=255;

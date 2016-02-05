@@ -13,11 +13,12 @@ import com.chancorp.audiofornerds.R;
 /**
  * Created by Chan on 2/3/2016.
  */
-public class VUMeterSettings  implements SeekBar.OnSeekBarChangeListener{
+public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener{
     private static final String LOG_TAG="CS_AFN";
     public int getType(){
         return BaseSetting.VU;
     }
+
     int range,historySize;
     public void setRange(int range){
         this.range=range;
@@ -32,8 +33,10 @@ public class VUMeterSettings  implements SeekBar.OnSeekBarChangeListener{
         return this.historySize;
     }
 
-
-
+    SidebarSettings sbs;
+    public VUMeterSettings(SidebarSettings sbs){
+        this.sbs=sbs;
+    }
 
 
 
@@ -57,12 +60,14 @@ public class VUMeterSettings  implements SeekBar.OnSeekBarChangeListener{
         if (seekBar.getId()==R.id.vis_vu_setting_history_seekbar) {
             setHistorySize(progress);
             historyTV.setText(Integer.toString(historySize));
+
         }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
             setRange(progress*10);
             lengthTV.setText(Integer.toString(range));
         }else{
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
+        sbs.notifyUI(this);
 
     }
 

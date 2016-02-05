@@ -1,6 +1,5 @@
 package com.chancorp.audiofornerds.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,17 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.exceptions.InvalidParameterException;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
 import com.chancorp.audiofornerds.settings.BaseSetting;
+import com.chancorp.audiofornerds.settings.SidebarSettings;
 import com.chancorp.audiofornerds.settings.VisualizationSettings;
 import com.chancorp.audiofornerds.visuals.SpectographVisuals;
 import com.chancorp.audiofornerds.visuals.SpectrumVisuals;
@@ -36,7 +32,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     Button visSettingsBtn;
     SidebarSettings sbs;
 
-    FrameLayout settings_container;
+
     boolean settingsMode=false;
 
     @Override
@@ -54,7 +50,6 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
             vv.getRenderThread().setMaxFPS(60);
         }
 
-        settings_container=(FrameLayout) v.findViewById(R.id.visuals_settings_container);
 
         visSettingsBtn=(Button)v.findViewById(R.id.visuals_settings_button);
         visSettingsBtn.setOnClickListener(this);
@@ -66,19 +61,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        if (view.getId()==R.id.visuals_settings_button){
-            if (!settingsMode) {
-                settings_container.addView(vv.getRenderThread().getRenderer().getSettingsView(getLayoutInflater(null), settings_container, null));
-                settings_container.setBackgroundColor(Color.argb(200,255,255,255));
-                visSettingsBtn.setBackgroundResource(R.drawable.ic_close_black_36dp);
-                settingsMode=true;
-            }else{
-                settings_container.removeAllViews();
-                visSettingsBtn.setBackgroundResource(R.drawable.ic_settings_black_36dp);
-                settings_container.setBackgroundColor(Color.argb(0, 255, 255, 255));
-                settingsMode=false;
-            }
-        }
+
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,

@@ -3,23 +3,18 @@ package com.chancorp.audiofornerds.visuals;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
+import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
+import com.chancorp.audiofornerds.settings.BaseSetting;
+import com.chancorp.audiofornerds.settings.SidebarSettings;
+import com.chancorp.audiofornerds.settings.VUMeterSettings;
 
 /**
  * Created by Chan on 2015-12-18.
  */
-public class VUMeterVisuals extends BaseRenderer{
+public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListener{
     Paint pt;
     int range = 2048; //Should be Synchronized.
     float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory; //TODO circular buffers for performance
@@ -33,11 +28,16 @@ public class VUMeterVisuals extends BaseRenderer{
     int rangeN;
     int historySizeN;
 
+    SidebarSettings sbs;
+
 
     public VUMeterVisuals(float density) {
+
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         initArrays();
+        sbs=SidebarSettings.getInstance();
+        sbs.addSettingsUpdateListener(this);
     }
     private void initArrays(){
         lAvgHistory=new float[historySize];
@@ -156,7 +156,15 @@ public class VUMeterVisuals extends BaseRenderer{
     }
 
 
-
-
-
+    @Override
+    public void updated(BaseSetting setting) {
+        if (setting instanceof VUMeterSettings){
+            VUMeterSettings vums=(VUMeterSettings)setting;
+            setRange(vums.getRange());
+            setHistorySize(vums.getHistorySize());
+        }
+    }
+    public void release(){
+        sbs.removeSettingsUpdateListener(this);
+    }
 }

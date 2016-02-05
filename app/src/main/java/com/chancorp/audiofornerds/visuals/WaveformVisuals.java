@@ -15,11 +15,15 @@ import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
+import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
+import com.chancorp.audiofornerds.settings.BaseSetting;
+import com.chancorp.audiofornerds.settings.SidebarSettings;
+import com.chancorp.audiofornerds.settings.WaveformVisualSettings;
 
 /**
  * Created by Chan on 2015-12-18.
  */
-public class WaveformVisuals extends BaseRenderer{
+public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListener{
     int range = 2048; //Should be Synchronized.
     int drawEvery = 1; //Should be Synchronized.
     boolean downmix=false; //Should be Synchronized.
@@ -30,13 +34,15 @@ public class WaveformVisuals extends BaseRenderer{
     int drawEveryN;
     boolean downmixN;
 
-
+    SidebarSettings sbs;
 
     Paint pt;
 
     public WaveformVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
+        sbs=SidebarSettings.getInstance();
+        sbs.addSettingsUpdateListener(this);
     }
 
     public void setRange(int samples) {
@@ -129,4 +135,16 @@ public class WaveformVisuals extends BaseRenderer{
     }
 
 
+    @Override
+    public void updated(BaseSetting setting) {
+        if (setting instanceof WaveformVisualSettings){
+            WaveformVisualSettings wfvs=(WaveformVisualSettings) setting;
+            setDownmix(wfvs.getDownmix());
+            setRange(wfvs.getRange());
+        }
+    }
+    @Override
+    public void release(){
+        sbs.removeSettingsUpdateListener(this);
+    }
 }

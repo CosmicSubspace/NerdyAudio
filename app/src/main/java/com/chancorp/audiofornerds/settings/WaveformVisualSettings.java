@@ -15,7 +15,7 @@ import com.chancorp.audiofornerds.R;
 /**
  * Created by Chan on 2/3/2016.
  */
-public class WaveformVisualSettings implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener{
+public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener{
     private static final String LOG_TAG="CS_AFN";
     int range;
     boolean downmix;
@@ -34,8 +34,10 @@ public class WaveformVisualSettings implements SeekBar.OnSeekBarChangeListener, 
     }
 
 
-
-
+    SidebarSettings sbs;
+    public WaveformVisualSettings(SidebarSettings sbs){
+        this.sbs=sbs;
+    }
 
 
     Switch s;
@@ -61,6 +63,7 @@ public class WaveformVisualSettings implements SeekBar.OnSeekBarChangeListener, 
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
 
+        sbs.notifyUI(this);
     }
 
     @Override
@@ -78,5 +81,11 @@ public class WaveformVisualSettings implements SeekBar.OnSeekBarChangeListener, 
         if (buttonView.getId()==R.id.vis_waveform_setting_stereo_switch){
             setDownmix(buttonView.isChecked());
         }
+        sbs.notifyUI(this);
+    }
+
+    @Override
+    public int getType() {
+        return BaseSetting.WAVEFORM;
     }
 }
