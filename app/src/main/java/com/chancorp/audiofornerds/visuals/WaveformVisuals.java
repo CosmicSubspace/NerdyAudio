@@ -49,7 +49,7 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
             Log.d(LOG_TAG,"WaveformVisuals state changed. syncing.");
             range=newSettings.getRange();
 
-            drawEvery=1024/range; //TODO more elegant way of optimizing
+            drawEvery=range/1024; //TODO more elegant way of optimizing
             if (drawEvery<1) drawEvery=1;
 
             downmix=newSettings.getDownmix();

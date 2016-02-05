@@ -27,8 +27,6 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     SpectrumVisualSettings newSettings=null;
 
 
-
-
     FFT fft;
 
     AudioPlayer ap;
@@ -47,6 +45,8 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     private void syncChanges(){
         if (newSettings!=null){
             fftSize=newSettings.getFftSize();
+            fft = new FFT(fftSize); //TODO I think FFT size doesn't change, needs testing.
+
             bars=newSettings.getBars();
             spacing=newSettings.getSpacing();
             startFreq=newSettings.getStartFreq();
@@ -66,10 +66,6 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
                 short[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
                 deleteBefore(currentFrame - fftSize / 2 + 1);
 
-
-                //TODO set cropping
-                //TODO frequency range setting
-                //TODO dB scale
                 double[] x = new double[fftSize], y = new double[fftSize];
                 for (int i = 0; i < pcmL.length; i++) {
                     x[i] = (pcmL[i]+pcmR[i]) / 65536.0;
@@ -106,15 +102,16 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
         }
     }
 
-    private float getMagnitude(double[] x, double[] y, double frequency){
+    private float getMagnitude(double[] x, double[] y, double frequency){ //TODO something's fucky here.
         int sr=ap.getSampleRate();
         double frqPerBin=sr/(double)this.fftSize;
         float bin=(float)(frequency/frqPerBin);
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));
 
-        float ceilFactor=(ceilBin-bin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
-        float floorFactor=(bin-floorBin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
+        //Inverse Distance Relationship.
+        float ceilFactor=(bin-floorBin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
+        float floorFactor=(ceilBin-bin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
         return ceilFactor+floorFactor;
     }
 

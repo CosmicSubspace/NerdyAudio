@@ -108,6 +108,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onDetach(){
+        super.onDetach();
         sbs.removeSettingsUpdateListener(this);
     }
 }
