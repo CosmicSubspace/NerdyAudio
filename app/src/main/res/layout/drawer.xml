@@ -32,5 +32,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/visuals_selector" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/visuals_setting_container"></FrameLayout>
+
 
 </LinearLayout>

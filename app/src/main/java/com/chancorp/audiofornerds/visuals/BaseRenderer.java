@@ -65,8 +65,4 @@ public abstract class BaseRenderer {
         }else return 0;
     }
 
-    public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.visuals_setting_waveform, container, false);
-        return v;
-    }
 }

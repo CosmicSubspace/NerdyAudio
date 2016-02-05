@@ -19,7 +19,7 @@ import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 /**
  * Created by Chan on 2015-12-18.
  */
-public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarChangeListener{
+public class VUMeterVisuals extends BaseRenderer{
     Paint pt;
     int range = 2048; //Should be Synchronized.
     float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory; //TODO circular buffers for performance
@@ -157,43 +157,6 @@ public class VUMeterVisuals extends BaseRenderer implements SeekBar.OnSeekBarCha
 
 
 
-    SeekBar sb_hist,sb_len;
-    TextView lengthTV,historyTV;
-    public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.visuals_setting_vu, container, false);
-        sb_hist=(SeekBar)v.findViewById(R.id.vis_vu_setting_history_seekbar);
-        historyTV=(TextView)v.findViewById(R.id.vis_vu_setting_history_value);
-        sb_hist.setOnSeekBarChangeListener(this);
 
-        sb_len=(SeekBar)v.findViewById(R.id.vis_vu_setting_length_seekbar);
-        lengthTV=(TextView)v.findViewById(R.id.vis_vu_setting_length_value);
-        sb_len.setOnSeekBarChangeListener(this);
-        return v;
-    }
-
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar.getId()==R.id.vis_vu_setting_history_seekbar) {
-            setHistorySize(progress);
-            historyTV.setText(Integer.toString(historySize));
-        }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
-            setRange(progress*10);
-            lengthTV.setText(Integer.toString(range));
-        }else{
-            Log.w(LOG_TAG,"I think I'm not the only seekbar around here....");
-        }
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 
 }
