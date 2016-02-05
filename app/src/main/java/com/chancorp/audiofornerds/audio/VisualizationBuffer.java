@@ -3,6 +3,7 @@ package com.chancorp.audiofornerds.audio;
 import android.util.Log;
 
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
+import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 
 import java.util.ArrayList;
@@ -81,6 +82,9 @@ public class VisualizationBuffer implements BufferFeedListener {
                     //Log.d(LOG_TAG,"AIOOB");
                     currentBuffer++;
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
+                } catch (IndexOutOfBoundsException e){
+                    Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer."); //TODO Something's fucky here.
+                    ErrorLogger.log(e);
                 }
             }
 
