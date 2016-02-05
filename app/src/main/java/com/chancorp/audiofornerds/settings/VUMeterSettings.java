@@ -19,7 +19,7 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
         return BaseSetting.VU;
     }
 
-    int range,historySize;
+    int range=4096,historySize=64;
     public void setRange(int range){
         this.range=range;
     }

@@ -79,13 +79,10 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     public void updated(BaseSetting setting) {
         if(setting.getType()==BaseSetting.VISUALIZATION){
             VisualizationSettings visSet=(VisualizationSettings)setting;
-
-
             if (visSet.getActiveVisualization()==VisualizationSettings.VU) {
                 VUMeterVisuals vis=new VUMeterVisuals(getResources().getDisplayMetrics().density);
                 vis.setRange(4096);
                 vv.getRenderThread().setRenderer(vis);
-
             }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTRUM){
                 SpectrumVisuals vis=new SpectrumVisuals(getResources().getDisplayMetrics().density);
                 vis.setFFTSize(2048);

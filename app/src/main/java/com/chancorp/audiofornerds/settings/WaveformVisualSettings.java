@@ -17,8 +17,8 @@ import com.chancorp.audiofornerds.R;
  */
 public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener{
     private static final String LOG_TAG="CS_AFN";
-    int range;
-    boolean downmix;
+    int range=8192;
+    boolean downmix=true;
 
     public void setRange(int range){
         this.range=range;

@@ -30,9 +30,9 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
     //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
     boolean stateChanged=false;
-    int rangeN;
-    int drawEveryN;
-    boolean downmixN;
+    int rangeN=range;
+    int drawEveryN=drawEvery;
+    boolean downmixN=downmix;
 
     SidebarSettings sbs;
 

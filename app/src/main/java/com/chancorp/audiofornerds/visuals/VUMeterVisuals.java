@@ -25,8 +25,8 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
 
     //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
     boolean stateChanged=false;
-    int rangeN;
-    int historySizeN;
+    int rangeN=range;
+    int historySizeN=historySize;
 
     SidebarSettings sbs;
 
@@ -40,6 +40,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
         sbs.addSettingsUpdateListener(this);
     }
     private void initArrays(){
+        Log.d(LOG_TAG,"VUMeterVisuals>InitArrays called. historySize="+historySize);
         lAvgHistory=new float[historySize];
         rAvgHistory=new float[historySize];
         lPeakHistory=new float[historySize];
@@ -62,6 +63,8 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
     }
 
     public void setHistorySize(int size){
+        Log.d(LOG_TAG,"SetHistorySize Called. size= "+size);
+        if (size<1) size=1;
         this.historySizeN=size;
         stateChanged=true;
     }
