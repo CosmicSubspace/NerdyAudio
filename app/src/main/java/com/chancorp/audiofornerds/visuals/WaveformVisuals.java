@@ -24,15 +24,12 @@ import com.chancorp.audiofornerds.settings.WaveformVisualSettings;
  * Created by Chan on 2015-12-18.
  */
 public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListener{
-    int range = 2048; //Should be Synchronized.
-    int drawEvery = 1; //Should be Synchronized.
-    boolean downmix=false; //Should be Synchronized.
+    int range = 2048;
+    int drawEvery = 1;
+    boolean downmix=false;
 
-    //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
-    boolean stateChanged=false;
-    int rangeN=range;
-    int drawEveryN=drawEvery;
-    boolean downmixN=downmix;
+
+    WaveformVisualSettings newSettings=null;
 
     SidebarSettings sbs;
 
@@ -45,29 +42,19 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
         sbs.addSettingsUpdateListener(this);
     }
 
-    public void setRange(int samples) {
-        this.rangeN = samples;
-        stateChanged=true;
-        Log.i(LOG_TAG,""+range+" | "+drawEvery);
-    }
 
-    public void drawEvery(int i) {
-        this.drawEveryN = i;
-        stateChanged=true;
-    }
 
-    public void setDownmix(boolean downmix){
-        this.downmixN=downmix;
-        stateChanged=true;
-    }
-
-    private void syncChanges(){ //Concurrency workaround //TODO is this the best way to do this?
-        if (stateChanged){
+    private void syncChanges(){
+        if (newSettings!=null){
             Log.d(LOG_TAG,"WaveformVisuals state changed. syncing.");
-            range=rangeN;
-            drawEvery=drawEveryN;
-            downmix=downmixN;
-            stateChanged=false;
+            range=newSettings.getRange();
+
+            drawEvery=1024/range; //TODO more elegant way of optimizing
+            if (drawEvery<1) drawEvery=1;
+
+            downmix=newSettings.getDownmix();
+
+            newSettings=null;
         }
     }
 
@@ -138,9 +125,8 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
     @Override
     public void updated(BaseSetting setting) {
         if (setting instanceof WaveformVisualSettings){
-            WaveformVisualSettings wfvs=(WaveformVisualSettings) setting;
-            setDownmix(wfvs.getDownmix());
-            setRange(wfvs.getRange());
+            newSettings=(WaveformVisualSettings) setting;
+
         }
     }
     @Override

@@ -29,7 +29,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     public static final String LOG_TAG="CS_AFN";
 
     VisualizationView vv;
-    Button visSettingsBtn;
+
     SidebarSettings sbs;
 
 
@@ -50,9 +50,6 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
             vv.getRenderThread().setMaxFPS(60);
         }
 
-
-        visSettingsBtn=(Button)v.findViewById(R.id.visuals_settings_button);
-        visSettingsBtn.setOnClickListener(this);
 
         return v;
 
@@ -81,17 +78,15 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
             VisualizationSettings visSet=(VisualizationSettings)setting;
             if (visSet.getActiveVisualization()==VisualizationSettings.VU) {
                 VUMeterVisuals vis=new VUMeterVisuals(getResources().getDisplayMetrics().density);
-                vis.setRange(4096);
+
                 vv.getRenderThread().setRenderer(vis);
             }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTRUM){
                 SpectrumVisuals vis=new SpectrumVisuals(getResources().getDisplayMetrics().density);
-                vis.setFFTSize(2048);
-                vis.setSpacing(0.3f);
+
                 vv.getRenderThread().setRenderer(vis);
             }else if (visSet.getActiveVisualization()==VisualizationSettings.WAVEFORM){
                 WaveformVisuals vis=new WaveformVisuals(getResources().getDisplayMetrics().density);
-                vis.setRange(8192);
-                vis.drawEvery(16);
+
                 vv.getRenderThread().setRenderer(vis);
             }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTOGRAPH){
                 SpectographVisuals vis=new SpectographVisuals(getResources().getDisplayMetrics().density);
@@ -109,5 +104,10 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 Log.w(LOG_TAG,"WHAT? (NowPlayingFragment)");
             }
         }
+    }
+
+    @Override
+    public void onDetach(){
+        sbs.removeSettingsUpdateListener(this);
     }
 }

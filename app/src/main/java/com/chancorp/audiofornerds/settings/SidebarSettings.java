@@ -37,6 +37,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     VisualizationSettings visualizationSettings = new VisualizationSettings();
     VUMeterSettings vuMeterSettings = new VUMeterSettings(this);
     WaveformVisualSettings waveformVisualSettings = new WaveformVisualSettings(this);
+    SpectrumVisualSettings spectrumVisualSettings=new SpectrumVisualSettings(this);
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
@@ -100,6 +101,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 break;
             case 2:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTRUM);
+                visual_setting_container.removeAllViews();
+                visual_setting_container.addView(spectrumVisualSettings.getSettingsView(li, visual_setting_container, null));
                 break;
             case 3:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTOGRAPH);

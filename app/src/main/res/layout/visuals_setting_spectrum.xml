@@ -7,8 +7,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VU Meter (sorta)"
-        android:id="@+id/vis_vu_setting_title"
+        android:text="FFT Spectrum"
+        android:id="@+id/vis_spectrum_setting_title"
         style="@style/setting_title"/>
 <!--
     <LinearLayout
@@ -33,41 +33,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sample Average"
-        android:id="@+id/vis_vu_setting_length_title"
-
+        android:text="FFT Size"
+        android:id="@+id/vis_spectrum_setting_fftsize_title"
         style="@style/setting_text"/>
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <Spinner
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_fftsize_selector" />
 
-        android:id="@+id/vis_vu_setting_length">
 
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vis_vu_setting_length_seekbar"
-            android:layout_toLeftOf="@+id/vis_vu_setting_length_value"
-            android:max="1000"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00"
-            android:id="@+id/vis_vu_setting_length_value"
-            android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
-    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="History Size"
-        android:id="@+id/vis_vu_setting_history_title"
+        android:text="Number of bars"
+        android:id="@+id/vis_spectrum_setting_bars_title"
 
         style="@style/setting_text"/>
 
@@ -75,13 +56,13 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_vu_setting_history">
+        android:id="@+id/vis_spectrum_setting_bars">
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_vu_setting_history_seekbar"
-            android:layout_toLeftOf="@+id/vis_vu_setting_history_value"
+            android:id="@+id/vis_spectrum_setting_bars_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrum_setting_bars_value"
             android:max="300"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
@@ -90,7 +71,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
-            android:id="@+id/vis_vu_setting_history_value"
+            android:id="@+id/vis_spectrum_setting_bars_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bar Spacing"
+        android:id="@+id/vis_spectrum_setting_spacing_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_spacing">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_spacing_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrum_setting_spacing_value"
+            android:max="100"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrum_setting_spacing_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frequency Start"
+        android:id="@+id/vis_spectrum_setting_frq_start_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_frq_start">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_frq_start_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrum_setting_frq_start_value"
+            android:max="100"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrum_setting_frq_start_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>

@@ -7,39 +7,58 @@ import android.util.Log;
 
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
+import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
+import com.chancorp.audiofornerds.settings.BaseSetting;
+import com.chancorp.audiofornerds.settings.SidebarSettings;
+import com.chancorp.audiofornerds.settings.SpectrumVisualSettings;
 import com.meapsoft.FFT;
 
 /**
  * Created by Chan on 2015-12-18.
  */
-public class SpectrumVisuals extends BaseRenderer {
+public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListener{
     Paint pt;
     int fftSize = 2048;
     int bars=100;
     float spacing = 0.0f;
     float startFreq=20, endFreq=1000;
+
+
+    SpectrumVisualSettings newSettings=null;
+
+
+
+
     FFT fft;
 
     AudioPlayer ap;
+
+    SidebarSettings sbs;
 
     public SpectrumVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);
         ap=AudioPlayer.getInstance();
+        sbs= SidebarSettings.getInstance();
+        sbs.addSettingsUpdateListener(this);
     }
 
-    public void setFFTSize(int samples) {
-        this.fftSize = samples;
-        fft = new FFT(samples);
-    }
+    private void syncChanges(){
+        if (newSettings!=null){
+            fftSize=newSettings.getFftSize();
+            bars=newSettings.getBars();
+            spacing=newSettings.getSpacing();
+            startFreq=newSettings.getStartFreq();
+            endFreq=newSettings.getEndFreq();
 
-    public void setSpacing(float spacing) {
-        this.spacing = spacing;
+            newSettings=null;
+        }
     }
 
     @Override
     public void draw(Canvas c, int w, int h) {
+        syncChanges();
         if (vb != null && ap != null) {
             long currentFrame = getCurrentFrame();
             try {
@@ -101,6 +120,13 @@ public class SpectrumVisuals extends BaseRenderer {
 
     @Override
     public void release() {
+        sbs.removeSettingsUpdateListener(this);
+    }
 
+    @Override
+    public void updated(BaseSetting setting) {
+        if (setting instanceof SpectrumVisualSettings){
+            newSettings=(SpectrumVisualSettings)setting;
+        }
     }
 }

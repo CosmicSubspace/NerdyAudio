@@ -24,9 +24,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
     float barsDp=100; //No need for Synchronization.
 
     //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
-    boolean stateChanged=false;
-    int rangeN=range;
-    int historySizeN=historySize;
+    VUMeterSettings newSetting=null;
 
     SidebarSettings sbs;
 
@@ -62,24 +60,13 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
         }
     }
 
-    public void setHistorySize(int size){
-        Log.d(LOG_TAG,"SetHistorySize Called. size= "+size);
-        if (size<1) size=1;
-        this.historySizeN=size;
-        stateChanged=true;
-    }
-
-    public void setRange(int samples) {
-        this.rangeN = samples;
-        stateChanged=true;
-    }
 
     private void syncChanges(){
-        if (stateChanged){
-            range=rangeN;
-            historySize=historySizeN;
+        if (newSetting!=null){
+            range=newSetting.getRange();
+            historySize=newSetting.getHistorySize();
             initArrays();
-            stateChanged=false;
+            newSetting=null;
         }
     }
 
@@ -162,9 +149,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
     @Override
     public void updated(BaseSetting setting) {
         if (setting instanceof VUMeterSettings){
-            VUMeterSettings vums=(VUMeterSettings)setting;
-            setRange(vums.getRange());
-            setHistorySize(vums.getHistorySize());
+            newSetting=(VUMeterSettings)setting;
         }
     }
     public void release(){
