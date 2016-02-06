@@ -1,5 +1,6 @@
 package com.chancorp.audiofornerds.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +21,14 @@ import java.util.ArrayList;
 public class SidebarSettings implements AdapterView.OnItemSelectedListener, Serializable {
     transient private static SidebarSettings inst; //TODO am I overusing Singleton?
 
+    public static SidebarSettings instantiate(Context c){
+        inst=new SidebarSettings(c); //TODO something tells me this is not the way of doing things.
+        return inst;
+    }
+
     public static SidebarSettings getInstance() {
         if (inst == null) {
-            inst = new SidebarSettings();
+            Log.e(LOG_TAG,"getInstance() called before instantiate() was called. Expect a NullPopinterException soon.");
         }
         return inst;
     }
@@ -34,10 +40,10 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     transient Spinner visSpinner;
     transient FrameLayout visual_setting_container;
 
-    VisualizationSettings visualizationSettings = new VisualizationSettings();
-    VUMeterSettings vuMeterSettings = new VUMeterSettings(this);
-    WaveformVisualSettings waveformVisualSettings = new WaveformVisualSettings(this);
-    SpectrumVisualSettings spectrumVisualSettings=new SpectrumVisualSettings(this);
+    VisualizationSettings visualizationSettings;
+    VUMeterSettings vuMeterSettings;
+    WaveformVisualSettings waveformVisualSettings;
+    SpectrumVisualSettings spectrumVisualSettings;
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
@@ -54,7 +60,11 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     }
 
-    private SidebarSettings() {
+    private SidebarSettings(Context c) {
+        visualizationSettings = new VisualizationSettings(this,c);
+        vuMeterSettings = new VUMeterSettings(this,c);
+        waveformVisualSettings = new WaveformVisualSettings(this,c);
+        spectrumVisualSettings=new SpectrumVisualSettings(this,c);
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,7 +119,6 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 break;
 
         }
-
         notifyUI(visualizationSettings);
     }
 

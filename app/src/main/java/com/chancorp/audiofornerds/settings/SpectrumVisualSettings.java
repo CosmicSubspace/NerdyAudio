@@ -1,5 +1,7 @@
 package com.chancorp.audiofornerds.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.chancorp.audiofornerds.R;
 public class SpectrumVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
         SeekBar.OnSeekBarChangeListener {
     private static final String LOG_TAG = "CS_AFN";
+    private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.SpectrumVisualSettings";
 
     int fftSize = 2048;
     int bars = 100;
@@ -30,14 +33,18 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     }
 
     public void setFftSize(int fftSize) {
-        Log.i(LOG_TAG,"SetFFTSize() - Inf.Loop?");
         this.fftSize = fftSize;
-        for (int i=0;i<fftSizes.length;i++) {
-            if (Integer.parseInt(fftSizes[i])==fftSize)
-            fftSizeSpinner.setSelection(i);
-            return;
+
+        if (fftSizeSpinner!=null) {
+            for (int i = 0; i < fftSizes.length; i++) {
+                if (Integer.parseInt(fftSizes[i]) == fftSize)
+                    fftSizeSpinner.setSelection(i);
+                return;
+            }
+            Log.w(LOG_TAG, "SpectrumVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
         }
-        Log.w(LOG_TAG,"SpectrumVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
+
+        save();
     }
 
     public int getBars() {
@@ -46,7 +53,12 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
     public void setBars(int bars) {
         this.bars = bars;
-        barsTV.setText(Integer.toString(bars));
+
+        if (barsTV!=null) {
+            barsTV.setText(Integer.toString(bars));
+        }
+
+        save();
     }
 
     public float getSpacing() {
@@ -55,7 +67,12 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
     public void setSpacing(float spacing) {
         this.spacing = spacing;
-        spacingTV.setText(Float.toString(spacing));
+
+        if (spacingTV!=null) {
+            spacingTV.setText(Float.toString(spacing));
+        }
+
+        save();
     }
 
     public float getStartFreq() {
@@ -69,9 +86,14 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         }else{
             this.startFreq = startFreq;
         }
-        startFrqTV.setText(Float.toString(this.startFreq));
-        startFrqSeekbar.setProgress((int)(this.startFreq/10));
+        if (startFrqTV!=null && startFrqSeekbar!=null) {
+            startFrqTV.setText(Float.toString(this.startFreq));
+            startFrqSeekbar.setProgress((int) (this.startFreq / 10));
+        }
+
+        save();
     }
+
 
     public float getEndFreq() {
         return endFreq;
@@ -85,16 +107,22 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         }else{
             this.endFreq = endFreq;
         }
-        endFrqTV.setText(Float.toString(this.endFreq));
-        endFrqSeekbar.setProgress((int)(this.endFreq/10));
+        if (endFrqTV!=null && endFrqSeekbar!=null) {
+            endFrqTV.setText(Float.toString(this.endFreq));
+            endFrqSeekbar.setProgress((int) (this.endFreq / 10));
+        }
 
+        save();
     }
 
 
     SidebarSettings sbs;
 
-    public SpectrumVisualSettings(SidebarSettings sbs) {
-        this.sbs = sbs;
+    public SpectrumVisualSettings(SidebarSettings sbs, Context c) {
+        super(sbs,c);
+
+        load();
+        sbs.notifyUI(this);
     }
 
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
@@ -135,6 +163,27 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     @Override
     public int getType() {
         return BaseSetting.SPECTRUM;
+    }
+
+    @Override
+    protected void save() {
+        SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
+        editor.putInt("fftSize",fftSize);
+        editor.putInt("bars",bars);
+        editor.putFloat("spacing", spacing);
+        editor.putFloat("startFreq", startFreq);
+        editor.putFloat("endFreq", endFreq);
+        editor.apply();
+    }
+
+    @Override
+    protected void load() {
+        SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
+        setFftSize(pref.getInt("fftSize", fftSize));
+        setBars(pref.getInt("bars", bars));
+        setSpacing(pref.getFloat("spacing", spacing));
+        setStartFreq(pref.getFloat("startFreq", startFreq));
+        setEndFreq(pref.getFloat("endFreq", endFreq));
     }
 
     @Override

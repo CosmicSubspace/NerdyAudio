@@ -1,5 +1,7 @@
 package com.chancorp.audiofornerds.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,20 +19,28 @@ import com.chancorp.audiofornerds.R;
  */
 public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener{
     private static final String LOG_TAG="CS_AFN";
+    private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.WaveformVisualSettings";
+
     int range=8192;
     boolean downmix=true;
 
     public void setRange(int range){
         this.range=range;
-        lengthTV.setText(Integer.toString(range));
-        sb.setProgress(range/20);
+        if (lengthTV!=null && sb!=null) {
+            lengthTV.setText(Integer.toString(range));
+            sb.setProgress(range / 20);
+        }
+        save();
     }
     public int getRange(){
         return this.range;
     }
     public void setDownmix(boolean downmix){
         this.downmix=downmix;
-        s.setChecked(downmix);
+        if (s!=null) {
+            s.setChecked(downmix);
+        }
+        save();
     }
     public boolean getDownmix(){
         return this.downmix;
@@ -38,8 +48,11 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
 
 
     SidebarSettings sbs;
-    public WaveformVisualSettings(SidebarSettings sbs){
-        this.sbs=sbs;
+    public WaveformVisualSettings(SidebarSettings sbs, Context c){
+        super(sbs,c);
+
+        load();
+        sbs.notifyUI(this);
     }
 
 
@@ -90,5 +103,20 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
     @Override
     public int getType() {
         return BaseSetting.WAVEFORM;
+    }
+
+    @Override
+    protected void save() {
+        SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
+        editor.putInt("range", range);
+        editor.putBoolean("downmix", downmix);
+        editor.apply();
+    }
+
+    @Override
+    protected void load() {
+        SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
+        setDownmix(pref.getBoolean("downmix",downmix));
+        setRange(pref.getInt("range",range));
     }
 }

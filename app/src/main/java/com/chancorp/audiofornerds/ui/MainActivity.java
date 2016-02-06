@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vb=VisualizationBuffer.getInstance();
         fm=FileManager.getInstance();
         wf=Waveform.getInstance();
-        sbs=SidebarSettings.getInstance();
+        sbs=SidebarSettings.instantiate(getApplicationContext());
 
         ap.setBufferFeedListener(vb);
 

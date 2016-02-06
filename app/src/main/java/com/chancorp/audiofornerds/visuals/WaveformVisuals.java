@@ -132,5 +132,5 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
     @Override
     public void release(){
         sbs.removeSettingsUpdateListener(this);
-    }
+    } //TODO release() is not actually called anywhere.
 }

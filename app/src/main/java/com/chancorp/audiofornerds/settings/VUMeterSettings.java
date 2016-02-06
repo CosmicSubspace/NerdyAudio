@@ -1,5 +1,7 @@
 package com.chancorp.audiofornerds.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,31 +17,58 @@ import com.chancorp.audiofornerds.R;
  */
 public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener{
     private static final String LOG_TAG="CS_AFN";
+    private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.VUMeterSettings";
+
     public int getType(){
         return BaseSetting.VU;
+    }
+
+    @Override
+    protected void save() {
+        SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
+        editor.putInt("range", range);
+        editor.putInt("historySize", historySize);
+        editor.apply();
+    }
+
+    @Override
+    protected void load() {
+        SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
+        setRange(pref.getInt("range", range));
+        setHistorySize(pref.getInt("historySize", historySize));
     }
 
     int range=4096,historySize=64;
     public void setRange(int range){
         this.range=range;
-        lengthTV.setText(Integer.toString(range));
-        sb_len.setProgress(range/10);
+        if (lengthTV!=null && sb_len!=null) {
+            lengthTV.setText(Integer.toString(range));
+            sb_len.setProgress(range / 10);
+        }
+
+        save();
     }
     public int getRange(){
         return this.range;
     }
     public void setHistorySize(int size){
         this.historySize=size;
-        historyTV.setText(Integer.toString(historySize));
-        sb_hist.setProgress(size);
+        if (historyTV!=null && sb_hist!=null) {
+            historyTV.setText(Integer.toString(historySize));
+            sb_hist.setProgress(size);
+        }
+
+        save();
     }
     public int getHistorySize(){
         return this.historySize;
     }
 
-    SidebarSettings sbs;
-    public VUMeterSettings(SidebarSettings sbs){
-        this.sbs=sbs;
+    public VUMeterSettings(SidebarSettings sbs, Context c){
+        super(sbs,c);
+
+        load();
+        sbs.notifyUI(this);
     }
 
 
