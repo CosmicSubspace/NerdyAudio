@@ -22,12 +22,15 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
 
     public void setRange(int range){
         this.range=range;
+        lengthTV.setText(Integer.toString(range));
+        sb.setProgress(range/20);
     }
     public int getRange(){
         return this.range;
     }
     public void setDownmix(boolean downmix){
         this.downmix=downmix;
+        s.setChecked(downmix);
     }
     public boolean getDownmix(){
         return this.downmix;
@@ -58,7 +61,7 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar.getId()==R.id.vis_waveform_setting_length_seekbar) {
             setRange(progress * 20);
-            lengthTV.setText(Integer.toString(range));
+
         }else{
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }

@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/vis_spectrum_setting_frq_start_seekbar"
             android:layout_toLeftOf="@+id/vis_spectrum_setting_frq_start_value"
-            android:max="100"
+            android:max="1000"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
 
@@ -136,6 +136,38 @@
             android:layout_height="wrap_content"
             android:text="00"
             android:id="@+id/vis_spectrum_setting_frq_start_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frequency End"
+        android:id="@+id/vis_spectrum_setting_frq_end_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_frq_end">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_frq_end_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrum_setting_frq_end_value"
+            android:max="1000"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrum_setting_frq_end_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>

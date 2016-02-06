@@ -45,7 +45,8 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     private void syncChanges(){
         if (newSettings!=null){
             fftSize=newSettings.getFftSize();
-            fft = new FFT(fftSize); //TODO I think FFT size doesn't change, needs testing.
+            Log.i(LOG_TAG,"Spectrum: size changing"+fftSize);
+            fft = new FFT(fftSize);
 
             bars=newSettings.getBars();
             spacing=newSettings.getSpacing();

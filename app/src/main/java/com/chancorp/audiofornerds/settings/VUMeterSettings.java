@@ -22,12 +22,16 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
     int range=4096,historySize=64;
     public void setRange(int range){
         this.range=range;
+        lengthTV.setText(Integer.toString(range));
+        sb_len.setProgress(range/10);
     }
     public int getRange(){
         return this.range;
     }
     public void setHistorySize(int size){
         this.historySize=size;
+        historyTV.setText(Integer.toString(historySize));
+        sb_hist.setProgress(size);
     }
     public int getHistorySize(){
         return this.historySize;
@@ -59,11 +63,11 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar.getId()==R.id.vis_vu_setting_history_seekbar) {
             setHistorySize(progress);
-            historyTV.setText(Integer.toString(historySize));
+
 
         }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
-            setRange(progress*10);
-            lengthTV.setText(Integer.toString(range));
+            setRange(progress * 10);
+
         }else{
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
