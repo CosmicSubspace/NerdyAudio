@@ -34,6 +34,7 @@ public class VisualizationSettings extends BaseSetting implements Serializable {
     protected void load() {
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
         setActiveVisualization(pref.getInt("activeVisualization", activeVisualization));
+        sbs.notifyUI(this);
     }
 
     int type;

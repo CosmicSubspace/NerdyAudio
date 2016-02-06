@@ -47,12 +47,10 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
     }
 
 
-    SidebarSettings sbs;
     public WaveformVisualSettings(SidebarSettings sbs, Context c){
         super(sbs,c);
 
         load();
-        sbs.notifyUI(this);
     }
 
 
@@ -66,7 +64,9 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
         lengthTV=(TextView)v.findViewById(R.id.vis_waveform_setting_length_value);
         sb.setOnSeekBarChangeListener(this);
         s.setOnCheckedChangeListener(this);
+        load();
         return v;
+
     }
 
 
@@ -118,5 +118,6 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
         setDownmix(pref.getBoolean("downmix",downmix));
         setRange(pref.getInt("range",range));
+        sbs.notifyUI(this);
     }
 }

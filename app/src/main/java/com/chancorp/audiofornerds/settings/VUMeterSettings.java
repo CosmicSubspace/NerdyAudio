@@ -36,6 +36,7 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
         setRange(pref.getInt("range", range));
         setHistorySize(pref.getInt("historySize", historySize));
+        sbs.notifyUI(this);
     }
 
     int range=4096,historySize=64;
@@ -68,7 +69,6 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
         super(sbs,c);
 
         load();
-        sbs.notifyUI(this);
     }
 
 
@@ -84,6 +84,7 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
         sb_len=(SeekBar)v.findViewById(R.id.vis_vu_setting_length_seekbar);
         lengthTV=(TextView)v.findViewById(R.id.vis_vu_setting_length_value);
         sb_len.setOnSeekBarChangeListener(this);
+        load();
         return v;
     }
 

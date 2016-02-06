@@ -116,13 +116,9 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     }
 
 
-    SidebarSettings sbs;
-
     public SpectrumVisualSettings(SidebarSettings sbs, Context c) {
         super(sbs,c);
 
-        load();
-        sbs.notifyUI(this);
     }
 
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
@@ -156,6 +152,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         endFrqTV = (TextView) v.findViewById(R.id.vis_spectrum_setting_frq_end_value);
         endFrqSeekbar.setOnSeekBarChangeListener(this);
 
+        load();
         return v;
     }
 
@@ -184,6 +181,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         setSpacing(pref.getFloat("spacing", spacing));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
+        sbs.notifyUI(this);
     }
 
     @Override
