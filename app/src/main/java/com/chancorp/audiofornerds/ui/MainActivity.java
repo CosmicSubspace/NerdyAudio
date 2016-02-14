@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.FileManager;
+import com.chancorp.audiofornerds.file.MusicInformation;
 import com.chancorp.audiofornerds.file.QueueManager;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.settings.SidebarSettings;
@@ -230,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             randomToast();
         }else if (id==R.id.db_3){
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
+        }else if (id==R.id.db_4){
+            qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3"));
         }
         return true;
     }

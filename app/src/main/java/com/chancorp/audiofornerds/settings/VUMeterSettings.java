@@ -47,7 +47,6 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
             sb_len.setProgress(range / 10);
         }
 
-        save();
     }
     public int getRange(){
         return this.range;
@@ -59,7 +58,6 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
             sb_hist.setProgress(size);
         }
 
-        save();
     }
     public int getHistorySize(){
         return this.historySize;
@@ -93,15 +91,14 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar.getId()==R.id.vis_vu_setting_history_seekbar) {
             setHistorySize(progress);
-
-
         }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
             setRange(progress * 10);
-
         }else{
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
-        sbs.notifyUI(this);
+        if (fromUser){
+        save();
+        sbs.notifyUI(this);}
 
     }
 

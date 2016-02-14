@@ -40,6 +40,9 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
         ap=AudioPlayer.getInstance();
         sbs= SidebarSettings.getInstance();
         sbs.addSettingsUpdateListener(this);
+
+        //I have a feeling that this would cause some nasty shit in the future.
+        updated(sbs.getSetting(BaseSetting.SPECTRUM));
     }
 
     private void syncChanges(){
@@ -110,7 +113,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));
 
-        //Inverse Distance Relationship.
+        //Linear Interpolation.
         float ceilFactor=(bin-floorBin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
         float floorFactor=(ceilBin-bin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
         return ceilFactor+floorFactor;
@@ -123,7 +126,9 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
 
     @Override
     public void updated(BaseSetting setting) {
+        Log.i(LOG_TAG,"SpectrumVisuals updated.");
         if (setting instanceof SpectrumVisualSettings){
+            Log.i(LOG_TAG,"SpectrumVisuals settings match.");
             newSettings=(SpectrumVisualSettings)setting;
         }
     }

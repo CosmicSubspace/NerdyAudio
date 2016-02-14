@@ -36,6 +36,9 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
         initArrays();
         sbs=SidebarSettings.getInstance();
         sbs.addSettingsUpdateListener(this);
+
+        updated(sbs.getSetting(BaseSetting.VU));
+
     }
     private void initArrays(){
         Log.d(LOG_TAG,"VUMeterVisuals>InitArrays called. historySize="+historySize);

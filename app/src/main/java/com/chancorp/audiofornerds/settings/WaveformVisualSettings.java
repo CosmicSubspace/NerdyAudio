@@ -30,7 +30,7 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
             lengthTV.setText(Integer.toString(range));
             sb.setProgress(range / 20);
         }
-        save();
+
     }
     public int getRange(){
         return this.range;
@@ -40,7 +40,7 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
         if (s!=null) {
             s.setChecked(downmix);
         }
-        save();
+
     }
     public boolean getDownmix(){
         return this.downmix;
@@ -78,8 +78,9 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
         }else{
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
-
-        sbs.notifyUI(this);
+        if (fromUser){
+        save();
+        sbs.notifyUI(this);}
     }
 
     @Override
@@ -97,6 +98,7 @@ public class WaveformVisualSettings extends BaseSetting implements SeekBar.OnSee
         if (buttonView.getId()==R.id.vis_waveform_setting_stereo_switch){
             setDownmix(buttonView.isChecked());
         }
+        save();
         sbs.notifyUI(this);
     }
 

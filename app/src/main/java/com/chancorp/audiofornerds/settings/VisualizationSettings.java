@@ -46,7 +46,6 @@ public class VisualizationSettings extends BaseSetting implements Serializable {
     }
     public void setActiveVisualization(int type){
         this.activeVisualization =type;
-        save();
     }
 
 }

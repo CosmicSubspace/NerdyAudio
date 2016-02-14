@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
+import com.chancorp.audiofornerds.helper.Log2;
 
 /**
  * Created by Chan on 2/3/2016.
@@ -23,6 +24,8 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     private static final String LOG_TAG = "CS_AFN";
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.SpectrumVisualSettings";
 
+    //TODO Logaritmic Scale
+    //TODO
     int fftSize = 2048;
     int bars = 100;
     float spacing = 0.0f;
@@ -33,18 +36,19 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     }
 
     public void setFftSize(int fftSize) {
+        Log2.log(2,this,"setFFTSize() Called",fftSize);
         this.fftSize = fftSize;
 
         if (fftSizeSpinner!=null) {
             for (int i = 0; i < fftSizes.length; i++) {
-                if (Integer.parseInt(fftSizes[i]) == fftSize)
-                    fftSizeSpinner.setSelection(i);
-                return;
+                if (Integer.parseInt(fftSizes[i]) == fftSize) {
+                    fftSizeSpinner.setSelection(i, false);
+                    return;
+                }
             }
             Log.w(LOG_TAG, "SpectrumVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
         }
 
-        save();
     }
 
     public int getBars() {
@@ -56,9 +60,9 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
         if (barsTV!=null) {
             barsTV.setText(Integer.toString(bars));
+            barsSeekbar.setProgress(bars);
         }
 
-        save();
     }
 
     public float getSpacing() {
@@ -70,9 +74,9 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
         if (spacingTV!=null) {
             spacingTV.setText(Float.toString(spacing));
+            spacingSeekbar.setProgress(Math.round(spacing*100));
         }
 
-        save();
     }
 
     public float getStartFreq() {
@@ -91,7 +95,6 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
             startFrqSeekbar.setProgress((int) (this.startFreq / 10));
         }
 
-        save();
     }
 
 
@@ -112,7 +115,6 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
             endFrqSeekbar.setProgress((int) (this.endFreq / 10));
         }
 
-        save();
     }
 
 
@@ -134,7 +136,15 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, fftSizes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fftSizeSpinner.setAdapter(adapter);
-        fftSizeSpinner.setOnItemSelectedListener(this);
+
+        //fftSizeSpinner.setOnItemSelectedListener(this);
+        //We do this because otherwise the initialization of the spinner would fire a callback
+        //Which would be undesirable.
+        fftSizeSpinner.post(new Runnable() {
+            public void run() {
+                fftSizeSpinner.setOnItemSelectedListener(SpectrumVisualSettings.this);
+            }
+        });
 
         barsSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrum_setting_bars_seekbar);
         barsTV = (TextView) v.findViewById(R.id.vis_spectrum_setting_bars_value);
@@ -164,6 +174,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
     @Override
     protected void save() {
+        Log2.log(2,this,"Saving:",fftSize,bars,spacing,startFreq,endFreq);
         SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
         editor.putInt("fftSize",fftSize);
         editor.putInt("bars",bars);
@@ -176,11 +187,13 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     @Override
     protected void load() {
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
+        Log2.log(2, this, "initial", fftSize, bars, spacing, startFreq, endFreq);
         setFftSize(pref.getInt("fftSize", fftSize));
         setBars(pref.getInt("bars", bars));
         setSpacing(pref.getFloat("spacing", spacing));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
+        Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
     }
 
@@ -189,6 +202,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         if (parent.getId() == R.id.vis_spectrum_setting_fftsize_selector) {
             setFftSize(Integer.parseInt(fftSizes[position]));
         }
+        save();
         sbs.notifyUI(this);
     }
 
@@ -201,10 +215,8 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar.getId() == R.id.vis_spectrum_setting_bars_seekbar) {
             setBars(progress);
-
         }else if (seekBar.getId() == R.id.vis_spectrum_setting_spacing_seekbar) {
             setSpacing(progress / 100.0f);
-
         }else if (seekBar.getId() == R.id.vis_spectrum_setting_frq_start_seekbar) {
             setStartFreq(progress*10); //0~10000
         }else if (seekBar.getId() == R.id.vis_spectrum_setting_frq_end_seekbar) {
@@ -212,8 +224,10 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         } else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
-
-        sbs.notifyUI(this);
+        if (fromUser) {
+            save();
+            sbs.notifyUI(this);
+        }
     }
 
     @Override

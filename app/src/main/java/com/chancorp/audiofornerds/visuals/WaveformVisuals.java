@@ -40,6 +40,8 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         sbs=SidebarSettings.getInstance();
         sbs.addSettingsUpdateListener(this);
+
+        updated(sbs.getSetting(BaseSetting.WAVEFORM));
     }
 
 

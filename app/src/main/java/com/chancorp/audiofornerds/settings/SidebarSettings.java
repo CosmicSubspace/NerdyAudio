@@ -86,6 +86,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         //Therefore, we copy the arraylist before iterating though it.
         ArrayList<SettingsUpdateListener> tSuls = new ArrayList<>(this.suls);
 
+        Log.i(LOG_TAG, "Notifying UI...");
         //Log.d(LOG_TAG, "NotifyUI() Entered");
         for (SettingsUpdateListener sul : tSuls) {
             sul.updated(setting);
@@ -101,6 +102,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         switch (position) {
             case 0:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.VU);
+
                 visual_setting_container.removeAllViews();
                 visual_setting_container.addView(vuMeterSettings.getSettingsView(li, visual_setting_container, null));
                 break;
@@ -119,11 +121,25 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 break;
 
         }
+        visualizationSettings.save();
         notifyUI(visualizationSettings);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public BaseSetting getSetting(int type){
+        switch (type){
+            case BaseSetting.SPECTRUM:
+                return spectrumVisualSettings;
+            case BaseSetting.VU:
+                return vuMeterSettings;
+            case BaseSetting.WAVEFORM:
+                return waveformVisualSettings;
+
+        }
+        return null;
     }
 }
