@@ -44,6 +44,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     VUMeterSettings vuMeterSettings;
     WaveformVisualSettings waveformVisualSettings;
     SpectrumVisualSettings spectrumVisualSettings;
+    SpectrogramVisualSettings spectrogramVisualSettings;
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
@@ -65,6 +66,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         vuMeterSettings = new VUMeterSettings(this,c);
         waveformVisualSettings = new WaveformVisualSettings(this,c);
         spectrumVisualSettings=new SpectrumVisualSettings(this,c);
+        spectrogramVisualSettings =new SpectrogramVisualSettings(this,c);
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,6 +120,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 break;
             case 3:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTOGRAPH);
+                visual_setting_container.removeAllViews();
+                visual_setting_container.addView(spectrogramVisualSettings.getSettingsView(li, visual_setting_container, null));
                 break;
 
         }
