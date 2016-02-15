@@ -44,7 +44,7 @@ public class FileManager implements FileListReturnListener{
         this.psl=psl;
     }
 
-    public void discover(String path, CompletionListener cl){ //TODO stop scanning two at once
+    public void discover(String path, CompletionListener cl){
         if (scanning) return;
         scanning=true;
         FileLister fl=new FileLister(path,psl,this);

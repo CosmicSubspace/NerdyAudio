@@ -25,7 +25,6 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.SpectrumVisualSettings";
 
     //TODO Logaritmic Scale
-    //TODO
     int fftSize = 2048;
     int bars = 100;
     float spacing = 0.0f;

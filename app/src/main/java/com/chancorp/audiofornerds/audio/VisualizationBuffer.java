@@ -83,7 +83,7 @@ public class VisualizationBuffer implements BufferFeedListener {
                     currentBuffer++;
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
                 } catch (IndexOutOfBoundsException e){
-                    Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer."); //TODO Something's fucky here.
+                    Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer.");
                     ErrorLogger.log(e);
                 }
             }

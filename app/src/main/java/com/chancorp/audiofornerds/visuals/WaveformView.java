@@ -68,7 +68,7 @@ public class WaveformView extends View{
 
             if (displayTimeStamp){
 
-                //TODO you know this.
+                //TODO Make this prettier.
 
                 float x=100,y=100, xPadding=4;
                 float density=getContext().getResources().getDisplayMetrics().density;

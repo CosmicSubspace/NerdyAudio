@@ -35,10 +35,9 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     FFT fft;
     Bitmap graph;
     int canvasX, canvasY;
-    int resolution=10;
     IntBuffer graphBuffer;
     float maxFreq=5000, minFreq=20;
-    int scrollPxPerRedraw=1;
+    int scrollPxPerRedraw=1; //TODO make this setting-able too.
     boolean logScale=false;
 
     SidebarSettings sbs;
@@ -190,7 +189,7 @@ sbs.removeSettingsUpdateListener(this);
     private float pixelNumberToFrequency(int pixelNum){
         if (!logScale) return (pixelNum/(float)canvasX)*(maxFreq-minFreq)+minFreq;
         else{
-            //TODO Optimization may be needed. This is called hundreds of times per redraw.
+
             return (float)Math.exp((Math.log(maxFreq)-Math.log(minFreq))*(pixelNum/(double)canvasX)+Math.log(minFreq));
 
         }

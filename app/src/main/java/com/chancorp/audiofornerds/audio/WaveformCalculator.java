@@ -49,9 +49,6 @@ this.c=ctxt;
     @Override
     public void run(){
 
-        //TODO Stereo support (Currently R and L channels are mixed and then averaged.)
-
-
         SoundFile sf=new SoundFile();
         try {
             sf.ReadFileMetaData(file);

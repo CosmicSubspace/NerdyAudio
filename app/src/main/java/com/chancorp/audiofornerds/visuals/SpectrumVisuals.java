@@ -91,7 +91,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
                 float magnitude;
                 //Log.d(LOG_TAG,"BetweenBars: "+betweenBars);
                 float betweenBars=w/(float)bars;
-                for (int i = 0; i < bars; i++) { //TODO This is a temporary zoom
+                for (int i = 0; i < bars; i++) {
 
                     c.drawRect(i * betweenBars, h - getMagnitude(x,y,startFreq+(endFreq-startFreq)*i/(float)bars) * 1, (i + 1 - spacing) * betweenBars, h, pt);
                 }

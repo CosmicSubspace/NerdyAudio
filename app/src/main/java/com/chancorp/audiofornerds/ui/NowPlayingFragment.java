@@ -97,7 +97,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 }
                 vis.setScrollPerRedraw(2);
                 vis.setScale(SpectrogramVisuals.LINEAR_SCALE);
-                //TODO Connect SpectrogramVisuals to AudioPlayer so it can receive Sampling Rate Data.
+
                 vv.getRenderThread().setRenderer(vis);
             }else{
                 Log.w(LOG_TAG,"WHAT? (NowPlayingFragment)");
