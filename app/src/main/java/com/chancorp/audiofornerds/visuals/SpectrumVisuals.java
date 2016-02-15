@@ -22,7 +22,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     int bars=100;
     float spacing = 0.0f;
     float startFreq=20, endFreq=1000;
-
+    //TODO Log Scale
 
     SpectrumVisualSettings newSettings=null;
 
@@ -106,7 +106,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
         }
     }
 
-    private float getMagnitude(double[] x, double[] y, double frequency){ //TODO something's fucky here.
+    private float getMagnitude(double[] x, double[] y, double frequency){
         int sr=ap.getSampleRate();
         double frqPerBin=sr/(double)this.fftSize;
         float bin=(float)(frequency/frqPerBin);

@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
@@ -20,13 +22,23 @@ import com.chancorp.audiofornerds.helper.Log2;
  * Created by Chan on 2/3/2016.
  */
 public class SpectrogramVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
-        SeekBar.OnSeekBarChangeListener {
+        SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
     private static final String LOG_TAG = "CS_AFN";
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.SpectrogramVisualSettings";
 
-    //TODO Logaritmic Scale
     int fftSize = 2048;
     float startFreq = 20, endFreq = 1000;
+    boolean logScale=false;
+
+    public boolean getLogScale(){
+        return logScale;
+    }
+    public void setLogScale(boolean log){
+        this.logScale=log;
+        if (s!=null){
+            s.setChecked(log);
+        }
+    }
 
     public int getFftSize() {
         return fftSize;
@@ -96,11 +108,12 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
     SeekBar startFrqSeekbar, endFrqSeekbar;
     TextView startFrqTV, endFrqTV;
+    Switch s;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.visuals_setting_spectrogram, container, false);
 
-        fftSizeSpinner = (Spinner) v.findViewById(R.id.vis_spectrograph_setting_fftsize_selector);
+        fftSizeSpinner = (Spinner) v.findViewById(R.id.vis_spectrogram_setting_fftsize_selector);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, fftSizes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fftSizeSpinner.setAdapter(adapter);
@@ -115,13 +128,16 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         });
 
 
-        startFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrograph_setting_frq_start_seekbar);
-        startFrqTV = (TextView) v.findViewById(R.id.vis_spectrograph_setting_frq_start_value);
+        startFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrogram_setting_frq_start_seekbar);
+        startFrqTV = (TextView) v.findViewById(R.id.vis_spectrogram_setting_frq_start_value);
         startFrqSeekbar.setOnSeekBarChangeListener(this);
 
-        endFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrograph_setting_frq_end_seekbar);
-        endFrqTV = (TextView) v.findViewById(R.id.vis_spectrograph_setting_frq_end_value);
+        endFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrogram_setting_frq_end_seekbar);
+        endFrqTV = (TextView) v.findViewById(R.id.vis_spectrogram_setting_frq_end_value);
         endFrqSeekbar.setOnSeekBarChangeListener(this);
+
+        s=(Switch) v.findViewById(R.id.vis_spectrogram_setting_log_switch);
+        s.setOnCheckedChangeListener(this);
 
         load();
         return v;
@@ -130,7 +146,7 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
     @Override
     public int getType() {
-        return BaseSetting.SPECTRUM;
+        return BaseSetting.SPECTOGRAPH;
     }
 
     @Override
@@ -141,6 +157,7 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
         editor.putFloat("startFreq", startFreq);
         editor.putFloat("endFreq", endFreq);
+        editor.putBoolean("logScale",logScale);
         editor.apply();
     }
 
@@ -151,13 +168,14 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         setFftSize(pref.getInt("fftSize", fftSize));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
+        setLogScale(pref.getBoolean("logScale", logScale));
         //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.vis_spectrum_setting_fftsize_selector) {
+        if (parent.getId() == R.id.vis_spectrogram_setting_fftsize_selector) {
             setFftSize(Integer.parseInt(fftSizes[position]));
         }
         save();
@@ -171,9 +189,9 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar.getId() == R.id.vis_spectrum_setting_frq_start_seekbar) {
+        if (seekBar.getId() == R.id.vis_spectrogram_setting_frq_start_seekbar) {
             setStartFreq(progress * 10); //0~10000
-        }else if (seekBar.getId() == R.id.vis_spectrum_setting_frq_end_seekbar) {
+        }else if (seekBar.getId() == R.id.vis_spectrogram_setting_frq_end_seekbar) {
             setEndFreq(progress * 10); //0~10000
         } else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
@@ -192,5 +210,14 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId()==R.id.vis_spectrogram_setting_log_switch) {
+            setLogScale(buttonView.isChecked());
+        }
+        save();
+        sbs.notifyUI(this);
     }
 }

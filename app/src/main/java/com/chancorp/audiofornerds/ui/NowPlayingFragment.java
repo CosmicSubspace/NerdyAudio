@@ -15,7 +15,7 @@ import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
 import com.chancorp.audiofornerds.settings.BaseSetting;
 import com.chancorp.audiofornerds.settings.SidebarSettings;
 import com.chancorp.audiofornerds.settings.VisualizationSettings;
-import com.chancorp.audiofornerds.visuals.SpectrographVisuals;
+import com.chancorp.audiofornerds.visuals.SpectrogramVisuals;
 import com.chancorp.audiofornerds.visuals.SpectrumVisuals;
 import com.chancorp.audiofornerds.visuals.VUMeterVisuals;
 import com.chancorp.audiofornerds.visuals.VisualizationView;
@@ -88,7 +88,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
                 vv.getRenderThread().setRenderer(vis);
             }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTOGRAPH){
-                SpectrographVisuals vis=new SpectrographVisuals(getResources().getDisplayMetrics().density);
+                SpectrogramVisuals vis=new SpectrogramVisuals(getResources().getDisplayMetrics().density);
                 vis.setFFTSize(2048);
                 try {
                     vis.setFrequencyRange(20, 3000);
@@ -96,8 +96,8 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                     ErrorLogger.log(e);
                 }
                 vis.setScrollPerRedraw(2);
-                vis.setScale(SpectrographVisuals.LINEAR_SCALE);
-                //TODO Connect SpectrographVisuals to AudioPlayer so it can receive Sampling Rate Data.
+                vis.setScale(SpectrogramVisuals.LINEAR_SCALE);
+                //TODO Connect SpectrogramVisuals to AudioPlayer so it can receive Sampling Rate Data.
                 vv.getRenderThread().setRenderer(vis);
             }else{
                 Log.w(LOG_TAG,"WHAT? (NowPlayingFragment)");

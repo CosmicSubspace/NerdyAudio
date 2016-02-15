@@ -10,6 +10,11 @@ import android.util.Log;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 import com.chancorp.audiofornerds.exceptions.FFTOutOfBoundsException;
 import com.chancorp.audiofornerds.exceptions.InvalidParameterException;
+import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
+import com.chancorp.audiofornerds.settings.BaseSetting;
+import com.chancorp.audiofornerds.settings.SidebarSettings;
+import com.chancorp.audiofornerds.settings.SpectrogramVisualSettings;
+import com.chancorp.audiofornerds.settings.SpectrumVisualSettings;
 import com.meapsoft.FFT;
 
 import java.nio.Buffer;
@@ -22,7 +27,7 @@ import java.nio.IntBuffer;
  */
 
 
-public class SpectrographVisuals extends BaseRenderer{
+public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateListener{
     public static final int LOG_SCALE=1235236;
     public static final int LINEAR_SCALE=4537;
     Paint pt;
@@ -32,10 +37,26 @@ public class SpectrographVisuals extends BaseRenderer{
     int canvasX, canvasY;
     int resolution=10;
     IntBuffer graphBuffer;
-    int samplingRate=44100;
-    int maxFreq=5000, minFreq=20;
+    float maxFreq=5000, minFreq=20;
     int scrollPxPerRedraw=1;
     boolean logScale=false;
+
+    SidebarSettings sbs;
+    SpectrogramVisualSettings newSettings=null;
+
+    private void syncChanges(){
+        if (newSettings!=null){
+            fftSize=newSettings.getFftSize();
+            Log.i(LOG_TAG,"Spectrum: size changing"+fftSize);
+            setFFTSize(newSettings.getFftSize());
+            try {
+                setFrequencyRange(newSettings.getStartFreq(), newSettings.getEndFreq());
+            }catch(InvalidParameterException e){
+                Log.w(LOG_TAG,"SpectrogramVisuals>syncChanges() wut?");
+            }
+            newSettings=null;
+        }
+    }
 
     public void newGraph(int w, int h){
         canvasX=w;
@@ -44,20 +65,23 @@ public class SpectrographVisuals extends BaseRenderer{
         graph=Bitmap.createBitmap(canvasX,canvasY, Bitmap.Config.ARGB_8888);
     }
 
-    public SpectrographVisuals(float density) {
+    public SpectrogramVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);
+
+        sbs= SidebarSettings.getInstance();
+        sbs.addSettingsUpdateListener(this);
+
+        //I have a feeling that this would cause some nasty shit in the future.
+        updated(sbs.getSetting(BaseSetting.SPECTRUM));
     }
 
     public void setFFTSize(int samples) {
         this.fftSize = samples;
         fft = new FFT(samples);
     }
-    public void setSamplingRate(int samplingRate){
-        this.samplingRate=samplingRate;
-    }
-    public void setFrequencyRange(int min, int max) throws InvalidParameterException {
+    public void setFrequencyRange(float min, float max) throws InvalidParameterException {
         this.maxFreq=max;
         this.minFreq=min;
         if (maxFreq<=minFreq) throw new InvalidParameterException("Min is larger than Max.");
@@ -68,17 +92,18 @@ public class SpectrographVisuals extends BaseRenderer{
     public void setScale(int option){
         if (option==LOG_SCALE) logScale=true;
         else if (option==LINEAR_SCALE) logScale=false;
-        else Log.e(LOG_TAG,"Invalid Option!(SpectrographVisuals>SetScale)");
+        else Log.e(LOG_TAG,"Invalid Option!(SpectrogramVisuals>SetScale)");
     }
 
 
     @Override
     public void draw(Canvas c, int w, int h) {
+        syncChanges();
+
         if (vb != null && ap != null) {
             if (w!=canvasX||h!=canvasY) newGraph(w, h);
             long currentFrame = getCurrentFrame();
             try {
-                //TODO interpolation between bins so that it would be smoother
                 //TODO increase temporal resolution
                 short[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
                 short[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
@@ -98,12 +123,14 @@ public class SpectrographVisuals extends BaseRenderer{
                 int targetBin;
                 int newColors[]=new int[canvasX];
                 for (int i=0;i<canvasX;i++){
+                    /*
                     try {
                         targetBin=frequencyToBinNumber(pixelNumberToFrequency(i));
                     }catch (FFTOutOfBoundsException fftoobe){
                         continue;
-                    }
-                    newColors[i]=magnitudeToColor(magnitude(x[targetBin],y[targetBin]));
+                    }*/
+                    //newColors[i]=magnitudeToColor(magnitude(x[targetBin],y[targetBin]));
+                    newColors[i]=magnitudeToColor(getMagnitude(x,y,minFreq+(maxFreq-minFreq)*i/(float)canvasX));
                 }
                 for (int i=0;i<scrollPxPerRedraw;i++) graphBuffer.put(newColors);
                 graphBuffer.rewind();
@@ -122,7 +149,7 @@ public class SpectrographVisuals extends BaseRenderer{
 
     @Override
     public void release() {
-
+sbs.removeSettingsUpdateListener(this);
     }
 
     private int magnitudeToColor(double mag){
@@ -130,6 +157,22 @@ public class SpectrographVisuals extends BaseRenderer{
         if (inten>255) inten=255;
         return Color.argb(255,inten,inten,inten);
     }
+
+    private float getMagnitude(double[] x, double[] y, double frequency){
+        //TODO Log scale here.
+        int sr=ap.getSampleRate();
+        double frqPerBin=sr/(double)this.fftSize;
+        float bin=(float)(frequency/frqPerBin);
+        int ceilBin=(int)Math.round(Math.ceil(bin));
+        int floorBin=(int)Math.round(Math.floor(bin));
+
+        //Linear Interpolation.
+        float ceilFactor=(bin-floorBin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
+        float floorFactor=(ceilBin-bin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
+        return ceilFactor+floorFactor;
+    }
+
+    /*
     private double magnitude(double x, double y){
         return Math.sqrt(x * x + y * y);
     }
@@ -151,12 +194,20 @@ public class SpectrographVisuals extends BaseRenderer{
             return (float)Math.exp((Math.log(maxFreq)-Math.log(minFreq))*(pixelNum/(double)canvasX)+Math.log(minFreq));
 
         }
+    }*/
+
+    @Override
+    public void updated(BaseSetting setting) {
+        if (setting instanceof SpectrogramVisualSettings){
+            Log.i(LOG_TAG,"SpectrumVisuals settings match.");
+            newSettings=(SpectrogramVisualSettings)setting;
+        }
     }
 }
 
 
 /*
-public class SpectrographVisuals extends BaseRenderer{
+public class SpectrogramVisuals extends BaseRenderer{
     Paint pt;
     int fftSize = 2048;
     FFT fft;
@@ -173,7 +224,7 @@ public class SpectrographVisuals extends BaseRenderer{
         }
     }
 
-    public SpectrographVisuals(float density) {
+    public SpectrogramVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);
