@@ -22,7 +22,7 @@ import java.nio.IntBuffer;
  */
 
 
-public class SpectographVisuals extends BaseRenderer{
+public class SpectrographVisuals extends BaseRenderer{
     public static final int LOG_SCALE=1235236;
     public static final int LINEAR_SCALE=4537;
     Paint pt;
@@ -44,7 +44,7 @@ public class SpectographVisuals extends BaseRenderer{
         graph=Bitmap.createBitmap(canvasX,canvasY, Bitmap.Config.ARGB_8888);
     }
 
-    public SpectographVisuals(float density) {
+    public SpectrographVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);
@@ -68,7 +68,7 @@ public class SpectographVisuals extends BaseRenderer{
     public void setScale(int option){
         if (option==LOG_SCALE) logScale=true;
         else if (option==LINEAR_SCALE) logScale=false;
-        else Log.e(LOG_TAG,"Invalid Option!(SpectographVisuals>SetScale)");
+        else Log.e(LOG_TAG,"Invalid Option!(SpectrographVisuals>SetScale)");
     }
 
 
@@ -156,7 +156,7 @@ public class SpectographVisuals extends BaseRenderer{
 
 
 /*
-public class SpectographVisuals extends BaseRenderer{
+public class SpectrographVisuals extends BaseRenderer{
     Paint pt;
     int fftSize = 2048;
     FFT fft;
@@ -173,7 +173,7 @@ public class SpectographVisuals extends BaseRenderer{
         }
     }
 
-    public SpectographVisuals(float density) {
+    public SpectrographVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         fft = new FFT(fftSize);

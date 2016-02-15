@@ -38,7 +38,7 @@ public class VisualizationSettings extends BaseSetting implements Serializable {
     }
 
     int type;
-    public static final String[] visualizations=new String[]{"VU Meter","Waveform","Spectrum","Spectograph"};
+    public static final String[] visualizations=new String[]{"VU Meter","Waveform","Spectrum","Spectrograph"};
     int activeVisualization =0;
 
     public int getActiveVisualization(){
