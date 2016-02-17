@@ -29,6 +29,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
     int fftSize = 2048;
     float startFreq = 20, endFreq = 1000;
     boolean logScale=false;
+    int scrollSpeed=2;
+    float contrast=2;
 
     public boolean getLogScale(){
         return logScale;
@@ -37,6 +39,28 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         this.logScale=log;
         if (s!=null){
             s.setChecked(log);
+        }
+    }
+
+    public int getScrollSpeed(){
+        return scrollSpeed;
+    }
+    public void setScrollSpeed(int pixelsPerFrame){
+        this.scrollSpeed=pixelsPerFrame;
+        if (scrollSpeedSeekbar!=null && scrollSpeedTV!=null){
+            scrollSpeedSeekbar.setProgress(this.scrollSpeed);//TODO
+            scrollSpeedTV.setText(Integer.toString(this.scrollSpeed));
+        }
+    }
+
+    public float getContrast(){
+        return contrast;
+    }
+    public void setContrast(float contrast){
+        this.contrast=contrast;
+        if (contrastSeekbar!=null && convtastTV!=null){
+            contrastSeekbar.setProgress(Math.round(this.contrast*100));
+            convtastTV.setText(Float.toString(this.contrast));
         }
     }
 
@@ -67,6 +91,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         //if end and start order is reversed(or is very close), weird shit would happen. So we do this
         if (this.endFreq<startFreq+100){
             //don't do anything
+        }else if(startFreq<20){
+            this.startFreq = 20;
         }else{
             this.startFreq = startFreq;
         }
@@ -87,6 +113,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         //if end and start order is reversed(or is very close), weird shit would happen. So we do this
         if (endFreq<this.startFreq+100){
             //don't do anything
+        }else if(endFreq<20){
+            this.endFreq = 20;
         }else{
             this.endFreq = endFreq;
         }
@@ -106,8 +134,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
     Spinner fftSizeSpinner;
 
-    SeekBar startFrqSeekbar, endFrqSeekbar;
-    TextView startFrqTV, endFrqTV;
+    SeekBar startFrqSeekbar, endFrqSeekbar, contrastSeekbar, scrollSpeedSeekbar;
+    TextView startFrqTV, endFrqTV, convtastTV, scrollSpeedTV;
     Switch s;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,6 +164,14 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         endFrqTV = (TextView) v.findViewById(R.id.vis_spectrogram_setting_frq_end_value);
         endFrqSeekbar.setOnSeekBarChangeListener(this);
 
+        contrastSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrogram_setting_contrast_seekbar);
+        convtastTV = (TextView) v.findViewById(R.id.vis_spectrogram_setting_contrast_value);
+        contrastSeekbar.setOnSeekBarChangeListener(this);
+
+        scrollSpeedSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrogram_setting_scroll_seekbar);
+        scrollSpeedTV = (TextView) v.findViewById(R.id.vis_spectrogram_setting_scroll_value);
+        scrollSpeedSeekbar.setOnSeekBarChangeListener(this);
+
         s=(Switch) v.findViewById(R.id.vis_spectrogram_setting_log_switch);
         s.setOnCheckedChangeListener(this);
 
@@ -146,7 +182,7 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
     @Override
     public int getType() {
-        return BaseSetting.SPECTOGRAPH;
+        return BaseSetting.SPECTROGRAM;
     }
 
     @Override
@@ -157,7 +193,9 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
 
         editor.putFloat("startFreq", startFreq);
         editor.putFloat("endFreq", endFreq);
-        editor.putBoolean("logScale",logScale);
+        editor.putBoolean("logScale", logScale);
+        editor.putInt("scrollSpeed", scrollSpeed);
+        editor.putFloat("contrast",contrast);
         editor.apply();
     }
 
@@ -169,6 +207,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
         setLogScale(pref.getBoolean("logScale", logScale));
+        setContrast(pref.getFloat("contrast", contrast));
+        setScrollSpeed(pref.getInt("scrollSpeed",scrollSpeed));
         //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
     }
@@ -193,7 +233,11 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
             setStartFreq(progress * 10); //0~10000
         }else if (seekBar.getId() == R.id.vis_spectrogram_setting_frq_end_seekbar) {
             setEndFreq(progress * 10); //0~10000
-        } else {
+        } else if (seekBar.getId() == R.id.vis_spectrogram_setting_contrast_seekbar) {
+            setContrast(progress / 100.0f); //0~10
+        }else if (seekBar.getId() == R.id.vis_spectrogram_setting_scroll_seekbar) {
+            setScrollSpeed(progress); //0~10
+        }else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
         if (fromUser) {

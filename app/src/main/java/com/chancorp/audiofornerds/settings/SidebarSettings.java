@@ -119,7 +119,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 visual_setting_container.addView(spectrumVisualSettings.getSettingsView(li, visual_setting_container, null));
                 break;
             case 3:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTOGRAPH);
+                visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTROGRAM);
                 visual_setting_container.removeAllViews();
                 visual_setting_container.addView(spectrogramVisualSettings.getSettingsView(li, visual_setting_container, null));
                 break;
@@ -142,6 +142,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 return vuMeterSettings;
             case BaseSetting.WAVEFORM:
                 return waveformVisualSettings;
+            case BaseSetting.SPECTROGRAM:
+                return spectrogramVisualSettings;
 
         }
         return null;

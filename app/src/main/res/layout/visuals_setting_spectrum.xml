@@ -42,6 +42,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/vis_spectrum_setting_fftsize_selector" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_log">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Scale"
+            android:id="@+id/vis_spectrum_setting_log_title"
+            style="@style/setting_text" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_log_switch" />
+    </LinearLayout>
+
 
 
     <TextView
@@ -168,6 +185,38 @@
             android:layout_height="wrap_content"
             android:text="00"
             android:id="@+id/vis_spectrum_setting_frq_end_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bar Height"
+        android:id="@+id/vis_spectrum_setting_height_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrum_setting_height">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_height_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrum_setting_height_value"
+            android:max="1000"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrum_setting_height_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>

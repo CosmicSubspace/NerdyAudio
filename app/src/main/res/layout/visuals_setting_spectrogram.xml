@@ -104,5 +104,69 @@
             style="@style/setting_text"/>
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contrast"
+        android:id="@+id/vis_spectrogram_setting_contrast_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrogram_setting_contrast">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrogram_setting_contrast_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrogram_setting_contrast_value"
+            android:max="1000"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrogram_setting_contrast_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scroll Speed"
+        android:id="@+id/vis_spectrogram_setting_scroll_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_spectrogram_setting_scroll">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrogram_setting_scroll_seekbar"
+            android:layout_toLeftOf="@+id/vis_spectrogram_setting_scroll_value"
+            android:max="10"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_spectrogram_setting_scroll_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

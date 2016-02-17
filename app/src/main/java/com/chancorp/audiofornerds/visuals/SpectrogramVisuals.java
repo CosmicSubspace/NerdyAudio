@@ -39,6 +39,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     float maxFreq=5000, minFreq=20;
     int scrollPxPerRedraw=1; //TODO make this setting-able too.
     boolean logScale=false;
+    float contrast=2.0f;
 
     SidebarSettings sbs;
     SpectrogramVisualSettings newSettings=null;
@@ -53,6 +54,9 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
             }catch(InvalidParameterException e){
                 Log.w(LOG_TAG,"SpectrogramVisuals>syncChanges() wut?");
             }
+            setLogScale(newSettings.getLogScale());
+            setScrollPerRedraw(newSettings.getScrollSpeed());
+            setContrast(newSettings.getContrast());
             newSettings=null;
         }
     }
@@ -73,7 +77,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
         sbs.addSettingsUpdateListener(this);
 
         //I have a feeling that this would cause some nasty shit in the future.
-        updated(sbs.getSetting(BaseSetting.SPECTRUM));
+        updated(sbs.getSetting(BaseSetting.SPECTROGRAM));
     }
 
     public void setFFTSize(int samples) {
@@ -88,10 +92,11 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     public void setScrollPerRedraw(int pixels){
         this.scrollPxPerRedraw=pixels;
     }
-    public void setScale(int option){
-        if (option==LOG_SCALE) logScale=true;
-        else if (option==LINEAR_SCALE) logScale=false;
-        else Log.e(LOG_TAG,"Invalid Option!(SpectrogramVisuals>SetScale)");
+    public void setLogScale(boolean logScale){
+        this.logScale=logScale;
+    }
+    public void setContrast(float contrast){
+        this.contrast=contrast;
     }
 
 
@@ -129,7 +134,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
                         continue;
                     }*/
                     //newColors[i]=magnitudeToColor(magnitude(x[targetBin],y[targetBin]));
-                    newColors[i]=magnitudeToColor(getMagnitude(x,y,minFreq+(maxFreq-minFreq)*i/(float)canvasX));
+                    newColors[i]=magnitudeToColor(getMagnitude(x,y,coordsToFrequency(i)));
                 }
                 for (int i=0;i<scrollPxPerRedraw;i++) graphBuffer.put(newColors);
                 graphBuffer.rewind();
@@ -152,15 +157,25 @@ sbs.removeSettingsUpdateListener(this);
     }
 
     private int magnitudeToColor(double mag){
-        int inten=(int)mag*2;
+        int inten=(int)(mag*this.contrast);
         if (inten>255) inten=255;
         return Color.argb(255,inten,inten,inten);
     }
 
-    private float getMagnitude(double[] x, double[] y, double frequency){
+    private float coordsToFrequency(float coord){
+        if (logScale){ //TODO this is called hundred of times per redraw. Performance.
+            double startLog=Math.log(minFreq);
+            double endLog=Math.log(maxFreq);
+            return (float)Math.exp(startLog+(endLog-startLog)*coord/(float)canvasX);
+        }else{
+            return minFreq+(maxFreq-minFreq)*coord/(float)canvasX;
+        }
+    }
+
+    private float getMagnitude(double[] x, double[] y, float frequency){
         //TODO Log scale here.
         int sr=ap.getSampleRate();
-        double frqPerBin=sr/(double)this.fftSize;
+        float frqPerBin=sr/(float)this.fftSize;
         float bin=(float)(frequency/frqPerBin);
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));

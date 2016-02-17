@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
@@ -20,15 +22,17 @@ import com.chancorp.audiofornerds.helper.Log2;
  * Created by Chan on 2/3/2016.
  */
 public class SpectrumVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
-        SeekBar.OnSeekBarChangeListener {
+        SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
     private static final String LOG_TAG = "CS_AFN";
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.SpectrumVisualSettings";
 
-    //TODO Logaritmic Scale
+
     int fftSize = 2048;
     int bars = 100;
     float spacing = 0.0f;
     float startFreq = 20, endFreq = 1000;
+    boolean logScale=false;
+    float barHeight=1.0f;
 
     public int getFftSize() {
         return fftSize;
@@ -50,6 +54,31 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
     }
 
+    public float getBarHeight() {
+        return barHeight;
+    }
+
+    public void setBarHeight(float height) {
+        this.barHeight = height;
+
+        if (barHeightTV!=null && barHeightSeekbar!=null) {
+            barHeightTV.setText(Float.toString(barHeight));
+            barHeightSeekbar.setProgress(Math.round(barHeight * 200));
+        }
+    }
+
+    public boolean getLogScale() {
+        return logScale;
+    }
+
+    public void setLogScale(boolean logScale) {
+        this.logScale = logScale;
+
+        if (logScaleSwitch!=null) {
+            logScaleSwitch.setChecked(logScale);
+        }
+    }
+
     public int getBars() {
         return bars;
     }
@@ -61,7 +90,6 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
             barsTV.setText(Integer.toString(bars));
             barsSeekbar.setProgress(bars);
         }
-
     }
 
     public float getSpacing() {
@@ -125,8 +153,9 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
     Spinner fftSizeSpinner;
 
-    SeekBar barsSeekbar, spacingSeekbar, startFrqSeekbar, endFrqSeekbar;
-    TextView barsTV, spacingTV, startFrqTV, endFrqTV;
+    SeekBar barsSeekbar, spacingSeekbar, startFrqSeekbar, endFrqSeekbar, barHeightSeekbar;
+    TextView barsTV, spacingTV, startFrqTV, endFrqTV, barHeightTV;
+    Switch logScaleSwitch;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.visuals_setting_spectrum, container, false);
@@ -161,6 +190,13 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         endFrqTV = (TextView) v.findViewById(R.id.vis_spectrum_setting_frq_end_value);
         endFrqSeekbar.setOnSeekBarChangeListener(this);
 
+        barHeightSeekbar = (SeekBar) v.findViewById(R.id.vis_spectrum_setting_height_seekbar);
+        barHeightTV = (TextView) v.findViewById(R.id.vis_spectrum_setting_height_value);
+        barHeightSeekbar.setOnSeekBarChangeListener(this);
+
+        logScaleSwitch=(Switch) v.findViewById(R.id.vis_spectrum_setting_log_switch);
+        logScaleSwitch.setOnCheckedChangeListener(this);
+
         load();
         return v;
     }
@@ -173,26 +209,30 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
 
     @Override
     protected void save() {
-        Log2.log(2,this,"Saving:",fftSize,bars,spacing,startFreq,endFreq);
+        //Log2.log(2,this,"Saving:",fftSize,bars,spacing,startFreq,endFreq);
         SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
         editor.putInt("fftSize",fftSize);
-        editor.putInt("bars",bars);
+        editor.putInt("bars", bars);
         editor.putFloat("spacing", spacing);
         editor.putFloat("startFreq", startFreq);
         editor.putFloat("endFreq", endFreq);
+        editor.putFloat("barHeight", barHeight);
+        editor.putBoolean("logScale", logScale);
         editor.apply();
     }
 
     @Override
     protected void load() {
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
-        Log2.log(2, this, "initial", fftSize, bars, spacing, startFreq, endFreq);
+        //Log2.log(2, this, "initial", fftSize, bars, spacing, startFreq, endFreq);
         setFftSize(pref.getInt("fftSize", fftSize));
         setBars(pref.getInt("bars", bars));
         setSpacing(pref.getFloat("spacing", spacing));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
-        Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
+        setLogScale(pref.getBoolean("logScale", logScale));
+        setBarHeight(pref.getFloat("barHeight", barHeight)); //TODO there's a bug where some of the settings do not load properly when app is restarted.
+        //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
     }
 
@@ -220,6 +260,8 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
             setStartFreq(progress*10); //0~10000
         }else if (seekBar.getId() == R.id.vis_spectrum_setting_frq_end_seekbar) {
             setEndFreq(progress * 10); //0~10000
+        }else if (seekBar.getId() == R.id.vis_spectrum_setting_height_seekbar) {
+            setBarHeight(progress / 200.f); //0~5
         } else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
@@ -237,5 +279,14 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId()==R.id.vis_spectrum_setting_log_switch) {
+            setLogScale(buttonView.isChecked());
+        }
+        save();
+        sbs.notifyUI(this);
     }
 }

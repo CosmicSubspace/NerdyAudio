@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.chancorp.audiofornerds.R;
-import com.chancorp.audiofornerds.exceptions.InvalidParameterException;
-import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.SettingsUpdateListener;
 import com.chancorp.audiofornerds.settings.BaseSetting;
 import com.chancorp.audiofornerds.settings.SidebarSettings;
@@ -85,18 +83,9 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 vv.getRenderThread().setRenderer(vis);
             }else if (visSet.getActiveVisualization()==VisualizationSettings.WAVEFORM){
                 WaveformVisuals vis=new WaveformVisuals(getResources().getDisplayMetrics().density);
-
                 vv.getRenderThread().setRenderer(vis);
-            }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTOGRAPH){
+            }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTROGRAM){
                 SpectrogramVisuals vis=new SpectrogramVisuals(getResources().getDisplayMetrics().density);
-                vis.setFFTSize(2048);
-                try {
-                    vis.setFrequencyRange(20, 3000);
-                } catch (InvalidParameterException e) {
-                    ErrorLogger.log(e);
-                }
-                vis.setScrollPerRedraw(2);
-                vis.setScale(SpectrogramVisuals.LINEAR_SCALE);
 
                 vv.getRenderThread().setRenderer(vis);
             }else{

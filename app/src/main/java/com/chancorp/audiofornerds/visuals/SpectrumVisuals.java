@@ -22,7 +22,8 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     int bars=100;
     float spacing = 0.0f;
     float startFreq=20, endFreq=1000;
-    //TODO Log Scale
+    boolean logScale=false;
+    float barHeightMultiplier=1.0f;
 
     SpectrumVisualSettings newSettings=null;
 
@@ -55,6 +56,8 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
             spacing=newSettings.getSpacing();
             startFreq=newSettings.getStartFreq();
             endFreq=newSettings.getEndFreq();
+            barHeightMultiplier=newSettings.getBarHeight();
+            logScale=newSettings.getLogScale();
 
             newSettings=null;
         }
@@ -93,7 +96,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
                 float betweenBars=w/(float)bars;
                 for (int i = 0; i < bars; i++) {
 
-                    c.drawRect(i * betweenBars, h - getMagnitude(x,y,startFreq+(endFreq-startFreq)*i/(float)bars) * 1, (i + 1 - spacing) * betweenBars, h, pt);
+                    c.drawRect(i * betweenBars, h - barHeightMultiplier*getMagnitude(x,y,barNumToFrequency(i)), (i + 1 - spacing) * betweenBars, h, pt);
                 }
 
                 //c.drawRect(0,0,300,300,pt);
@@ -106,9 +109,19 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
         }
     }
 
-    private float getMagnitude(double[] x, double[] y, double frequency){
+    private float barNumToFrequency(int barNumber){
+        if (logScale){ //TODO this is called hundred of times per redraw. Performance.
+            double startLog=Math.log(startFreq);
+            double endLog=Math.log(endFreq);
+            return (float)Math.exp(startLog+(endLog-startLog)*barNumber/(float)bars);
+        }else{
+            return startFreq+(endFreq-startFreq)*barNumber/(float)bars;
+        }
+    }
+
+    private float getMagnitude(double[] x, double[] y, float frequency){
         int sr=ap.getSampleRate();
-        double frqPerBin=sr/(double)this.fftSize;
+        float frqPerBin=sr/(float)this.fftSize;
         float bin=(float)(frequency/frqPerBin);
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));
