@@ -12,7 +12,7 @@
         style="@style/setting_title"/>
         -->
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,12 +23,14 @@
             android:layout_height="wrap_content"
             android:text="Mono"
             android:id="@+id/vis_waveform_setting_stereo_title"
-            style="@style/setting_text" />
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_waveform_setting_stereo_switch" />
-    </LinearLayout>
+            android:id="@+id/vis_waveform_setting_stereo_switch"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <include layout="@layout/subdivider"/>
 

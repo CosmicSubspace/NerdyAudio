@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/visuals_setting_container"
-        android:padding="8dp"></FrameLayout>
+        android:paddingLeft="16dp"></FrameLayout>
 
     <include layout="@layout/divider"/>
 
@@ -40,7 +40,7 @@
         style="@style/setting_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visualization"
+        android:text="Other Stuff"
         android:id="@+id/textView3" />
 
     <include layout="@layout/divider"/>

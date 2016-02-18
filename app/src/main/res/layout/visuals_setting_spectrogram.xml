@@ -12,21 +12,29 @@
             android:id="@+id/vis_spectrogram_setting_title"
             style="@style/setting_title"/>
     -->
-    <TextView
-        android:id="@+id/vis_spectrogram_setting_fftsize_title"
-        style="@style/setting_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FFT Size" />
 
-    <Spinner
-        android:id="@+id/vis_spectrogram_setting_fftsize_selector"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/vis_spectrogram_setting_fftsize_title"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FFT Size"
+            android:layout_alignParentLeft="true" />
+
+        <Spinner
+            android:id="@+id/vis_spectrogram_setting_fftsize_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <include layout="@layout/subdivider" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/vis_waveform_setting_stereo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,13 +45,15 @@
             style="@style/setting_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log Scale" />
+            android:text="Log Scale"
+            android:layout_alignParentLeft="true" />
 
         <Switch
             android:id="@+id/vis_spectrogram_setting_log_switch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <include layout="@layout/subdivider"/>
 

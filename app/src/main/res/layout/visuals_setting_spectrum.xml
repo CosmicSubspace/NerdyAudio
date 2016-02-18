@@ -31,21 +31,28 @@
         </LinearLayout>
         -->
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FFT Size"
-        android:id="@+id/vis_spectrum_setting_fftsize_title"
-        style="@style/setting_text"/>
+        android:layout_height="wrap_content">
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrum_setting_fftsize_selector" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_spectrum_setting_fftsize_selector"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FFT Size"
+            android:id="@+id/vis_spectrum_setting_fftsize_title"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
 
     <include layout="@layout/subdivider"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,12 +62,15 @@
             android:layout_height="wrap_content"
             android:text="Log Scale"
             android:id="@+id/vis_spectrum_setting_log_title"
-            style="@style/setting_text" />
+            style="@style/setting_text"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentLeft="true" />
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_spectrum_setting_log_switch" />
-    </LinearLayout>
+            android:id="@+id/vis_spectrum_setting_log_switch"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <include layout="@layout/subdivider"/>
 
