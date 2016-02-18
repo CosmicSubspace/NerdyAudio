@@ -73,8 +73,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         View v = inflater.inflate(R.layout.drawer, container, false);
 
         visSpinner = (Spinner) v.findViewById(R.id.visuals_selector);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, VisualizationSettings.visualizations);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.visuals_spinner_element, VisualizationSettings.visualizations);
+        //adapter.setDropDownViewResource(R.layout.visuals_spinner_element);
         visSpinner.setAdapter(adapter);
         visSpinner.setOnItemSelectedListener(this);
         visual_setting_container = (FrameLayout) v.findViewById(R.id.visuals_setting_container);

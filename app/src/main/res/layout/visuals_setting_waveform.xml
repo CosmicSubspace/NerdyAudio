@@ -3,13 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/vis_waveform_setting_container">
-
+<!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Waveform"
         android:id="@+id/vis_waveform_setting_title"
         style="@style/setting_title"/>
+        -->
 
     <LinearLayout
         android:orientation="horizontal"
@@ -20,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Downmix"
+            android:text="Mono"
             android:id="@+id/vis_waveform_setting_stereo_title"
             style="@style/setting_text" />
         <Switch
@@ -28,6 +29,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/vis_waveform_setting_stereo_switch" />
     </LinearLayout>
+
+    <include layout="@layout/subdivider"/>
 
     <TextView
         android:layout_width="wrap_content"

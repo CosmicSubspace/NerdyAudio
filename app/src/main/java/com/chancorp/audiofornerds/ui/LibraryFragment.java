@@ -58,6 +58,8 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         currentDir=(TextView)v.findViewById(R.id.library_tab_current_directory);
         scanning=(TextView)v.findViewById(R.id.library_tab_scanning);
 
+        //TODO make file browser inside the tab, not on a popup thing.
+
 
         if (FileManager.getInstance().isScanning()) scanUI();
         else scanCompleteUI();

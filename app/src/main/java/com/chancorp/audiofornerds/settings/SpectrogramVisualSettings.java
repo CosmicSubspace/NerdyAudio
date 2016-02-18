@@ -48,7 +48,7 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
     public void setScrollSpeed(int pixelsPerFrame){
         this.scrollSpeed=pixelsPerFrame;
         if (scrollSpeedSeekbar!=null && scrollSpeedTV!=null){
-            scrollSpeedSeekbar.setProgress(this.scrollSpeed);//TODO
+            scrollSpeedSeekbar.setProgress(this.scrollSpeed);
             scrollSpeedTV.setText(Integer.toString(this.scrollSpeed));
         }
     }
@@ -194,8 +194,8 @@ public class SpectrogramVisualSettings extends BaseSetting implements AdapterVie
         editor.putFloat("startFreq", startFreq);
         editor.putFloat("endFreq", endFreq);
         editor.putBoolean("logScale", logScale);
-        editor.putInt("scrollSpeed", scrollSpeed);
         editor.putFloat("contrast",contrast);
+        editor.putInt("scrollSpeed", scrollSpeed);
         editor.apply();
     }
 

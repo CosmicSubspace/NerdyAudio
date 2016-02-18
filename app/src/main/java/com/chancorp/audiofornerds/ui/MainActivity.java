@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DrawerLayout dl;
     Button settingBtn;
     TextView statusText;
-    FrameLayout sideContainer;
+    ScrollView sideContainer;
 
     SharedPreferences sf;
 
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         statusText=(TextView)findViewById(R.id.status);
 
-        sideContainer=(FrameLayout)findViewById(R.id.drawer_container);
+        sideContainer=(ScrollView)findViewById(R.id.drawer_scroll);
         sideContainer.addView(sbs.getView(getLayoutInflater(),sideContainer,null));
 
 

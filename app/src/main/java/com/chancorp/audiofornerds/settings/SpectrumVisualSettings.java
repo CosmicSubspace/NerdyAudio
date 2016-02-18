@@ -230,8 +230,8 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         setSpacing(pref.getFloat("spacing", spacing));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
-        setLogScale(pref.getBoolean("logScale", logScale));
         setBarHeight(pref.getFloat("barHeight", barHeight)); //TODO there's a bug where some of the settings do not load properly when app is restarted.
+        setLogScale(pref.getBoolean("logScale", logScale));
         //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
     }

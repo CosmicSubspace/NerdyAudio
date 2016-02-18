@@ -70,8 +70,8 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
                 pt.setColor(Color.BLACK);
 
-                short[] pcmL = getLSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
-                short[] pcmR = getRSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
+                short[] pcmL = getLSamples(currentFrame - range+1, currentFrame);
+                short[] pcmR = getRSamples(currentFrame - range+1, currentFrame);
                 deleteBefore(currentFrame - range / 2 + 1);
 
                 int numberOfLinePoints = pcmL.length / drawEvery;

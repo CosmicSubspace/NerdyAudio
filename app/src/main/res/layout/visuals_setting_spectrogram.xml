@@ -1,171 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/vis_waveform_setting_container"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/vis_waveform_setting_container">
-
+    android:orientation="vertical">
+    <!--
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spectrogram"
+            android:id="@+id/vis_spectrogram_setting_title"
+            style="@style/setting_title"/>
+    -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Spectrogram"
-        android:id="@+id/vis_spectrogram_setting_title"
-        style="@style/setting_title"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FFT Size"
         android:id="@+id/vis_spectrogram_setting_fftsize_title"
-        style="@style/setting_text"/>
+        style="@style/setting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FFT Size" />
 
     <Spinner
+        android:id="@+id/vis_spectrogram_setting_fftsize_selector"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrogram_setting_fftsize_selector" />
+        android:layout_height="wrap_content" />
+
+    <include layout="@layout/subdivider" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/vis_waveform_setting_stereo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_waveform_setting_stereo">
+        android:orientation="horizontal">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log Scale"
             android:id="@+id/vis_spectrogram_setting_log_title"
-            style="@style/setting_text" />
-        <Switch
+            style="@style/setting_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_spectrogram_setting_log_switch" />
+            android:text="Log Scale" />
+
+        <Switch
+            android:id="@+id/vis_spectrogram_setting_log_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <include layout="@layout/subdivider"/>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Frequency Start"
         android:id="@+id/vis_spectrogram_setting_frq_start_title"
+        style="@style/setting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        style="@style/setting_text"/>
+        android:text="Frequency Start" />
 
     <RelativeLayout
-        android:orientation="horizontal"
+        android:id="@+id/vis_spectrogram_setting_frq_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrogram_setting_frq_start">
+        android:orientation="horizontal">
 
         <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/vis_spectrogram_setting_frq_start_seekbar"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/vis_spectrogram_setting_frq_start_value"
-            android:max="1000"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
+            android:max="1000" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00"
             android:id="@+id/vis_spectrogram_setting_frq_start_value"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
+            android:text="00" />
     </RelativeLayout>
 
+    <include layout="@layout/subdivider"/>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Frequency End"
         android:id="@+id/vis_spectrogram_setting_frq_end_title"
+        style="@style/setting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        style="@style/setting_text"/>
+        android:text="Frequency End" />
 
     <RelativeLayout
-        android:orientation="horizontal"
+        android:id="@+id/vis_spectrogram_setting_frq_end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrogram_setting_frq_end">
+        android:orientation="horizontal">
 
         <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/vis_spectrogram_setting_frq_end_seekbar"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/vis_spectrogram_setting_frq_end_value"
-            android:max="1000"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
+            android:max="1000" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00"
             android:id="@+id/vis_spectrogram_setting_frq_end_value"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
+            android:text="00" />
     </RelativeLayout>
 
+    <include layout="@layout/subdivider"/>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Contrast"
         android:id="@+id/vis_spectrogram_setting_contrast_title"
-
-        style="@style/setting_text"/>
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrogram_setting_contrast">
-
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vis_spectrogram_setting_contrast_seekbar"
-            android:layout_toLeftOf="@+id/vis_spectrogram_setting_contrast_value"
-            android:max="1000"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00"
-            android:id="@+id/vis_spectrogram_setting_contrast_value"
-            android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
-    </RelativeLayout>
-
-    <TextView
+        style="@style/setting_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scroll Speed"
-        android:id="@+id/vis_spectrogram_setting_scroll_title"
 
-        style="@style/setting_text"/>
+        android:text="Contrast" />
 
     <RelativeLayout
-        android:orientation="horizontal"
+        android:id="@+id/vis_spectrogram_setting_contrast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_spectrogram_setting_scroll">
+        android:orientation="horizontal">
 
         <SeekBar
+            android:id="@+id/vis_spectrogram_setting_contrast_seekbar"
+            style="@style/setting_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_spectrogram_setting_scroll_seekbar"
-            android:layout_toLeftOf="@+id/vis_spectrogram_setting_scroll_value"
-            android:max="10"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/vis_spectrogram_setting_contrast_value"
+            android:max="1000" />
 
         <TextView
+            android:id="@+id/vis_spectrogram_setting_contrast_value"
+            style="@style/setting_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00"
-            android:id="@+id/vis_spectrogram_setting_scroll_value"
             android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
+            android:text="00" />
+    </RelativeLayout>
+
+    <include layout="@layout/subdivider"/>
+
+    <TextView
+        android:id="@+id/vis_spectrogram_setting_scroll_title"
+        style="@style/setting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Scroll Speed" />
+
+    <RelativeLayout
+        android:id="@+id/vis_spectrogram_setting_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/vis_spectrogram_setting_scroll_seekbar"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/vis_spectrogram_setting_scroll_value"
+            android:max="10" />
+
+        <TextView
+            android:id="@+id/vis_spectrogram_setting_scroll_value"
+            style="@style/setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="00" />
     </RelativeLayout>
 
 
