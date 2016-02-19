@@ -4,9 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -47,6 +51,7 @@ public class WaveformView extends View{
         invalidate();
     }
 
+    @Override
     protected void onDraw(Canvas canvas) {
 
         //Log.d(LOG_TAG, "Drawing WaveformView" + w + " | " + h);
@@ -100,6 +105,24 @@ public class WaveformView extends View{
 
 
     }
+
+    float iniX,iniY;
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        int action = MotionEventCompat.getActionMasked(ev);
+        if (action==MotionEvent.ACTION_DOWN){
+            iniX=ev.getX();
+            iniY=ev.getY();
+        }else if (action==MotionEvent.ACTION_MOVE){
+
+        }else if (action==MotionEvent.ACTION_UP){
+            float totalTime=(float)(wf.getNumOfFrames()/(double)connected.getSampleRate());
+            connected.seekTo(totalTime*ev.getX()/w);
+        }
+        return true;
+    }
+
+
     protected int rampColor(int colorA, int colorB, float ramp){
         //Log.d(LOG_TAG,"Ramping color..."+colorA+" | "+colorB+" | "+ramp);
         return Color.argb(Math.round(Color.alpha(colorA) * ramp + Color.alpha(colorB) * (1.0f - ramp)),

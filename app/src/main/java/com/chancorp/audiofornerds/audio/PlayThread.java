@@ -53,7 +53,7 @@ class PlayThread extends Thread{
         while (ap.getCurrentFrame()!=lastSample){
             try {
                 lastSample=ap.getCurrentFrame();
-                Thread.sleep(30); //Wait and block until it is done playing
+                Thread.sleep(30); //Wait and block until it is done playing(we know it is done playing if it doesn't advance any in 30ms.)
             } catch (Exception e) {
                 ErrorLogger.log(e);
             }

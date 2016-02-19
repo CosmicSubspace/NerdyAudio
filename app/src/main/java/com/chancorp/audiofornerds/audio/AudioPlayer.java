@@ -112,6 +112,7 @@ public class AudioPlayer {
         mAudioTrack.flush(); //TODO there is a significant time delay after the seek. Fix that.
     }
 
+
     public synchronized long getCurrentFrame(){ //Frame no. without taking seeks into account.
         if (mAudioTrack!=null){
             if (isPlaying()||isPaused()) return mAudioTrack.getPlaybackHeadPosition();
@@ -139,6 +140,8 @@ public class AudioPlayer {
 
         getInfoFromFile();
         initializeAudio();
+
+        seekOffsetus=0;
 
         mKeepPlaying = true;
         mAudioTrack.flush();

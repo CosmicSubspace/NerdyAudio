@@ -399,20 +399,22 @@ public class SoundFile {
                 // We could check that codec.getOutputFormat(), which is the new output format,
                 // is what we expect.
             }
-            /*
-            if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0
-                    || (mDecodedBytes.position() / (2 * mChannels)) >= expectedNumSamples) {
-                // We got all the decoded data from the decoder. Stop here.
-                // Theoretically dequeueOutputBuffer(info, ...) should have set info.flags to
-                // MediaCodec.BUFFER_FLAG_END_OF_STREAM. However some phones (e.g. Samsung S3)
-                // won't do that for some files (e.g. with mono AAC files), in which case subsequent
-                // calls to dequeueOutputBuffer may result in the application crashing, without
-                // even an exception being thrown... Hence the second check.
-                // (for mono AAC files, the S3 will actually double each sample, as if the stream
-                // was stereo. The resulting stream is half what it's supposed to be and with a much
-                // lower pitch.)
-                break;
-            }*/
+
+            //if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0
+             //       || (mDecodedBytes.position() / (2 * mChannels)) >= expectedNumSamples) {
+            if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0){ //TODO this _WILL_ cause rare crashes.
+                    // We got all the decoded data from the decoder. Stop here.
+                    // Theoretically dequeueOutputBuffer(info, ...) should have set info.flags to
+                    // MediaCodec.BUFFER_FLAG_END_OF_STREAM. However some phones (e.g. Samsung S3)
+                    // won't do that for some files (e.g. with mono AAC files), in which case subsequent
+                    // calls to dequeueOutputBuffer may result in the application crashing, without
+                    // even an exception being thrown... Hence the second check.
+                    // (for mono AAC files, the S3 will actually double each sample, as if the stream
+                    // was stereo. The resulting stream is half what it's supposed to be and with a much
+                    // lower pitch.)
+                    break;
+
+            }
         }
         /*
         mNumSamples = mDecodedBytes.position() / (mChannels * 2);  // One sample = 2 bytes.
