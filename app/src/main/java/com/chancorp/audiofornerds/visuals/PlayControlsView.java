@@ -4,41 +4,53 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.os.Bundle;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SeekBar;
-import android.widget.Switch;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.Waveform;
+import com.chancorp.audiofornerds.file.QueueManager;
 
-/**
- * Created by Chan on 2015-12-10.
- */
-public class WaveformView extends View{
+public class PlayControlsView extends View{
     int w, h;
     Waveform wf;
     Paint pt;
+    RectF playBtnBounds, prevBtnBounds, nextBtnBounds, waveformBounds, artBounds;
+    int menuColor,buttonColor,textPrimary,textSecondary;
     int playedColor=Color.BLACK, remainingColor=Color.GRAY, timestampColor= Color.WHITE, timestampBackgroundColor=Color.BLACK;
     int timestampSize=24;
+    int albumArtSize=100;//dp
+    int waveformSize=50; //dp
+    int buttonsSize=36;//dp
+    int albumArtMargin=12;//dp
     float spacing=0.3f;
     float currentPosition =0.5f;
-    float timestampOffsetX=0,timestampOffsetY=0;
-    AudioPlayer connected;
-    boolean displayTimeStamp=false;
+    float timestampOffsetX=100,timestampOffsetY=100;
+    AudioPlayer ap;
+    QueueManager qm;
+    boolean displayTimeStamp=true;
     public static final String LOG_TAG = "CS_AFN";
+    float density;
 
-    public WaveformView(Context context, AttributeSet attrs) {
+    public PlayControlsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
+        density=getResources().getDisplayMetrics().density;
+        qm=QueueManager.getInstance();
+        ap=AudioPlayer.getInstance();
+
+        menuColor=getResources().getColor(R.color.colorPrimary);
+        buttonColor=Color.WHITE;
+        textPrimary=getResources().getColor(R.color.colorLightPrimaryText);
+        textSecondary=getResources().getColor(R.color.colorLightSecondaryText);
+
+        prepareLayout();
     }
 
     public void setWaveform(Waveform w) {
@@ -46,17 +58,28 @@ public class WaveformView extends View{
         invalidate();
     }
 
-    public void connectToAudioPlayer(AudioPlayer ap){
-        this.connected=ap;
-        invalidate();
+    protected void prepareLayout(){
+        float buttonsAreaW=w-albumArtSize*density;
+        float buttonsAreaIni=albumArtSize*density;
+        float halfButtonPx=buttonsSize*density/2.0f;
+        prevBtnBounds=new RectF(buttonsAreaIni+buttonsAreaW*(1.0f/6.0f)-halfButtonPx, h-16*density-halfButtonPx,
+                buttonsAreaIni+buttonsAreaW*(1.0f/6.0f)+halfButtonPx,h-16*density+halfButtonPx);
+        playBtnBounds=new RectF(buttonsAreaIni+buttonsAreaW*(3.0f/6.0f)-halfButtonPx, h-16*density-halfButtonPx,
+                buttonsAreaIni+buttonsAreaW*(3.0f/6.0f)+halfButtonPx,h-16*density+halfButtonPx);
+        nextBtnBounds=new RectF(buttonsAreaIni+buttonsAreaW*(5.0f/6.0f)-halfButtonPx, h-16*density-halfButtonPx,
+                buttonsAreaIni+buttonsAreaW*(5.0f/6.0f)+halfButtonPx,h-16*density+halfButtonPx);
+        waveformBounds=new RectF(0,0,w,waveformSize*density);
+        artBounds=new RectF(albumArtMargin*density,(albumArtMargin+waveformSize)*density,(albumArtSize-albumArtMargin)*density,(albumArtSize-albumArtMargin+waveformSize)*density);
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
 
         //Log.d(LOG_TAG, "Drawing WaveformView" + w + " | " + h);
-        if (wf != null && connected !=null && wf.isReady()&&wf.getFilename().equals(connected.getSourceString())) {
-            setCurrentPosition((float)(connected.getMusicCurrentFrame()/(double)wf.getNumOfFrames()));
+        if (wf != null && ap !=null && wf.isReady()&&wf.getFilename().equals(ap.getSourceString())) {
+            setCurrentPosition((float)(ap.getMusicCurrentFrame()/(double)wf.getNumOfFrames()));
             float spacing = getSpacingBetween();
             float width=getBarWidth();
             float perBar=1/(float)wf.getDivisions();
@@ -67,7 +90,7 @@ public class WaveformView extends View{
                 else pt.setColor(rampColor(playedColor,remainingColor,(currentPosition-i*perBar)/perBar));
 
                 //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
-                canvas.drawRect(i*spacing , h, i*spacing+width, h*(1-wf.getRatio(i)), pt);
+                canvas.drawRect(i*spacing , waveformSize*density, i*spacing+width, waveformSize*density*(1-wf.getRatio(i)), pt);
             }
 
 
@@ -75,13 +98,13 @@ public class WaveformView extends View{
 
                 //TODO Make this prettier.
 
-                float x=100,y=100, xPadding=4;
+                float xPadding=4;
                 float density=getContext().getResources().getDisplayMetrics().density;
 
 
                 pt.setTextSize(timestampSize*density);
 
-                String s=wf.frameNumberToTimeStamp(connected.getMusicCurrentFrame());
+                String s=wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame());
                 Paint.FontMetrics fm = new Paint.FontMetrics();
                 pt.setTextAlign(Paint.Align.CENTER);
                 pt.getFontMetrics(fm);
@@ -95,12 +118,41 @@ public class WaveformView extends View{
                 //Log.d(LOG_TAG, "Drawing text at " + canvasX + " | " + (canvasY + -(fm.ascent + fm.descent)));
                 //canvas.drawText(s, canvasX, canvasY, pt);
                 canvas.drawText(s, w - pt.measureText(s)/2.0f-timestampOffsetX*density, h-fm.descent-timestampOffsetY*density, pt);
-
-
             }
 
 
+
         }
+
+        pt.setColor(menuColor);
+        canvas.drawRect(0, waveformSize * density, w, h, pt);
+
+        if (qm.getCurrentMusic()!=null) { //TODO better alignment here.
+            pt.setTextAlign(Paint.Align.LEFT);
+            pt.setColor(textPrimary);
+            pt.setTextSize(24 * density);
+            Paint.FontMetrics fm = new Paint.FontMetrics();
+            String s=qm.getCurrentMusic().getTitle();
+            canvas.drawText(s, albumArtSize * density, (waveformSize+24) * density, pt);
+
+            pt.setColor(textSecondary);
+            pt.setTextSize(16 * density);
+            fm = new Paint.FontMetrics();
+            s=qm.getCurrentMusic().getArtist();
+            canvas.drawText(s,albumArtSize * density, (waveformSize+24+16) * density , pt);
+
+            //TODO Optimize this part. This only needs to be called once per track init.
+            if (qm.getCurrentMusic().getArt()!=null) {
+                canvas.drawBitmap(qm.getCurrentMusic().getArt(),null,artBounds,pt);
+                Log.d(LOG_TAG,"trying to draw..");
+            }
+        }
+
+        pt.setColor(buttonColor);
+        canvas.drawRect(prevBtnBounds, pt);
+        canvas.drawRect(playBtnBounds,pt);
+        canvas.drawRect(nextBtnBounds,pt);
+
         invalidate(); //TODO is this good practice?
 
 
@@ -116,8 +168,24 @@ public class WaveformView extends View{
         }else if (action==MotionEvent.ACTION_MOVE){
 
         }else if (action==MotionEvent.ACTION_UP){
-            float totalTime=(float)(wf.getNumOfFrames()/(double)connected.getSampleRate());
-            connected.seekTo(totalTime*ev.getX()/w);
+            if (waveformBounds.contains(ev.getX(),ev.getY())) {
+                float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
+                ap.seekTo(totalTime * ev.getX() / w);
+            }else if (prevBtnBounds.contains(ev.getX(),ev.getY())) {
+                qm.playPreviousFile();
+            }else if (playBtnBounds.contains(ev.getX(),ev.getY())) {
+                if (ap!=null){
+                    if (ap.isPlaying()){
+                        ap.pause();
+                    }else if (ap.isPaused()){
+                        ap.playAudio();
+                    }else{
+                        qm.playFile();
+                    }
+                }
+            } else if (nextBtnBounds.contains(ev.getX(),ev.getY())) {
+                qm.playPreviousFile();
+            }
         }
         return true;
     }
@@ -172,6 +240,7 @@ public class WaveformView extends View{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.w = w;
         this.h = h;
+        prepareLayout();
     }
 
 

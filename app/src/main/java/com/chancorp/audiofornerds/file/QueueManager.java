@@ -53,8 +53,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         fm = FileManager.getInstance();
         vb = VisualizationBuffer.getInstance();
     }
-    public void parseQueueFromFile(File file){
-        ArrayList<String> files=new ArrayList<>();
+
+    public void parseQueueFromFile(File file) {
+        ArrayList<String> files = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
@@ -63,23 +64,26 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                 files.add(line);
             }
             br.close();
-        }catch(IOException e){
+        } catch (IOException e) {
             ErrorLogger.log(e);
         }
         getQueueFromFileList(files);
     }
-    public void getQueueFromFileList(String[] list){
+
+    public void getQueueFromFileList(String[] list) {
         for (int i = 0; i < list.length; i++) {
             addMusicWithoutWaveformPreparation(new MusicInformation(list[i]));
         }
         prepareWaveform();
     }
-    public void getQueueFromFileList(ArrayList<String> list){
+
+    public void getQueueFromFileList(ArrayList<String> list) {
         for (int i = 0; i < list.size(); i++) {
             addMusicWithoutWaveformPreparation(new MusicInformation(list.get(i)));
         }
         prepareWaveform();
     }
+
     public ArrayList<MusicInformation> getQueue() {
         return queue;
     }
@@ -91,7 +95,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     public void addMusicWithoutWaveformPreparation(MusicInformation mi) {
         queue.add(mi);
-   }
+    }
 
     public void passActivity(MainActivity ma) {
         this.ma = ma;
@@ -190,7 +194,11 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public MusicInformation getCurrentMusic() {
-        return queue.get(currentMusicIndex);
+        try {
+            return queue.get(currentMusicIndex);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

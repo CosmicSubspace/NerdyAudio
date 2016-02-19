@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -31,7 +30,7 @@ import com.chancorp.audiofornerds.file.QueueManager;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.settings.SidebarSettings;
 import com.chancorp.audiofornerds.sql.DBManager;
-import com.chancorp.audiofornerds.visuals.WaveformView;
+import com.chancorp.audiofornerds.visuals.PlayControlsView;
 import com.chancorp.audiofornerds.audio.VisualizationBuffer;
 import com.chancorp.audiofornerds.audio.Waveform;
 import com.chancorp.audiofornerds.visuals.VisualizationView;
@@ -52,7 +51,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerLayout.DrawerListener{
     public final String LOG_TAG="CS_AFN";
     Waveform wf;
-    WaveformView wfv;
+    PlayControlsView wfv;
     AudioPlayer ap;
     VisualizationBuffer vb;
     QueueManager qm;
@@ -62,12 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler mHandler = new Handler();
 
     VisualizationView vv;
-    Button play, rewind, forward;
-    TextView title, artist;
-    ImageView art;
+
     DrawerLayout dl;
-    RelativeLayout settingBtn;
-    TextView statusText;
+
+RelativeLayout settingBtn;
     ScrollView sideContainer;
 
     SharedPreferences sf;
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         getSupportFragmentManager().beginTransaction().replace(R.id.tab_area,new LibraryFragment()).commit();
 
-        wfv=(WaveformView)findViewById(R.id.waveform);
+        wfv=(PlayControlsView)findViewById(R.id.waveform);
         wfv.setSpacing(0);
         wfv.setTimestampVisibility(true);
         wfv.setTimestampSize(16);
@@ -152,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wfv.setTimestampBackgroundColor(Color.argb(128, 0, 0, 0));
 
         wfv.setWaveform(wf);
-        wfv.connectToAudioPlayer(ap);
-
+/*
         play=(Button) findViewById(R.id.controls_play);
         rewind=(Button) findViewById(R.id.controls_rewind);
         forward=(Button) findViewById(R.id.controls_fastforward);
@@ -167,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         artist=(TextView) findViewById(R.id.controls_artist);
 
         art=(ImageView) findViewById(R.id.controls_art);
-
+*/
         vv=(VisualizationView)findViewById(R.id.visualization);
 
         dl=(DrawerLayout)findViewById(R.id.drawer_layout);
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         settingBtn=(RelativeLayout)findViewById(R.id.settings_btn);
         settingBtn.setOnClickListener(this);
 
-        statusText=(TextView)findViewById(R.id.status);
+        //statusText=(TextView)findViewById(R.id.status);
 
         sideContainer=(ScrollView)findViewById(R.id.drawer_scroll);
         sideContainer.addView(sbs.getView(getLayoutInflater(),sideContainer,null));
@@ -265,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id=view.getId();
+        /*
         if (id==R.id.controls_play){
             if (ap!=null){
                 if (ap.isPlaying()){
@@ -284,17 +281,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             qm.playNextFile();
         }else if (id==R.id.controls_rewind){
             qm.playPreviousFile();
+        }*/
+        if (id==R.id.settings_btn){
+            dl.openDrawer(Gravity.RIGHT);
         }
     }
 
     public void updateUI(){
-        title.setText(qm.getCurrentMusic().getTitle());
-        artist.setText(qm.getCurrentMusic().getArtist());
-        art.setImageBitmap(qm.getCurrentMusic().getArt());
+        //title.setText(qm.getCurrentMusic().getTitle());
+        //artist.setText(qm.getCurrentMusic().getArtist());
+        //art.setImageBitmap(qm.getCurrentMusic().getArt());
+        //TODO implement this in the custom view
     }
 
     public void updateStatusString(){
-        statusText.setText(qm.getStatusString());
+        //statusText.setText(qm.getStatusString());
     }
     private Runnable mUpdateClockTask = new Runnable() {
         public void run() {

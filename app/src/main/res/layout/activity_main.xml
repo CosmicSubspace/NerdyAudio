@@ -77,18 +77,18 @@
             android:id="@+id/tab_area"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@+id/control_bar"
+            android:layout_above="@+id/waveform"
             android:layout_below="@+id/tab_layout" />
 
 
-        <com.chancorp.audiofornerds.visuals.WaveformView
+        <com.chancorp.audiofornerds.visuals.PlayControlsView
             android:id="@+id/waveform"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_above="@+id/control_bar"
-            android:layout_alignParentBottom="false"
-            android:layout_centerHorizontal="true" />
-
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-50dp" />
+<!--
         <View
             android:layout_width="fill_parent"
             android:layout_height="16dp"
@@ -191,7 +191,7 @@
 
         </RelativeLayout>
 
-
+-->
     </RelativeLayout>
     <!-- The navigation drawer -->
     <RelativeLayout
