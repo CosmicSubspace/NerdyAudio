@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/db_6" android:title="Try Seeking to 10s=10,000,000us"/>
     <item android:id="@+id/db_1" android:title="Prepare Waveform"/>
     <item android:id="@+id/db_4" android:title="Load Single Song"/>
     <item android:id="@+id/db_5" android:title="Load all files into queue"/>

@@ -53,6 +53,7 @@
                 android:background="@drawable/ic_settings_white_24dp" />
         </LinearLayout>
 
+        <!-- TODO Make the tab selector a bit more.... stylish. -->
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"

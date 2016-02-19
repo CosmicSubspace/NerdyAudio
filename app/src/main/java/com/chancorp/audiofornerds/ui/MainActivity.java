@@ -40,6 +40,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+//TODO : Animations
+//TODO : Numerical Setting Input
+//TODO : Prettier Queue Elements
+//TODO : Queue Remove/reorder
+//TODO : Better Library Browser
+
+
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerLayout.DrawerListener{
     public final String LOG_TAG="CS_AFN";
     Waveform wf;
@@ -234,6 +242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
         }else if (id==R.id.db_4){
             qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3"));
+        }else if (id==R.id.db_6){
+            ap.seekTo(10);
         }
         return true;
     }

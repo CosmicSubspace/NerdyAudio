@@ -142,7 +142,7 @@ public class AudioPlayer {
     }
 
     public synchronized void seekTo(float time){
-        //TODO Implementation!
+        mPlayThread.sf.seekToRequest=Math.round(((double)time)*1000*1000);
     }
 
     public synchronized void pause() {
