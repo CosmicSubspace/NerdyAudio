@@ -48,6 +48,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener{
         refreshBtn = (Button) v.findViewById(R.id.tab_queue_refresh);
         refreshBtn.setOnClickListener(this);
 
+        //TODO more options for fab: shuffle, order, etc
         fab=(FloatingActionButton)v.findViewById(R.id.tab_queue_fab);
         fab.setOnClickListener(this);
         return v;

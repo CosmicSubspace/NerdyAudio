@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView title, artist;
     ImageView art;
     DrawerLayout dl;
-    Button settingBtn;
+    RelativeLayout settingBtn;
     TextView statusText;
     ScrollView sideContainer;
 
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dl.setDrawerListener(this);
 
-        settingBtn=(Button)findViewById(R.id.settings_btn);
+        settingBtn=(RelativeLayout)findViewById(R.id.settings_btn);
         settingBtn.setOnClickListener(this);
 
         statusText=(TextView)findViewById(R.id.status);

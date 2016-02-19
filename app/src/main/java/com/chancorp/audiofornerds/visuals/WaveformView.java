@@ -51,7 +51,7 @@ public class WaveformView extends View{
 
         //Log.d(LOG_TAG, "Drawing WaveformView" + w + " | " + h);
         if (wf != null && connected !=null && wf.isReady()&&wf.getFilename().equals(connected.getSourceString())) {
-            setCurrentPosition((float)(connected.getCurrentFrame()/(double)wf.getNumOfFrames()));
+            setCurrentPosition((float)(connected.getMusicCurrentFrame()/(double)wf.getNumOfFrames()));
             float spacing = getSpacingBetween();
             float width=getBarWidth();
             float perBar=1/(float)wf.getDivisions();
@@ -76,7 +76,7 @@ public class WaveformView extends View{
 
                 pt.setTextSize(timestampSize*density);
 
-                String s=wf.frameNumberToTimeStamp(connected.getCurrentFrame());
+                String s=wf.frameNumberToTimeStamp(connected.getMusicCurrentFrame());
                 Paint.FontMetrics fm = new Paint.FontMetrics();
                 pt.setTextAlign(Paint.Align.CENTER);
                 pt.getFontMetrics(fm);

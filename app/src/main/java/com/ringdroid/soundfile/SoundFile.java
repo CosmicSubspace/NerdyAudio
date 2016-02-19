@@ -221,15 +221,23 @@ public class SoundFile {
     }
 
     //TODO assimilate this class into the AFN code.
+    MediaExtractor extractor;
 
-    public boolean stop = false; //TODO better methods for these
+    public boolean stop = false;
+    public long seekOffset=0;
+    public long requestSeek(long us){
+        //TODO calculate time offset.
+        seekOffset=extractor.getSampleTime()-us+seekOffset; //Next sample's presentation time.
+        seekToRequest=us;
+        return seekOffset;
+    }
     public long seekToRequest=-1;
 
     public void ReadFileWithCallback(File inputFile, BufferFeedListener bfl)
             throws java.io.FileNotFoundException,
             java.io.IOException, InvalidInputException {
 
-        MediaExtractor extractor = new MediaExtractor();
+        extractor = new MediaExtractor();
         MediaFormat format = null;
         int i;
 

@@ -24,6 +24,7 @@ public class AudioPlayer {
     protected int mChannels;
     protected int mNumSamples;  // Number of samples per channel.
     protected int bufferSize;
+    protected long seekOffsetus=0;
 
     protected AudioTrack mAudioTrack;
     protected PlayThread mPlayThread;
@@ -106,13 +107,20 @@ public class AudioPlayer {
         else return false;
     }
 
+    public synchronized void seekTo(float time){
+        seekOffsetus=mPlayThread.sf.requestSeek(Math.round(((double)time)*1000*1000)); //TODO because we seek to the _nearest_ frame, there could be a time shift.
+        mAudioTrack.flush(); //TODO there is a significant time delay after the seek. Fix that.
+    }
 
-    public synchronized long getCurrentFrame(){
+    public synchronized long getCurrentFrame(){ //Frame no. without taking seeks into account.
         if (mAudioTrack!=null){
             if (isPlaying()||isPaused()) return mAudioTrack.getPlaybackHeadPosition();
             else return 0;
         }
         else return 0;
+    }
+    public synchronized long getMusicCurrentFrame(){
+        return getCurrentFrame()-Math.round(seekOffsetus/1000000.0*getSampleRate());
     }
 
     public synchronized void playAudio() {
@@ -141,9 +149,7 @@ public class AudioPlayer {
         mPlayThread.start();
     }
 
-    public synchronized void seekTo(float time){
-        mPlayThread.sf.seekToRequest=Math.round(((double)time)*1000*1000);
-    }
+
 
     public synchronized void pause() {
         Log.i(LOG_TAG, "Ckecking if able to pause...");
