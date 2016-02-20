@@ -7,6 +7,8 @@ import com.chancorp.audiofornerds.audio.VisualizationBuffer;
 import com.chancorp.audiofornerds.audio.Waveform;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.CompletionListener;
+import com.chancorp.audiofornerds.interfaces.NewSongListener;
+import com.chancorp.audiofornerds.interfaces.ProgressStringListener;
 import com.chancorp.audiofornerds.interfaces.SampleProgressListener;
 import com.chancorp.audiofornerds.interfaces.WaveformReturnListener;
 import com.chancorp.audiofornerds.ui.MainActivity;
@@ -25,7 +27,7 @@ import java.util.Random;
 public class QueueManager implements CompletionListener, SampleProgressListener, WaveformReturnListener {
     static final String LOG_TAG = "CS_AFN";
 
-    String statusString = "";
+
 
     AudioPlayer ap;
     FileManager fm;
@@ -34,6 +36,10 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     MainActivity ma;
 
     ArrayList<MusicInformation> queue = new ArrayList<>();
+
+    ArrayList<ProgressStringListener> psl=new ArrayList<>();
+    ArrayList<NewSongListener> nsl=new ArrayList<>();
+
     MusicInformation currentlyCaching = null;
 
     static QueueManager inst;
@@ -52,6 +58,26 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         ap.setCompletionListener(this);
         fm = FileManager.getInstance();
         vb = VisualizationBuffer.getInstance();
+    }
+
+    public void addProgressStringListener(ProgressStringListener psl){
+        this.psl.add(psl);
+    }
+
+    protected void notifyProgressStringListeners(String progress){
+        for (ProgressStringListener psl:this.psl){
+            psl.report(progress);
+        }
+    }
+
+    public void addNewSongListener(NewSongListener nsl){
+        this.nsl.add(nsl);
+    }
+
+    protected void notifyNewSongListeners(MusicInformation newSong){
+        for (NewSongListener nsl:this.nsl){
+            nsl.newSong(newSong);
+        }
     }
 
     public void parseQueueFromFile(File file) {
@@ -103,7 +129,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     public void playFile() {
         Log.d(LOG_TAG, "Playing file.");
-
+        notifyNewSongListeners(queue.get(currentMusicIndex));
         vb.clear();
         ap.killThread();
         ap.release();
@@ -113,6 +139,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             Waveform.getInstance().loadFromFile(queue.get(currentMusicIndex).getFilepath(), 1.0, ma);
         else Waveform.getInstance().loadBlank();
         updateUI();
+
 
     }
 
@@ -139,6 +166,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     private void previousFile() {
         currentMusicIndex--;
         if (currentMusicIndex < 0) currentMusicIndex = 0;
+
     }
 
     private void firstFile() {
@@ -189,9 +217,6 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         firstFile();
     }
 
-    public String getStatusString() {
-        return statusString;
-    }
 
     public MusicInformation getCurrentMusic() {
         try {
@@ -203,13 +228,13 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     @Override
     public void report(long l) {
-        statusString = "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)";
+        notifyProgressStringListeners( "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
     }
 
     @Override
     public void onReturn(Waveform wf) {
         currentlyCaching = null;
         prepareWaveform();
-        statusString = "Caching Complete.";
+        notifyProgressStringListeners("Caching Complete.");
     }
 }

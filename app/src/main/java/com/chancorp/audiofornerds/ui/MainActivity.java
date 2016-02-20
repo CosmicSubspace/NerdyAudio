@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     DrawerLayout dl;
 
-RelativeLayout settingBtn;
+    RelativeLayout settingBtn;
     ScrollView sideContainer;
 
     SharedPreferences sf;
@@ -149,6 +149,8 @@ RelativeLayout settingBtn;
         wfv.setTimestampBackgroundColor(Color.argb(128, 0, 0, 0));
 
         wfv.setWaveform(wf);
+        qm.addNewSongListener(wfv);
+        qm.addProgressStringListener(wfv);
 /*
         play=(Button) findViewById(R.id.controls_play);
         rewind=(Button) findViewById(R.id.controls_rewind);

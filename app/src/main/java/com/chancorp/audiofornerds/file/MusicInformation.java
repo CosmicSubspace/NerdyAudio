@@ -38,12 +38,9 @@ public class MusicInformation {
             artist="(No Artist Data)";
         }
     }
-    public Bitmap getArt(){
+    public byte[] getArtByteArray(){
         MediaMetadataRetriever mmr=new MediaMetadataRetriever();
         mmr.setDataSource(filepath);
-        byte[] art=mmr.getEmbeddedPicture();
-        if( art != null ){
-            return BitmapFactory.decodeByteArray(art, 0, art.length);
-        }else return null;
+        return mmr.getEmbeddedPicture();
     }
 }
