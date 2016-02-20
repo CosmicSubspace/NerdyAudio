@@ -1,5 +1,7 @@
 package com.chancorp.audiofornerds.animation;
 
+import java.io.SyncFailedException;
+
 /**
  * Created by Chan on 2/20/2016.
  */
@@ -27,15 +29,16 @@ public class AnimatableProperty {
     }
 
     public float getValue(){
-        if (!animate) return value;
+        return getValue(System.currentTimeMillis());
+    }
 
-        long currentTime=System.currentTimeMillis();
+    public float getValue(long currentTime){
+        if (!animate) return value;
         if (currentTime>endTime){
             value=target;
             animate=false;
             return value;
         }
-
         return (float)EasingEquations.ease1D(0,endTime-startTime,currentTime-startTime,value,target,mode);
     }
 

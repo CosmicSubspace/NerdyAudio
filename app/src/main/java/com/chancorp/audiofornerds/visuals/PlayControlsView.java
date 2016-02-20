@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -16,7 +14,9 @@ import android.view.View;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.animation.AnimatableShape;
+import com.chancorp.audiofornerds.animation.EasingEquations;
 import com.chancorp.audiofornerds.animation.PrimitivePaths;
+import com.chancorp.audiofornerds.animation.PropertySet;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.Waveform;
 import com.chancorp.audiofornerds.file.MusicInformation;
@@ -33,6 +33,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     int menuColor, buttonColor, textPrimary, textSecondary;
     int playedColor = Color.BLACK, remainingColor = Color.GRAY, timestampColor = Color.WHITE, timestampBackgroundColor = Color.BLACK;
     int timestampSize = 24;
+    int buttonPaddings =16;
     int albumArtSize = 100;//dp
     int waveformSize = 50; //dp
     int buttonsSize = 36;//dp
@@ -47,6 +48,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     float density;
 
     AnimatableShape playBtn;
+    PropertySet buttonFollower;
+
+    boolean playing=false;
+
 
     public PlayControlsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -67,7 +72,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         this.wf = w;
         invalidate();
     }
-    Path temp;
+
     protected void prepareLayout() {
         float buttonsAreaW = w - albumArtSize * density;
         float buttonsAreaIni = albumArtSize * density;
@@ -81,10 +86,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         waveformBounds = new RectF(0, 0, w, waveformSize * density);
         artBounds = new RectF(albumArtMargin * density, (albumArtMargin + waveformSize) * density, (albumArtSize - albumArtMargin) * density, (albumArtSize - albumArtMargin + waveformSize) * density);
 
-
+        buttonFollower=new PropertySet(0,waveformSize*density,0.3f,180,0,"Follower");
         playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f),h - 16 * density - buttonsSize*density,1,30);
-        playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
-        temp=playBtn.getPointsCompound().toPath();
+        playBtn.addPropertySet(buttonFollower);
+
+        //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
+
+
     }
 
 
@@ -148,7 +156,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 canvas.drawText(s, w - pt.measureText(s) / 2.0f - timestampOffsetX * density, h - fm.descent - timestampOffsetY * density, pt);
             }
 
-
+            buttonFollower.setX(w*currentPosition);
         }
 
         pt.setColor(menuColor);
@@ -175,19 +183,38 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
         }
 
+
+
         pt.setColor(Color.argb(50, 0, 0, 0));
         canvas.drawRect(prevBtnBounds, pt);
         canvas.drawRect(playBtnBounds, pt);
         canvas.drawRect(nextBtnBounds, pt);
 
-        pt.setColor(Color.RED);
+        //debug draws
+        pt.setColor(Color.argb(30, 255, 0, 0));
+        canvas.drawRect(playBtn.getPointsCompound().getBounds(buttonPaddings *density), pt);
+
+        pt.setColor(buttonColor);
         //canvas.drawPath(PrimitivePaths.square(50), pt);
         //canvas.drawPath(new AnimatableShape(PrimitivePaths.square(50),0,0,1,0).getPointsCompound().toPath(),pt);
+
         canvas.drawPath(playBtn.getPointsCompound().toPath(),pt);
+
+
 
         invalidate(); //TODO is this good practice?
 
 
+    }
+
+
+    private void animatePlay(){
+        playBtn.getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
+    }
+    private void animateStop(){
+        playBtn.getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
     }
 
     float iniX, iniY;
@@ -206,14 +233,17 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 ap.seekTo(totalTime * ev.getX() / w);
             } else if (prevBtnBounds.contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
-            } else if (playBtnBounds.contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getPointsCompound().getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
                     if (ap.isPlaying()) {
                         ap.pause();
+                        animateStop();
                     } else if (ap.isPaused()) {
                         ap.playAudio();
+                        animatePlay();
                     } else {
                         qm.playFile();
+                        animatePlay();
                     }
                 }
             } else if (nextBtnBounds.contains(ev.getX(), ev.getY())) {

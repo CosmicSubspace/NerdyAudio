@@ -2,6 +2,7 @@ package com.chancorp.audiofornerds.animation;
 
 import android.graphics.Matrix;
 import android.graphics.Path;
+import android.graphics.RectF;
 
 import java.util.ArrayList;
 
@@ -32,10 +33,25 @@ public class PointsCompound {
         Path res=new Path();
         for (int i = 0; i < pointsArray.length/2; i++) {
             if (i==0) res.moveTo(pointsArray[i*2],pointsArray[i*2+1]);
-            res.lineTo(pointsArray[i*2],pointsArray[i*2+1]);
+            res.lineTo(pointsArray[i * 2], pointsArray[i * 2 + 1]);
         }
         res.close();
         return res;
+    }
+
+    public RectF getBounds(float padding){
+        float maxX=-10000, minX=10000,maxY=-10000,minY=10000;
+        for (int i = 0; i < pointsArray.length/2; i++) {
+            //X
+            if (pointsArray[i * 2]<minX) minX=pointsArray[i * 2];
+            if (pointsArray[i * 2]>maxX) maxX=pointsArray[i * 2];
+
+            //Y
+            if (pointsArray[i * 2 + 1]<minY) minY=pointsArray[i * 2 + 1];
+            if (pointsArray[i * 2 + 1]>maxY) maxY=pointsArray[i * 2 + 1];
+        }
+
+        return new RectF(minX-padding,minY-padding,maxX+padding,maxY+padding);
     }
 
     public static class Builder{
