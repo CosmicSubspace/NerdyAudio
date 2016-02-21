@@ -4,7 +4,11 @@ package com.chancorp.audiofornerds.animation;
  * Created by Chan on 2/20/2016.
  */
 public class EasingEquations {
-    public static int LINEAR=0;
+
+
+
+
+    public final static int LINEAR=0;
     public final static int QUADRATIC=1;
     public final static int QUADRATIC_IN=2;
     public final static int QUADRATIC_OUT=3;
@@ -26,6 +30,13 @@ public class EasingEquations {
     public final static int QUINTIC=19;
     public final static int QUINTIC_IN=20;
     public final static int QUINTIC_OUT=21;
+
+
+    public static int DEFAULT_EASE=QUINTIC_OUT;
+    public void setDefaultEase(int ease){
+        DEFAULT_EASE=ease;
+    }
+
 
     public static double ease1D(double start, double end, double current, double startVal, double endVal, int mode){
         if (current>end) return endVal;

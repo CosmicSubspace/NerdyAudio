@@ -23,9 +23,17 @@ public class PrimitivePaths {
         builder.addPoint(-radius / sqrt2, radius / sqrt2);
         return builder.build();
     }
-    public static PointsCompound next(){
+    public static PointsCompound pause(float radius){
         PointsCompound.Builder builder=new PointsCompound.Builder();
-        //TODO this
-        return null;
+        builder.addPoint(radius/sqrt2,radius/sqrt2);
+        builder.addPoint(0.33f*radius / sqrt2, radius / sqrt2);
+        builder.addPoint(0.33f*radius / sqrt2, -radius / sqrt2);
+        builder.addPoint(radius / sqrt2, -radius / sqrt2);
+        builder.cut();
+        builder.addPoint(-radius/sqrt2,radius/sqrt2);
+        builder.addPoint(-0.33f*radius / sqrt2, radius / sqrt2);
+        builder.addPoint(-0.33f*radius / sqrt2, -radius / sqrt2);
+        builder.addPoint(-radius / sqrt2, -radius / sqrt2);
+        return builder.build();
     }
 }

@@ -14,11 +14,11 @@ public class PropertySet {
     private HashMap<String,Float> properties=new HashMap<String,Float>();
 
     public Float getValue(String key){
-        Log2.log(2,this,properties);
+        //Log2.log(2,this,properties);
         return properties.get(key);
     }
     public float getValue(String key, float defaultValue){
-        Log2.log(2,this,properties);
+        //Log2.log(2,this,properties);
         if (properties.get(key)==null) return defaultValue;
         return properties.get(key);
     }
@@ -52,6 +52,10 @@ public class PropertySet {
 
     public String getName(){
         return this.name;
+    }
+
+    public int getNumKeys(){
+        return properties.size();
     }
 
     @Override

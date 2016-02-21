@@ -39,7 +39,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
     }
 
     public void setFftSize(int fftSize) {
-        Log2.log(2,this,"setFFTSize() Called",fftSize);
+        //Log2.log(2,this,"setFFTSize() Called",fftSize);
         this.fftSize = fftSize;
 
         if (fftSizeSpinner!=null) {

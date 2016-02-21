@@ -2,6 +2,7 @@ package com.chancorp.audiofornerds.animation;
 
 import android.util.Log;
 
+import com.chancorp.audiofornerds.exceptions.PropertySetException;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.helper.Log2;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
  * Created by Chan on 2/21/2016.
  */
 public class Animator {
-
+    public static final String LOG_TAG="CS_AFN";
 
 
     ArrayList<PropertySet> set=new ArrayList<>();
@@ -27,22 +28,38 @@ public class Animator {
         PropertySet res=new PropertySet("results");
 
 
-        float influenceSum=0;
+        //float influenceSum=0;
         float influence;
+        int size=-1;
+
+        HashMap<String,Float> influences=new HashMap<>();
 
         for (PropertySet ps : this.set) {
-            Log2.log(2,this,ps.toString());
+            if (size>0 && ps.getNumKeys()!=size){
+                //throw new PropertySetException("Property Set Size Mismatch!");
+                //Log.w(LOG_TAG, "Property Set Size Mismatch!");
+            }else size=ps.getNumKeys();
+
+            //Log2.log(2,this,ps.toString());
+
             influence=ps.getInfluence().getValue(time);
-            influenceSum+=influence;
+
+            //influenceSum+=influence;
             for (Object k:ps.getIter()){
                 String key=(String)k;
-                Log2.log(2,this,key,k,ps.getName());
+
+                if (influences.get(key)==null) influences.put(key,0.0f);
+
+                influences.put(key,influences.get(key)+influence);
+                //Log2.log(2,this,key,k,ps.getName());
                 res.setValue(key, res.getValue(key,0)+ps.getValue(key)*influence);
+
             }
+
         }
         for (Object k:res.getIter()){
             String key=(String)k;
-            res.setValue(key, res.getValue(key)/influenceSum);
+            res.setValue(key, res.getValue(key)/influences.get(key));
         }
 
         return res;

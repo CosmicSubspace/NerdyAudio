@@ -13,13 +13,14 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.chancorp.audiofornerds.R;
-import com.chancorp.audiofornerds.animation.AnimatableShape;
-import com.chancorp.audiofornerds.animation.AnimatableValue;
+import com.chancorp.audiofornerds.animation.Animator;
+import com.chancorp.audiofornerds.draw.AnimatableShape;
 import com.chancorp.audiofornerds.animation.EasingEquations;
 import com.chancorp.audiofornerds.animation.PrimitivePaths;
 import com.chancorp.audiofornerds.animation.PropertySet;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.Waveform;
+import com.chancorp.audiofornerds.draw.AnimatableText;
 import com.chancorp.audiofornerds.file.MusicInformation;
 import com.chancorp.audiofornerds.file.QueueManager;
 import com.chancorp.audiofornerds.helper.BitmapConversions;
@@ -41,7 +42,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     int albumArtMargin = 12;//dp
     float spacing = 0.3f;
     float currentPosition = 0.5f;
-    float timestampOffsetX = 100, timestampOffsetY = 100;
+    float timestampOffsetX = 30, timestampOffsetY = 100;
     AudioPlayer ap;
     QueueManager qm;
     boolean displayTimeStamp = true;
@@ -50,6 +51,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     AnimatableShape playBtn;
     PropertySet buttonFollower;
+
+    AnimatableText titleAnimatable;
+    PropertySet titleNoArt;
+
+    Animator albumArtColor;
+    PropertySet albumArtNone;
+
+    AnimatableShape pauseBtn;
+    PropertySet pauseVisible;
+    PropertySet pauseInvisible;
 
     //TODO : Animate _EVERYTHING_
 
@@ -88,10 +99,34 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         waveformBounds = new RectF(0, 0, w, waveformSize * density);
         artBounds = new RectF(albumArtMargin * density, (albumArtMargin + waveformSize) * density, (albumArtSize - albumArtMargin) * density, (albumArtSize - albumArtMargin + waveformSize) * density);
 
-        buttonFollower=new PropertySet("Follower").setValue("X",0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180);
+        buttonFollower=new PropertySet("Follower").setValue("X",0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f);
         buttonFollower.getInfluence().set(0);
-        playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f),h - 16 * density - buttonsSize*density,1,30);
+        playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonColor,new PropertySet("Basis").setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - 16 * density - buttonsSize*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
         playBtn.getAnimator().addPropertySet(buttonFollower);
+
+        pauseBtn=new AnimatableShape(PrimitivePaths.pause(buttonsSize / 2.0f * density),buttonColor,new PropertySet("Basis").setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - 16 * density - buttonsSize*density).setValue("Scale",1).setValue("Rotation",0));
+
+        pauseVisible=new PropertySet("PauseVisible").setValue("Alpha",1.0f);
+        pauseVisible.getInfluence().set(0);
+        pauseInvisible=new PropertySet("PauseInvisible").setValue("Alpha",0.0f);
+
+        pauseBtn.getAnimator().addPropertySet(pauseInvisible);
+        pauseBtn.getAnimator().addPropertySet(pauseVisible);
+
+
+        titleAnimatable=new AnimatableText(new PropertySet("Basis").setValue("X",albumArtSize * density).setValue("Y", waveformSize * density),textPrimary,"",24*density);
+        titleNoArt=new PropertySet("NoArt").setValue("X", 0).setValue("Y",waveformSize * density);
+        titleNoArt.getInfluence().set(0);
+        titleAnimatable.getAnimator().addPropertySet(titleNoArt);
+
+        albumArtColor=new Animator(new PropertySet("Basis").setValue("alpha",255));
+        albumArtNone=new PropertySet("NoArt").setValue("alpha",0);
+        albumArtNone.getInfluence().set(0);
+        albumArtColor.addPropertySet(albumArtNone);
+
+
+        timestampOffsetY=110;
+        timestampOffsetX=30;
 
         //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
 
@@ -105,9 +140,19 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     protected void parseMusicInformation(MusicInformation mi) {
         title = mi.getTitle();
+        titleAnimatable.setText(mi.getTitle());
         artist = mi.getArtist();
         if (mi.getArtByteArray() != null) {
             albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(artBounds.width()), Math.round(artBounds.height()));
+            titleAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.LINEAR);
+            albumArtColor.getPropertySet("NoArt").getInfluence().animate(0,1,EasingEquations.LINEAR);
+        }else{
+            titleAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.LINEAR);
+            albumArtColor.getPropertySet("NoArt").getInfluence().animate(1,1,EasingEquations.LINEAR);
         }
     }
 
@@ -169,20 +214,23 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             pt.setTextAlign(Paint.Align.LEFT);
             pt.setColor(textPrimary);
             pt.setTextSize(24 * density);
-            Paint.FontMetrics fm = new Paint.FontMetrics();
 
-            canvas.drawText(title, albumArtSize * density, (waveformSize + 24) * density, pt);
+            //canvas.drawText(title, albumArtSize * density, (waveformSize + 24) * density, pt);
+
+            titleAnimatable.draw(canvas,pt);
 
             pt.setColor(textSecondary);
             pt.setTextSize(16 * density);
-            fm = new Paint.FontMetrics();
+
 
             canvas.drawText(artist, albumArtSize * density, (waveformSize + 24 + 16) * density, pt);
 
             //TODO Optimize this part. This only needs to be called once per track init.
             if (albumArt != null) {
+                pt.setAlpha(Math.round(albumArtColor.update(System.currentTimeMillis()).getValue("alpha")));
                 canvas.drawBitmap(albumArt, null, artBounds, pt);
                 Log.d(LOG_TAG, "trying to draw..");
+                pt.setAlpha(255);
             }
         }
 
@@ -195,13 +243,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         //debug draws
         pt.setColor(Color.argb(30, 255, 0, 0));
-        canvas.drawRect(playBtn.getPointsCompound().getBounds(buttonPaddings *density), pt);
+        canvas.drawRect(playBtn.getBounds(buttonPaddings * density), pt);
+        canvas.drawRect(pauseBtn.getBounds(buttonPaddings * density), pt);
 
         pt.setColor(buttonColor);
         //canvas.drawPath(PrimitivePaths.square(50), pt);
         //canvas.drawPath(new AnimatableShape(PrimitivePaths.square(50),0,0,1,0).getPointsCompound().toPath(),pt);
 
-        canvas.drawPath(playBtn.getPointsCompound().toPath(),pt);
+        playBtn.draw(canvas,pt);
+
+        pauseBtn.draw(canvas,pt);
 
 
 
@@ -212,12 +263,18 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
     private void animatePlay(){
-        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
-        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
+        pauseBtn.getAnimator().getPropertySet("PauseVisible").getInfluence().animate(1,1,EasingEquations.LINEAR);
+        pauseBtn.getAnimator().getPropertySet("PauseInvisible").getInfluence().animate(0,1,EasingEquations.LINEAR);
     }
     private void animateStop(){
-        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
-        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
+        pauseBtn.getAnimator().getPropertySet("PauseVisible").getInfluence().animate(0,1,EasingEquations.LINEAR);
+        pauseBtn.getAnimator().getPropertySet("PauseInvisible").getInfluence().animate(1,1,EasingEquations.LINEAR);
     }
 
     float iniX, iniY;
@@ -234,12 +291,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             //buttons get priority.
             if (prevBtnBounds.contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
-            } else if (playBtn.getPointsCompound().getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
-                    if (ap.isPlaying()) {
-                        ap.pause();
-                        animateStop();
-                    } else if (ap.isPaused()) {
+                    if (ap.isPaused()) {
                         ap.playAudio();
                         animatePlay();
                     } else {
@@ -247,7 +301,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         animatePlay();
                     }
                 }
-            } else if (nextBtnBounds.contains(ev.getX(), ev.getY())) {
+            } else if (pauseBtn.getBounds(buttonPaddings*density).contains(ev.getX(),ev.getY())){
+                if (ap != null) {
+                    if (ap.isPlaying()) {
+                        ap.pause();
+                        animateStop();
+                    }
+                }
+            }
+            else if (nextBtnBounds.contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
             }else if (waveformBounds.contains(ev.getX(), ev.getY())) {
                 float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
