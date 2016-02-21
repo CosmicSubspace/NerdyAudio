@@ -11,6 +11,8 @@ import java.util.ArrayList;
  */
 public class PointsCompound {
 
+    //TODO : Support for multiple paths.
+
     float[] pointsArray;
 
     private PointsCompound(ArrayList<Float> pts){
@@ -54,6 +56,17 @@ public class PointsCompound {
         return new RectF(minX-padding,minY-padding,maxX+padding,maxY+padding);
     }
 
+    public PointsCompound add(PointsCompound ptc) throws IncompatableShapesException{
+        if (this.pointsArray.length!=ptc.pointsArray.length)throw new IncompatableShapesException("Points Number Mismatch!");
+        float[] newPts=new float[this.pointsArray.length];
+
+            for (int i = 0; i < this.pointsArray.length; i++) {
+                newPts[i] = this.pointsArray[i] + ptc.pointsArray[i];
+            }
+
+        return new PointsCompound(newPts);
+    }
+
     public static class Builder{
         ArrayList<Float> points=new ArrayList<>();
         public void addPoint(float x, float y){
@@ -62,6 +75,12 @@ public class PointsCompound {
         }
         public PointsCompound build(){
             return new PointsCompound(points);
+        }
+    }
+
+    public static class IncompatableShapesException extends Exception{
+        public IncompatableShapesException(String s){
+            super(s);
         }
     }
 }

@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.animation.AnimatableShape;
+import com.chancorp.audiofornerds.animation.AnimatableValue;
 import com.chancorp.audiofornerds.animation.EasingEquations;
 import com.chancorp.audiofornerds.animation.PrimitivePaths;
 import com.chancorp.audiofornerds.animation.PropertySet;
@@ -50,7 +51,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     AnimatableShape playBtn;
     PropertySet buttonFollower;
 
-    boolean playing=false;
+    //TODO : Animate _EVERYTHING_
+
 
 
     public PlayControlsView(Context context, AttributeSet attrs) {
@@ -86,9 +88,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         waveformBounds = new RectF(0, 0, w, waveformSize * density);
         artBounds = new RectF(albumArtMargin * density, (albumArtMargin + waveformSize) * density, (albumArtSize - albumArtMargin) * density, (albumArtSize - albumArtMargin + waveformSize) * density);
 
-        buttonFollower=new PropertySet(0,waveformSize*density,0.3f,180,0,"Follower");
+        buttonFollower=new PropertySet("Follower").setValue("X",0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180);
+        buttonFollower.getInfluence().set(0);
         playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f),h - 16 * density - buttonsSize*density,1,30);
-        playBtn.addPropertySet(buttonFollower);
+        playBtn.getAnimator().addPropertySet(buttonFollower);
 
         //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
 
@@ -156,7 +159,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 canvas.drawText(s, w - pt.measureText(s) / 2.0f - timestampOffsetX * density, h - fm.descent - timestampOffsetY * density, pt);
             }
 
-            buttonFollower.setX(w*currentPosition);
+            buttonFollower.setValue("X",w*currentPosition);
         }
 
         pt.setColor(menuColor);
@@ -209,12 +212,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
     private void animatePlay(){
-        playBtn.getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
-        playBtn.getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
     }
     private void animateStop(){
-        playBtn.getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
-        playBtn.getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.QUINTIC_OUT);
+        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.QUINTIC_OUT);
     }
 
     float iniX, iniY;
@@ -228,10 +231,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         } else if (action == MotionEvent.ACTION_MOVE) {
 
         } else if (action == MotionEvent.ACTION_UP) {
-            if (waveformBounds.contains(ev.getX(), ev.getY())) {
-                float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
-                ap.seekTo(totalTime * ev.getX() / w);
-            } else if (prevBtnBounds.contains(ev.getX(), ev.getY())) {
+            //buttons get priority.
+            if (prevBtnBounds.contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
             } else if (playBtn.getPointsCompound().getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
@@ -247,7 +248,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                     }
                 }
             } else if (nextBtnBounds.contains(ev.getX(), ev.getY())) {
-                qm.playPreviousFile();
+                qm.playNextFile();
+            }else if (waveformBounds.contains(ev.getX(), ev.getY())) {
+                float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
+                ap.seekTo(totalTime * ev.getX() / w);
             }
         }
         return true;

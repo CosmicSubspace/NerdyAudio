@@ -23,4 +23,9 @@ public class PrimitivePaths {
         builder.addPoint(-radius / sqrt2, radius / sqrt2);
         return builder.build();
     }
+    public static PointsCompound next(){
+        PointsCompound.Builder builder=new PointsCompound.Builder();
+        //TODO this
+        return null;
+    }
 }

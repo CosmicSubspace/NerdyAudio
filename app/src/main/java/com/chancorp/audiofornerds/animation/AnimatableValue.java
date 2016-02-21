@@ -5,14 +5,14 @@ import java.io.SyncFailedException;
 /**
  * Created by Chan on 2/20/2016.
  */
-public class AnimatableProperty {
+public class AnimatableValue {
 
     float value, target;
     boolean animate=false;
     long startTime;
     long endTime;
     int mode;
-    public AnimatableProperty(float value){
+    public AnimatableValue(float value){
         this.value=value;
     }
 
@@ -22,6 +22,11 @@ public class AnimatableProperty {
         this.endTime=System.currentTimeMillis()+(int)(time*1000);
         this.mode=mode;
         this.animate=true;
+    }
+
+    public void set(float target){
+        this.value=target;
+        this.animate=false;
     }
 
     public boolean isAnimating(){
