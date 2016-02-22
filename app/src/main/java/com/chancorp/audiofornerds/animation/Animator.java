@@ -59,7 +59,9 @@ public class Animator {
         }
         for (Object k:res.getIter()){
             String key=(String)k;
+            if (influences.get(key)==0) Log.w(LOG_TAG,"Influence of "+key+" is ZERO. Expect Animation errors.");
             res.setValue(key, res.getValue(key)/influences.get(key));
+
         }
 
         return res;

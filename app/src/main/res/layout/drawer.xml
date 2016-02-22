@@ -40,6 +40,15 @@
         style="@style/setting_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Volume Button Controls"
+        android:id="@+id/textView4" />
+
+    <include layout="@layout/divider"/>
+
+    <TextView
+        style="@style/setting_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Other Stuff"
         android:id="@+id/textView3" />
 
