@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.chancorp.audiofornerds.R;
-import com.chancorp.audiofornerds.animation.Animator;
+import com.chancorp.audiofornerds.animation.MixedProperties;
 import com.chancorp.audiofornerds.draw.AnimatableShape;
 import com.chancorp.audiofornerds.animation.EasingEquations;
 import com.chancorp.audiofornerds.animation.PrimitivePaths;
@@ -36,6 +36,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     int playedColor = Color.BLACK, remainingColor = Color.GRAY, timestampColor = Color.WHITE, timestampBackgroundColor = Color.BLACK;
     int timestampSize = 24;
     int buttonPaddings =16;
+    int buttonMargins=8;//dp
     int albumArtSize = 100;//dp
     int waveformSize = 50; //dp
     int buttonsSize = 36;//dp
@@ -50,23 +51,34 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     float density;
 
     AnimatableShape playBtn;
-    PropertySet buttonFollower;
+    MixedProperties buttonFollower;
+    MixedProperties playBtnNormal;
+
+
 
     AnimatableText titleAnimatable;
-    PropertySet titleNoArt;
+    MixedProperties titleNoArt;
+    MixedProperties titleNormal;
 
     AnimatableText artistAnimatable;
-    PropertySet artistNoArt;
+    MixedProperties artistNoArt;
+    MixedProperties artistNormal;
 
-    Animator albumArtColor;
-    PropertySet albumArtNone;
+    MixedProperties albumArtColor;
+    MixedProperties albumArtNormal;
+    MixedProperties albumArtNone;
 
     AnimatableShape pauseBtn;
-    PropertySet pauseVisible;
-    PropertySet pauseInvisible;
+    MixedProperties pauseNormal;
+    MixedProperties pauseVisible;
+    MixedProperties pauseInvisible;
+
 
     AnimatableShape nextBtn;
+
+
     AnimatableShape prevBtn;
+
 
     //TODO : Animate _EVERYTHING_
 
@@ -105,37 +117,51 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         waveformBounds = new RectF(0, 0, w, waveformSize * density);
         artBounds = new RectF(albumArtMargin * density, (albumArtMargin + waveformSize) * density, (albumArtSize - albumArtMargin) * density, (albumArtSize - albumArtMargin + waveformSize) * density);
 
-        buttonFollower=new PropertySet("Follower").setValue("X",0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f);
+
+        buttonFollower=new MixedProperties("Follower",new PropertySet().setValue("X", 0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
         buttonFollower.getInfluence().set(0);
-        playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonColor,new PropertySet("Basis").setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - buttonsSize*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
-        playBtn.getAnimator().addPropertySet(buttonFollower);
+        playBtnNormal=new MixedProperties("Normal",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
+        playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonColor,new MixedProperties("Mix"));
+        playBtn.getMixedProperties().addProperty(buttonFollower);
+        playBtn.getMixedProperties().addProperty(playBtnNormal);
 
-        pauseBtn=new AnimatableShape(PrimitivePaths.pause(buttonsSize / 2.0f * density),buttonColor,new PropertySet("Basis").setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - buttonsSize*density).setValue("Scale",1).setValue("Rotation",0));
 
-        pauseVisible=new PropertySet("PauseVisible").setValue("Alpha",1.0f);
+        pauseNormal=new MixedProperties("Normal",new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation", 0));
+        pauseBtn=new AnimatableShape(PrimitivePaths.pause(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Mix"));
+
+        pauseVisible=new MixedProperties("PauseVisible",new PropertySet().setValue("Alpha", 1.0f));
         pauseVisible.getInfluence().set(0);
-        pauseInvisible=new PropertySet("PauseInvisible").setValue("Alpha",0.0f);
+        pauseInvisible=new MixedProperties("PauseInvisible",new PropertySet().setValue("Alpha", 0.0f));
 
-        pauseBtn.getAnimator().addPropertySet(pauseInvisible);
-        pauseBtn.getAnimator().addPropertySet(pauseVisible);
+        pauseBtn.getMixedProperties().addProperty(pauseInvisible);
+        pauseBtn.getMixedProperties().addProperty(pauseVisible);
+        pauseBtn.getMixedProperties().addProperty(pauseNormal);
 
-        nextBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new PropertySet("Basis").setValue("X",buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y",h - buttonsSize*density).setValue("Scale",1).setValue("Rotation",0).setValue("Alpha",1.0f));
-        prevBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new PropertySet("Basis").setValue("X",buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y", h - buttonsSize*density).setValue("Scale",1).setValue("Rotation",180).setValue("Alpha",1.0f));
 
-        titleAnimatable=new AnimatableText(new PropertySet("Basis").setValue("X",albumArtSize * density).setValue("Y", waveformSize * density),textPrimary,"",24*density);
-        titleNoArt=new PropertySet("NoArt").setValue("X", 0).setValue("Y", waveformSize * density);
+        nextBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Basis",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",0).setValue("Alpha",1.0f)));
+        prevBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Basis",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",180).setValue("Alpha",1.0f)));
+
+        titleAnimatable=new AnimatableText(new MixedProperties("Mix"),textPrimary,"",24*density);
+        titleNoArt=new MixedProperties("NoArt",new PropertySet().setValue("X", albumArtMargin * density).setValue("Y", waveformSize * density));
         titleNoArt.getInfluence().set(0);
-        titleAnimatable.getAnimator().addPropertySet(titleNoArt);
+        titleNormal=new MixedProperties("Normal",new PropertySet().setValue("X",albumArtSize * density).setValue("Y", waveformSize * density));
+        titleAnimatable.getMixedProperties().addProperty(titleNoArt);
+        titleAnimatable.getMixedProperties().addProperty(titleNormal);
 
-        artistAnimatable=new AnimatableText(new PropertySet("Basis").setValue("X",albumArtSize * density).setValue("Y", (waveformSize+30) * density),textSecondary,"",16*density);
-        artistNoArt=new PropertySet("NoArt").setValue("X", 0).setValue("Y",(waveformSize+30) * density);
+
+        artistNormal=new MixedProperties("Normal",new PropertySet().setValue("X",albumArtSize * density).setValue("Y", (waveformSize+30) * density));
+        artistAnimatable=new AnimatableText(new MixedProperties("FinalMix"),textSecondary,"",16*density);
+        artistNoArt=new MixedProperties("NoArt",new PropertySet().setValue("X", albumArtMargin * density).setValue("Y",(waveformSize+30) * density));
         artistNoArt.getInfluence().set(0);
-        artistAnimatable.getAnimator().addPropertySet(artistNoArt);
+        artistAnimatable.getMixedProperties().addProperty(artistNoArt);
+        artistAnimatable.getMixedProperties().addProperty(artistNormal);
 
-        albumArtColor=new Animator(new PropertySet("Basis").setValue("alpha",255));
-        albumArtNone=new PropertySet("NoArt").setValue("alpha",0);
+        albumArtColor=new MixedProperties("AlbumArtMix");
+        albumArtNormal=new MixedProperties("Normal",new PropertySet().setValue("alpha",255));
+        albumArtNone=new MixedProperties("NoArt",new PropertySet().setValue("alpha", 0));
         albumArtNone.getInfluence().set(0);
-        albumArtColor.addPropertySet(albumArtNone);
+        albumArtColor.addProperty(albumArtNone);
+        albumArtColor.addProperty(albumArtNormal);
 
 
         timestampOffsetY=110;
@@ -157,21 +183,25 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         artist = mi.getArtist();
         artistAnimatable.setText(mi.getArtist());
         if (mi.getArtByteArray() != null) {
+            //TODO: move album art decode into seperate thread.
             albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(artBounds.width()), Math.round(artBounds.height()));
-            titleAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            titleAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getPropertySet("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
+
 
         }else{
-            titleAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            titleAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getPropertySet("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getAnimator().getPropertySet("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            albumArtColor.getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
         }
     }
 
@@ -223,7 +253,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 canvas.drawText(s, w - pt.measureText(s) / 2.0f - timestampOffsetX * density, h - fm.descent - timestampOffsetY * density, pt);
             }
 
-            buttonFollower.setValue("X",w*currentPosition);
+            buttonFollower.getBasis().setValue("X", w * currentPosition);
         }
 
         pt.setColor(menuColor);
@@ -287,18 +317,19 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
     private void animatePlay(){
-        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        //We et influence to 1000 so it will override both Basis and Centered.
 
-        pauseBtn.getAnimator().getPropertySet("PauseVisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        pauseBtn.getAnimator().getPropertySet("PauseInvisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pauseBtn.getMixedProperties().getProperty("PauseVisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pauseBtn.getMixedProperties().getProperty("PauseInvisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
     }
     private void animateStop(){
-        playBtn.getAnimator().getPropertySet("Basis").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        playBtn.getAnimator().getPropertySet("Follower").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
-        pauseBtn.getAnimator().getPropertySet("PauseVisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        pauseBtn.getAnimator().getPropertySet("PauseInvisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pauseBtn.getMixedProperties().getProperty("PauseVisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pauseBtn.getMixedProperties().getProperty("PauseInvisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
     }
 
     float iniX, iniY;
@@ -336,7 +367,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
             else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
-            }else if (waveformBounds.contains(ev.getX(), ev.getY())) {
+            }else if (waveformBounds.contains(ev.getX(), ev.getY())) { //TODO : Drag
                 float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
                 ap.seekTo(totalTime * ev.getX() / w);
             }

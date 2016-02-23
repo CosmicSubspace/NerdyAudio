@@ -16,10 +16,18 @@ public class AnimatableValue {
         this.value=value;
     }
 
-    public void animate(float target, float time, int mode){
+    public void animate(float target, float duration, int mode){
         this.target=target;
         this.startTime=System.currentTimeMillis();
-        this.endTime=System.currentTimeMillis()+(int)(time*1000);
+        this.endTime=this.startTime+(int)(duration*1000);
+        this.mode=mode;
+        this.animate=true;
+    }
+
+    public void animateDelayed(float target, float duration, float delay, int mode){
+        this.target=target;
+        this.startTime=System.currentTimeMillis()+(int)(delay*1000);
+        this.endTime=this.startTime+(int)(duration*1000);
         this.mode=mode;
         this.animate=true;
     }

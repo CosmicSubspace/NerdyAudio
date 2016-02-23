@@ -226,10 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id==R.id.db_1){
-            qm.prepareWaveform();
-
-        }else if (id==R.id.db_5){
+        if (id==R.id.db_5){
             for (int i=0;i<fm.getMusics().size();i++) {
                 qm.addMusicWithoutWaveformPreparation(fm.getMusics().get(i));
             }
@@ -241,8 +238,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
         }else if (id==R.id.db_4){
             qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3"));
-        }else if (id==R.id.db_6){
-            ap.seekTo(10);
         }
         return true;
     }

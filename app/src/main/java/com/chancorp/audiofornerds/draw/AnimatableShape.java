@@ -3,16 +3,11 @@ package com.chancorp.audiofornerds.draw;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 
-import com.chancorp.audiofornerds.animation.Animator;
+import com.chancorp.audiofornerds.animation.MixedProperties;
 import com.chancorp.audiofornerds.animation.PointsCompound;
 import com.chancorp.audiofornerds.animation.PropertySet;
-import com.chancorp.audiofornerds.helper.Log2;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 /**
  * Created by Chan on 2/20/2016.
@@ -21,7 +16,7 @@ public class AnimatableShape {
 
     PointsCompound path;
 
-    Animator animator;
+    MixedProperties mixedProperties;
     Matrix mat;
 
     int color;
@@ -35,15 +30,15 @@ public class AnimatableShape {
     alpha
      */
 
-    public AnimatableShape(PointsCompound path, int color, PropertySet basisSet){
-        animator=new Animator(basisSet);
+    public AnimatableShape(PointsCompound path, int color, MixedProperties basisSet){
+        mixedProperties =basisSet;
 
         this.path =path;
         this.color=color;
     }
 
     private PointsCompound getPointsCompound(){
-        PropertySet ps=animator.update(System.currentTimeMillis());
+        PropertySet ps= mixedProperties.update(System.currentTimeMillis());
 
         mat=new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
@@ -58,7 +53,7 @@ public class AnimatableShape {
     }
 
     public void draw(Canvas c, Paint pt){
-        PropertySet ps=animator.update(System.currentTimeMillis());
+        PropertySet ps= mixedProperties.update(System.currentTimeMillis());
 
         mat=new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
@@ -72,8 +67,8 @@ public class AnimatableShape {
         pt.setAlpha(255);
     }
 
-    public Animator getAnimator(){
-        return animator;
+    public MixedProperties getMixedProperties(){
+        return mixedProperties;
     }
 
 

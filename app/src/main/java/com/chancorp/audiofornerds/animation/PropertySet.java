@@ -34,11 +34,9 @@ public class PropertySet {
     }
 
 
-    private String name;
-    private AnimatableValue influence;
-    public PropertySet(String name){
-        this.name=name;
-        influence=new AnimatableValue(1);
+
+    public PropertySet(){
+
     }
 
     /*
@@ -46,13 +44,7 @@ public class PropertySet {
         this.influence=influence;
     }*/
 
-    public AnimatableValue getInfluence(){
-        return this.influence;
-    }
 
-    public String getName(){
-        return this.name;
-    }
 
     public int getNumKeys(){
         return properties.size();
@@ -66,5 +58,9 @@ public class PropertySet {
         }
 
         return res.toString();
+    }
+
+    public void changeTo(PropertySet target, float duration, int type){
+
     }
 }

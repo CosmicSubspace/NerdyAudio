@@ -14,27 +14,57 @@ import java.util.Objects;
 /**
  * Created by Chan on 2/21/2016.
  */
-public class Animator {
+public class MixedProperties {
     public static final String LOG_TAG="CS_AFN";
 
+    PropertySet basis;
+    ArrayList<MixedProperties> set;
 
-    ArrayList<PropertySet> set=new ArrayList<>();
+    private String name;
+    private AnimatableValue influence;
 
-    public Animator(PropertySet basis){
-        addPropertySet(basis);
+    public MixedProperties(String name, PropertySet basis){
+        this.name=name;
+        influence=new AnimatableValue(1);
+        this.basis=basis;
+    }
+
+    public MixedProperties(String name){
+        this.name=name;
+        influence=new AnimatableValue(1);
+        set=new ArrayList<>();
+    }
+
+
+    public AnimatableValue getInfluence(){
+        return this.influence;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public PropertySet getBasis(){
+        if (basis==null) Log.w(LOG_TAG,"getBasis() called to a non-basic instance!");
+        return basis;
     }
 
     public PropertySet update(long time){
-        PropertySet res=new PropertySet("results");
 
+        if (basis!=null) return basis;
 
+        PropertySet res=new PropertySet();
         //float influenceSum=0;
         float influence;
         int size=-1;
 
         HashMap<String,Float> influences=new HashMap<>();
 
-        for (PropertySet ps : this.set) {
+        for (MixedProperties mp : this.set) {
+
+            PropertySet ps=mp.update(time);
+
+
             if (size>0 && ps.getNumKeys()!=size){
                 //throw new PropertySetException("Property Set Size Mismatch!");
                 //Log.w(LOG_TAG, "Property Set Size Mismatch!");
@@ -42,7 +72,7 @@ public class Animator {
 
             //Log2.log(2,this,ps.toString());
 
-            influence=ps.getInfluence().getValue(time);
+            influence=mp.getInfluence().getValue(time);
 
             //influenceSum+=influence;
             for (Object k:ps.getIter()){
@@ -67,13 +97,13 @@ public class Animator {
         return res;
 
     }
-    public void addPropertySet(PropertySet ps){
-        this.set.add(ps);
+    public void addProperty(MixedProperties mp){
+        this.set.add(mp);
     }
-    public PropertySet getPropertySet(String name){
-        for (PropertySet ps:this.set){
-            if (ps.getName().equals(name)) {
-                return ps;
+    public MixedProperties getProperty(String name){
+        for (MixedProperties mp:this.set){
+            if (mp.getName().equals(name)) {
+                return mp;
             }
         }
         return null;

@@ -2,9 +2,8 @@ package com.chancorp.audiofornerds.draw;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
-import com.chancorp.audiofornerds.animation.Animator;
+import com.chancorp.audiofornerds.animation.MixedProperties;
 import com.chancorp.audiofornerds.animation.PropertySet;
 
 /**
@@ -17,8 +16,8 @@ public class AnimatableText {
     y
 
      */
-    public AnimatableText(PropertySet basisSet, int color, String text,float size){
-        animator=new Animator(basisSet);
+    public AnimatableText(MixedProperties basisSet, int color, String text,float size){
+        mixedProperties =basisSet;
         this.color=color;
         this.text=text;
         this.textSize=size;
@@ -40,8 +39,8 @@ public class AnimatableText {
         this.color = color;
     }
 
-    public Animator getAnimator(){
-        return animator;
+    public MixedProperties getMixedProperties(){
+        return mixedProperties;
     }
 
 
@@ -58,7 +57,7 @@ public class AnimatableText {
     }
 
     float textSize;
-    Animator animator;
+    MixedProperties mixedProperties;
 
 
 
@@ -68,7 +67,7 @@ public class AnimatableText {
 
     PropertySet current;
     public void draw(Canvas c, Paint pt){
-        current=animator.update(System.currentTimeMillis());
+        current= mixedProperties.update(System.currentTimeMillis());
         fm=pt.getFontMetrics();
         pt.setColor(color);
         pt.setTextSize(textSize);
