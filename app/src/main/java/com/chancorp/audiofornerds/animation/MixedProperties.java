@@ -100,6 +100,7 @@ public class MixedProperties {
     public void addProperty(MixedProperties mp){
         this.set.add(mp);
     }
+    @Deprecated
     public MixedProperties getProperty(String name){
         for (MixedProperties mp:this.set){
             if (mp.getName().equals(name)) {

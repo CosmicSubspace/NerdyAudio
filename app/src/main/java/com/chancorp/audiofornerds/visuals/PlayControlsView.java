@@ -52,9 +52,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     AnimatableShape playBtn;
     MixedProperties buttonFollower;
-    MixedProperties playBtnNormal;
-
-
+    MixedProperties playBtnRestPosition;
+    MixedProperties playBtnRestCenter;
+    MixedProperties playBtnRestSide;
 
     AnimatableText titleAnimatable;
     MixedProperties titleNoArt;
@@ -69,16 +69,20 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     MixedProperties albumArtNone;
 
     AnimatableShape pauseBtn;
-    MixedProperties pauseNormal;
+    MixedProperties pauseRest;
+    MixedProperties pauseRestCenter;
+    MixedProperties pauseRestSide;
     MixedProperties pauseVisible;
     MixedProperties pauseInvisible;
 
 
     AnimatableShape nextBtn;
-
+    MixedProperties nextSide;
+    MixedProperties nextCenter;
 
     AnimatableShape prevBtn;
-
+    MixedProperties prevSide;
+    MixedProperties prevCenter;
 
     //TODO : Animate _EVERYTHING_
 
@@ -120,13 +124,26 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         buttonFollower=new MixedProperties("Follower",new PropertySet().setValue("X", 0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
         buttonFollower.getInfluence().set(0);
-        playBtnNormal=new MixedProperties("Normal",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
+        playBtnRestPosition =new MixedProperties("Rest");
+        playBtnRestSide=new MixedProperties("Side",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
+        playBtnRestCenter=new MixedProperties("Center",new PropertySet().setValue("X",w * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
+        playBtnRestCenter.getInfluence().set(0.0f);
+        playBtnRestPosition.addProperty(playBtnRestSide);
+        playBtnRestPosition.addProperty(playBtnRestCenter);
+
+
         playBtn=new AnimatableShape(PrimitivePaths.triangle(buttonsSize/2.0f*density),buttonColor,new MixedProperties("Mix"));
         playBtn.getMixedProperties().addProperty(buttonFollower);
-        playBtn.getMixedProperties().addProperty(playBtnNormal);
+        playBtn.getMixedProperties().addProperty(playBtnRestPosition);
 
 
-        pauseNormal=new MixedProperties("Normal",new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation", 0));
+        pauseRest =new MixedProperties("Rest");
+        pauseRestSide=new MixedProperties("Side",new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation", 0));
+        pauseRestCenter=new MixedProperties("Center",new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation", 0));
+        pauseRestCenter.getInfluence().set(0.0f);
+        pauseRest.addProperty(pauseRestSide);
+        pauseRest.addProperty(pauseRestCenter);
+
         pauseBtn=new AnimatableShape(PrimitivePaths.pause(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Mix"));
 
         pauseVisible=new MixedProperties("PauseVisible",new PropertySet().setValue("Alpha", 1.0f));
@@ -135,11 +152,26 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         pauseBtn.getMixedProperties().addProperty(pauseInvisible);
         pauseBtn.getMixedProperties().addProperty(pauseVisible);
-        pauseBtn.getMixedProperties().addProperty(pauseNormal);
+        pauseBtn.getMixedProperties().addProperty(pauseRest);
 
 
-        nextBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Basis",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",0).setValue("Alpha",1.0f)));
-        prevBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("Basis",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",180).setValue("Alpha",1.0f)));
+        nextBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("FinalMix"));
+        nextSide=new MixedProperties("Side",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",0).setValue("Alpha", 1.0f));
+        nextCenter=new MixedProperties("Center",new PropertySet().setValue("X",w * (5.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",0).setValue("Alpha",1.0f));
+        nextCenter.getInfluence().set(0.0f);
+        nextBtn.getMixedProperties().addProperty(nextSide);
+        nextBtn.getMixedProperties().addProperty(nextCenter);
+
+
+
+        prevBtn=new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density),buttonColor,new MixedProperties("FinalMix"));
+        prevSide=new MixedProperties("Side",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",180).setValue("Alpha",1.0f));
+        prevCenter=new MixedProperties("Center",new PropertySet().setValue("X",w * (1.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",180).setValue("Alpha",1.0f));
+        prevCenter.getInfluence().set(0.0f);
+        prevBtn.getMixedProperties().addProperty(prevSide);
+        prevBtn.getMixedProperties().addProperty(prevCenter);
+
+
 
         titleAnimatable=new AnimatableText(new MixedProperties("Mix"),textPrimary,"",24*density);
         titleNoArt=new MixedProperties("NoArt",new PropertySet().setValue("X", albumArtMargin * density).setValue("Y", waveformSize * density));
@@ -192,7 +224,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             albumArtColor.getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
+            playBtnRestCenter.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            playBtnRestSide.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
 
+            pauseRestCenter.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            pauseRestSide.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
+            prevCenter.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            prevSide.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            nextCenter.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            nextSide.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
 
         }else{
             titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
@@ -202,6 +243,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
 
+            playBtnRestCenter.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            playBtnRestSide.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            pauseRestCenter.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            pauseRestSide.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
+            prevCenter.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            prevSide.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            nextCenter.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            nextSide.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
         }
     }
 
@@ -312,12 +362,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         invalidate(); //TODO is this good practice?
 
-
     }
 
 
     private void animatePlay(){
-        playBtn.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        //TODO replace getProperty with direct references
+        playBtnRestPosition.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
         playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
         //We et influence to 1000 so it will override both Basis and Centered.
 
@@ -325,7 +375,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         pauseBtn.getMixedProperties().getProperty("PauseInvisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
     }
     private void animateStop(){
-        playBtn.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtnRestPosition.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
         playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
         pauseBtn.getMixedProperties().getProperty("PauseVisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
