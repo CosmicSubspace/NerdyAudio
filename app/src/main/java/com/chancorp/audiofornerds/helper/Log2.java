@@ -12,7 +12,11 @@ public class Log2 {
         log.append("]");
         for (Object arg:arguments){
             log.append(" | ");
-            log.append(arg.toString());
+            try {
+                log.append(arg.toString());
+            }catch(NullPointerException e){
+                log.append("NULL");
+            }
         }
 
         switch (level){

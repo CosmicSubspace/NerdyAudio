@@ -22,9 +22,14 @@ public class MusicInformation {
         return artist;
     }
 
+    public boolean hasArt(){
+        return hasArt;
+    }
+
     String filepath;
     String title;
     String artist;
+    boolean hasArt;
     public MusicInformation(String source){
         this.filepath=source;
         MediaMetadataRetriever mmr=new MediaMetadataRetriever();
@@ -37,6 +42,8 @@ public class MusicInformation {
         if (artist==null || artist.equals("")){
             artist="(No Artist Data)";
         }
+        if (mmr.getEmbeddedPicture()==null) hasArt=false;
+        else hasArt=true;
     }
     public byte[] getArtByteArray(){
         MediaMetadataRetriever mmr=new MediaMetadataRetriever();

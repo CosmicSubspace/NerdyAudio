@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.chancorp.audiofornerds.filters.FilterManager;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
+import com.chancorp.audiofornerds.helper.Log2;
 import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 import com.chancorp.audiofornerds.interfaces.CompletionListener;
 import com.ringdroid.soundfile.SoundFile;
@@ -108,8 +109,22 @@ public class AudioPlayer {
     }
 
     public synchronized void seekTo(float time){
-        seekOffsetus=mPlayThread.sf.requestSeek(Math.round(((double)time)*1000*1000)); //TODO because we seek to the _nearest_ frame, there could be a time shift.
-        mAudioTrack.flush(); //TODO there is a significant time delay after the seek. Fix that.
+        //TODO : This is a hasty fix for a NullPointerException. It is unclear why mPlayThread's sf returns null sometimes.
+        int i=0;
+        while(i<5) {
+            try {
+                Log2.log(1, this, mPlayThread, mPlayThread.sf);
+                seekOffsetus = mPlayThread.sf.requestSeek(Math.round(((double) time) * 1000 * 1000)); //TODO because we seek to the _nearest_ frame, there could be a time shift.
+                mAudioTrack.flush(); //TODO there is a significant time delay after the seek. Fix that.
+                break;
+            } catch (NullPointerException e) {
+                Log2.log(1, this, "NullPointerException in seekTo. Retrying.");
+                try {
+                    Thread.sleep(1);
+                }catch (Exception e1){}
+                i++;
+            }
+        }
     }
 
 

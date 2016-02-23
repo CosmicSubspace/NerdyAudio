@@ -52,6 +52,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     AnimatableShape playBtn;
     MixedProperties buttonFollower;
+    MixedProperties buttonFollowerProgress;
+    MixedProperties buttonFollowerUser;
+
     MixedProperties playBtnRestPosition;
     MixedProperties playBtnRestCenter;
     MixedProperties playBtnRestSide;
@@ -83,6 +86,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     AnimatableShape prevBtn;
     MixedProperties prevSide;
     MixedProperties prevCenter;
+
+    AnimatableText timestampAnim;
+    MixedProperties timestampRest;
+    MixedProperties timestampFollow;
 
     //TODO : Animate _EVERYTHING_
 
@@ -122,7 +129,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         artBounds = new RectF(albumArtMargin * density, (albumArtMargin + waveformSize) * density, (albumArtSize - albumArtMargin) * density, (albumArtSize - albumArtMargin + waveformSize) * density);
 
 
-        buttonFollower=new MixedProperties("Follower",new PropertySet().setValue("X", 0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
+        buttonFollower=new MixedProperties("Follower");
+        buttonFollowerUser=new MixedProperties("User",new PropertySet().setValue("X", 0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
+        buttonFollowerProgress=new MixedProperties("Progress",new PropertySet().setValue("X", 0).setValue("Y",waveformSize*density).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
+        buttonFollowerUser.getInfluence().set(0.0f);
+        buttonFollower.addProperty(buttonFollowerProgress);
+        buttonFollower.addProperty(buttonFollowerUser);
+
         buttonFollower.getInfluence().set(0);
         playBtnRestPosition =new MixedProperties("Rest");
         playBtnRestSide=new MixedProperties("Side",new PropertySet().setValue("X",buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y",h - (buttonsSize/2+buttonMargins)*density).setValue("Scale",1).setValue("Rotation",30).setValue("Alpha",1.0f));
@@ -196,9 +209,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         albumArtColor.addProperty(albumArtNormal);
 
 
-        timestampOffsetY=110;
-        timestampOffsetX=30;
-
+        timestampAnim=new AnimatableText(new MixedProperties("FinalMixed"),textPrimary,"",timestampSize*density);
+        timestampRest=new MixedProperties("Rest",new PropertySet().setValue("X", w-30 * density).setValue("Y",30*density));
+        timestampFollow=new MixedProperties("Follow",new PropertySet().setValue("X", 0).setValue("Y",20*density));
+        timestampFollow.getInfluence().set(0.0f);
+        timestampAnim.getMixedProperties().addProperty(timestampRest);
+        timestampAnim.getMixedProperties().addProperty(timestampFollow);
+        timestampAnim.setBgColor(timestampBackgroundColor);
+        timestampAnim.drawBackground(true);
+        timestampAnim.setAlign(AnimatableText.ALIGN_CENTER);
         //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
 
 
@@ -209,14 +228,24 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     String artist = new String();
     Bitmap albumArt;
 
-    protected void parseMusicInformation(MusicInformation mi) {
+    protected void parseMusicInformation(final MusicInformation mi) {
         title = mi.getTitle();
         titleAnimatable.setText(mi.getTitle());
         artist = mi.getArtist();
         artistAnimatable.setText(mi.getArtist());
-        if (mi.getArtByteArray() != null) {
+
+        if (mi.hasArt()) {
             //TODO: move album art decode into seperate thread.
-            albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(artBounds.width()), Math.round(artBounds.height()));
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(artBounds.width()), Math.round(artBounds.height()));
+                }
+            }).run();
+
+
+
             titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
             titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
@@ -276,7 +305,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 canvas.drawRect(i * spacing, waveformSize * density, i * spacing + width, waveformSize * density * (1 - wf.getRatio(i)), pt);
             }
 
-
+/*
             if (displayTimeStamp) {
 
                 //TODO Make this prettier.
@@ -302,8 +331,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 //canvas.drawText(s, canvasX, canvasY, pt);
                 canvas.drawText(s, w - pt.measureText(s) / 2.0f - timestampOffsetX * density, h - fm.descent - timestampOffsetY * density, pt);
             }
+*/
+            if (!dragMode) {
+                timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
+            }
 
-            buttonFollower.getBasis().setValue("X", w * currentPosition);
+
+            timestampAnim.draw(canvas,pt);
+
+            buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
 
         pt.setColor(menuColor);
@@ -383,6 +419,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     }
 
     float iniX, iniY;
+    boolean dragMode=false;
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -390,11 +427,38 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         if (action == MotionEvent.ACTION_DOWN) {
             iniX = ev.getX();
             iniY = ev.getY();
-        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (buttonFollower.getInfluence().getValue()>0.99f){ //if in playing mode and button is in follow state
+                if (playBtn.getBounds(buttonPaddings*density).contains(ev.getX(),ev.getY())){
+                    dragMode=true;
+                    buttonFollowerUser.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+                    buttonFollowerProgress.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
+                    timestampFollow.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+                    timestampRest.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
+                    buttonFollowerUser.getBasis().setValue("X", ev.getX());
+                    timestampFollow.getBasis().setValue("X", ev.getX());
+                }
+            }
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (dragMode) {
+                buttonFollowerUser.getBasis().setValue("X",ev.getX());
+                timestampFollow.getBasis().setValue("X", ev.getX());
+                timestampAnim.setText(wf.frameNumberToTimeStamp((long) (wf.getNumOfFrames() * (ev.getX() / (double) w))));
+            }
         } else if (action == MotionEvent.ACTION_UP) {
             //buttons get priority.
-            if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            if (dragMode) { //TODO : Drag
+                buttonFollowerUser.getInfluence().animate(0,0.5f,EasingEquations.DEFAULT_EASE);
+                buttonFollowerProgress.getInfluence().animate(1, 0.5f, EasingEquations.DEFAULT_EASE);
+                float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
+                ap.seekTo(totalTime * ev.getX() / w);
+
+                timestampFollow.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                timestampRest.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+
+                dragMode=false;
+            }else if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
 
                 qm.playPreviousFile();
             } else if (playBtn.getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
@@ -417,10 +481,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
             else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
-            }else if (waveformBounds.contains(ev.getX(), ev.getY())) { //TODO : Drag
-                float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
-                ap.seekTo(totalTime * ev.getX() / w);
             }
+
+
+
         }
         return true;
     }

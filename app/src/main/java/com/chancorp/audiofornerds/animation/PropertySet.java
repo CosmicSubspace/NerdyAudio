@@ -36,7 +36,6 @@ public class PropertySet {
 
 
     public PropertySet(){
-
     }
 
     /*
@@ -60,7 +59,4 @@ public class PropertySet {
         return res.toString();
     }
 
-    public void changeTo(PropertySet target, float duration, int type){
-
-    }
 }

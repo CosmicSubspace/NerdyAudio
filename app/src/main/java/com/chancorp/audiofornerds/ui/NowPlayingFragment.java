@@ -30,8 +30,6 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     SidebarSettings sbs;
 
 
-    boolean settingsMode=false;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sbs=SidebarSettings.getInstance();
