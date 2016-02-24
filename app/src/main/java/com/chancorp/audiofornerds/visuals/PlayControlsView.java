@@ -107,6 +107,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         textPrimary = getResources().getColor(R.color.colorLightPrimaryText);
         textSecondary = getResources().getColor(R.color.colorLightSecondaryText);
 
+        //We need to disable hardware acceleration for this layer,
+        //since we need to fiddle with blending and shader combining
+        //for the marquee text effect.
+        //It also takes care of a bug with Paths.
+        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+
+
         prepareLayout();
     }
 
@@ -192,6 +199,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         titleNormal=new MixedProperties("Normal",new PropertySet().setValue("X",albumArtSize * density).setValue("Y", waveformSize * density));
         titleAnimatable.getMixedProperties().addProperty(titleNoArt);
         titleAnimatable.getMixedProperties().addProperty(titleNormal);
+        titleAnimatable.enableMarquee(w - (albumArtSize+albumArtMargin) * density, 16 * density);
 
 
         artistNormal=new MixedProperties("Normal",new PropertySet().setValue("X",albumArtSize * density).setValue("Y", (waveformSize+30) * density));
@@ -242,12 +250,14 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 public void run() {
                     albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(artBounds.width()), Math.round(artBounds.height()));
                 }
-            }).run();
+            }).start();
 
 
 
-            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.enableMarquee(w - (albumArtSize+albumArtMargin) * density, 16 * density);
+
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
@@ -267,6 +277,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         }else{
             titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            titleAnimatable.enableMarquee(w - albumArtMargin*2 * density,16*density);
+
             albumArtColor.getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);

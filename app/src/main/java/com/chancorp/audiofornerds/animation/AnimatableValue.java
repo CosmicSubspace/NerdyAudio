@@ -17,6 +17,9 @@ public class AnimatableValue {
     }
 
     public void animate(float target, float duration, int mode){
+        if (animate){//This value is currently being animated, need to commit the value before animating.
+            this.value=getValue();
+        }
         this.target=target;
         this.startTime=System.currentTimeMillis();
         this.endTime=this.startTime+(int)(duration*1000);
@@ -44,6 +47,8 @@ public class AnimatableValue {
     public float getValue(){
         return getValue(System.currentTimeMillis());
     }
+
+
 
     public float getValue(long currentTime){
         if (!animate) return value;
