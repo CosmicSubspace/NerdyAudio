@@ -1,8 +1,10 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.exceptions;
 
-/**
- * Created by Chan on 2015-12-25.
- */
+
 public class InvalidParameterException extends Exception {
     public InvalidParameterException(String s){
         super(s);

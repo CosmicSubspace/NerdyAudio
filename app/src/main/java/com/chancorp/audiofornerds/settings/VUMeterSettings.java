@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.settings;
 
 import android.content.Context;
@@ -12,9 +16,7 @@ import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
 
-/**
- * Created by Chan on 2/3/2016.
- */
+
 public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener{
     private static final String LOG_TAG="CS_AFN";
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.VUMeterSettings";

@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.audio;
 
 import android.content.Context;
@@ -13,6 +17,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+
 
 //TODO I don't think Singleton is the way to do this...
 //TODO seperate this calss into a manager and a non-singleton class.

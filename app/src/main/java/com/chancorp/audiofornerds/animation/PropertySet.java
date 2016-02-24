@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.animation;
 
 import com.chancorp.audiofornerds.exceptions.InvalidParameterException;
@@ -6,9 +10,6 @@ import com.chancorp.audiofornerds.helper.Log2;
 import java.util.HashMap;
 import java.util.Objects;
 
-/**
- * Created by Chan on 2/21/2016.
- */
 public class PropertySet {
 
     private HashMap<String,Float> properties=new HashMap<String,Float>();

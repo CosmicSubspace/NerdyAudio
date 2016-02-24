@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.audio;
 
 import android.media.AudioDeviceInfo;
@@ -15,9 +19,8 @@ import com.ringdroid.soundfile.SoundFile;
 
 import java.io.File;
 
-/**
- * Created by Chan on 2015-12-09.
- */
+
+
 public class AudioPlayer {
     public final String LOG_TAG="CS_AFN";
 

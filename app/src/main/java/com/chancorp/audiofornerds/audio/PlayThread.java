@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.audio;
 
 import android.util.Log;
@@ -8,9 +12,7 @@ import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 import com.ringdroid.soundfile.SoundFile;
 
-/**
- * Created by Chan on 2015-12-22.
- */
+
 class PlayThread extends Thread{
     SoundFile sf;
     AudioPlayer ap; //TODO BAD PRACTICE!!!

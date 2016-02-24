@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.visuals;
 
 import android.content.Context;
@@ -6,9 +10,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-/**
- * Created by Chan on 2015-12-12.
- */
+
 public class VisualizationView extends SurfaceView implements SurfaceHolder.Callback{
 
 

@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.settings;
 
 import android.content.Context;
@@ -8,9 +12,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Created by Chan on 2/3/2016.
- */
+
 public abstract class BaseSetting {
     public static final int VISUALIZATION=124;
     public static final int VU=129642;

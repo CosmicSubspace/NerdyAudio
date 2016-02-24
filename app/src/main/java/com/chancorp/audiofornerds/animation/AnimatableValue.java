@@ -1,10 +1,12 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.animation;
 
-import java.io.SyncFailedException;
 
-/**
- * Created by Chan on 2/20/2016.
- */
+
+
 public class AnimatableValue {
 
     float value, target;

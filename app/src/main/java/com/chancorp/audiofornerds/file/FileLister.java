@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.file;
 
 import com.chancorp.audiofornerds.interfaces.FileListReturnListener;
@@ -7,9 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Chan on 2015-12-17.
- */
 public class FileLister extends Thread{
     String path;
     ArrayList<MusicInformation> musics=new ArrayList<>();

@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.filters;
 
 import android.media.AudioManager;
@@ -12,9 +16,6 @@ import android.widget.TextView;
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.audio.Waveform;
 
-/**
- * Created by Chan on 1/28/2016.
- */
 public class AutoGainFilter extends BaseFilter {
     private static final String LOG_TAG="CS_AFN";
     Waveform wf;

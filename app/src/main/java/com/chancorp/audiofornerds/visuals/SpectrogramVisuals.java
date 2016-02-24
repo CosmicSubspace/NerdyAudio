@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.visuals;
 
 import android.graphics.Bitmap;
@@ -22,9 +26,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-/**
- * Created by Chan on 2015-12-18.
- */
 
 
 public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateListener{

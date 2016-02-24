@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.draw;
 
 import android.graphics.Canvas;
@@ -18,9 +22,7 @@ import com.chancorp.audiofornerds.helper.Log2;
 
 import javax.xml.transform.stream.StreamSource;
 
-/**
- * Created by Chan on 2/21/2016.
- */
+
 public class AnimatableText {
     /*
     Required Properties:

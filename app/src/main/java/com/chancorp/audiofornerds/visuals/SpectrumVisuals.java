@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.visuals;
 
 import android.graphics.Canvas;
@@ -13,9 +17,7 @@ import com.chancorp.audiofornerds.settings.SidebarSettings;
 import com.chancorp.audiofornerds.settings.SpectrumVisualSettings;
 import com.meapsoft.FFT;
 
-/**
- * Created by Chan on 2015-12-18.
- */
+
 public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListener{
     Paint pt;
     int fftSize = 2048;

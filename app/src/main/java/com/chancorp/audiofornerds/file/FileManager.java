@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.file;
 
 import android.os.Environment;
@@ -10,9 +14,7 @@ import com.chancorp.audiofornerds.interfaces.ProgressStringListener;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by Chan on 2015-12-17.
- */
+
 public class FileManager implements FileListReturnListener{
     static final String LOG_TAG="CS_AFN";
 

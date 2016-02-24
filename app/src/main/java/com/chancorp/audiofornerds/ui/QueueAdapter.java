@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.ui;
 
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +16,7 @@ import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.MusicInformation;
 import com.chancorp.audiofornerds.file.QueueManager;
 
-/**
- * Created by Chan on 2015-12-19.
- */
+
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder> {
     private QueueManager qm;
 

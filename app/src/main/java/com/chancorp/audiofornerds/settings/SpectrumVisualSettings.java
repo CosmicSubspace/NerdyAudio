@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.settings;
 
 import android.content.Context;
@@ -18,9 +22,7 @@ import android.widget.TextView;
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.helper.Log2;
 
-/**
- * Created by Chan on 2/3/2016.
- */
+
 public class SpectrumVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
         SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
     private static final String LOG_TAG = "CS_AFN";

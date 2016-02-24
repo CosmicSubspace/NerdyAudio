@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.draw;
 
 import android.graphics.Canvas;
@@ -9,9 +13,6 @@ import com.chancorp.audiofornerds.animation.MixedProperties;
 import com.chancorp.audiofornerds.animation.PointsCompound;
 import com.chancorp.audiofornerds.animation.PropertySet;
 
-/**
- * Created by Chan on 2/20/2016.
- */
 public class AnimatableShape {
 
     PointsCompound path;

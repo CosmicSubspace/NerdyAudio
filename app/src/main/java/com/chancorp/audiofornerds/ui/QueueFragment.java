@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.ui;
 
 import android.os.Bundle;
@@ -13,9 +17,7 @@ import android.widget.Button;
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.QueueManager;
 
-/**
- * Created by Chan on 2015-12-16.
- */
+
 public class QueueFragment extends Fragment implements View.OnClickListener{
     public static final String LOG_TAG="CS_AFN";
 

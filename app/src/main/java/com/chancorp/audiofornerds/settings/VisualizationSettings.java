@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.settings;
 
 import android.content.Context;
@@ -5,9 +9,7 @@ import android.content.SharedPreferences;
 
 import java.io.Serializable;
 
-/**
- * Created by Chan on 2/3/2016.
- */
+
 public class VisualizationSettings extends BaseSetting implements Serializable {
 
     private static final String PREF_IDENTIFIER = "com.chancorp.audiofornerds.settings.VisualizationSettings";

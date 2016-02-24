@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.visuals;
 
 import android.graphics.Canvas;
@@ -11,9 +15,7 @@ import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.VisualizationBuffer;
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 
-/**
- * Created by Chan on 2015-12-18.
- */
+
 public abstract class BaseRenderer {
     public static final String LOG_TAG="CS_AFN";
     VisualizationBuffer vb;

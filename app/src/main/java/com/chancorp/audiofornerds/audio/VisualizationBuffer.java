@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.audio;
 
 import android.util.Log;
@@ -8,9 +12,7 @@ import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 
 import java.util.ArrayList;
 
-/**
- * Created by Chan on 2015-12-12.
- */
+
 public class VisualizationBuffer implements BufferFeedListener {
     public static final int RIGHT_CHANNEL=53214;
     public static final int LEFT_CHANNEL=65965;

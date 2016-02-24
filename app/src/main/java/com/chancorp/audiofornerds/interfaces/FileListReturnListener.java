@@ -1,12 +1,13 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.interfaces;
 
 import com.chancorp.audiofornerds.file.MusicInformation;
 
 import java.util.ArrayList;
 
-/**
- * Created by Chan on 2015-12-17.
- */
 public interface FileListReturnListener {
     void onReturn(ArrayList<MusicInformation> files);
 }

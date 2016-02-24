@@ -1,3 +1,7 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.visuals;
 
 import android.graphics.Canvas;
@@ -11,9 +15,7 @@ import com.chancorp.audiofornerds.settings.BaseSetting;
 import com.chancorp.audiofornerds.settings.SidebarSettings;
 import com.chancorp.audiofornerds.settings.VUMeterSettings;
 
-/**
- * Created by Chan on 2015-12-18.
- */
+
 public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListener{
     Paint pt;
     int range = 2048; //Should be Synchronized.

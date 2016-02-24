@@ -1,11 +1,13 @@
+//Licensed under the MIT License.
+//Include the license text thingy if you're gonna use this.
+//Copyright (c) 2016 Chansol Yang
+
 package com.chancorp.audiofornerds.helper;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-/**
- * Created by Chan on 2015-12-10.
- */
+
 public class ByteConversions {
     public static short[] bytesToShorts(byte[] b){
         short[] shorts = new short[b.length/2];
