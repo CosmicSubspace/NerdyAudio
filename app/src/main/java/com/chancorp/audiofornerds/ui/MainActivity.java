@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else if (pos == 2) ft.replace(R.id.tab_area, new FiltersFragment());
                 else if (pos == 3) ft.replace(R.id.tab_area, new NowPlayingFragment());
 
+
+
                 ft.commit();
             }
 

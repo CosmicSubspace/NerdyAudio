@@ -124,6 +124,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     AnimatableText filePath;
     MixedProperties filePathActive;
+    MixedProperties filePathActiveArt;
+    MixedProperties filePathActiveNoArt;
     MixedProperties filePathInactive;
 
     //TODO : Animate _EVERYTHING_
@@ -201,7 +203,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         buttonFollowerUser=new MixedProperties("User",new PropertySet().setValue("X", 0).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
         buttonFollowerProgress=new MixedProperties("Progress",new PropertySet().setValue("X", 0).setValue("Scale",0.3f).setValue("Rotation",180).setValue("Alpha",1.0f));
         buttonFollowerUser.getInfluence().set(0.0f);
-        buttonFollowerYExpanded=new MixedProperties("YExpanded",new PropertySet().setValue("Y", h - (expandedBarHeight-albumArtSize-40) * density));
+        buttonFollowerYExpanded=new MixedProperties("YExpanded",new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40) * density));
         buttonFollowerYExpanded.getInfluence().set(0.0f);
         buttonFollowerYNotExpanded = new MixedProperties("YNotExpanded",new PropertySet().setValue("Y", h - (normalBarHeight) * density));
         buttonFollower.addProperty(buttonFollowerProgress);
@@ -288,7 +290,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         filePath=new AnimatableText(new MixedProperties("Mix"),textSecondary,"",12*density);
         filePath.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
-        filePathActive=new MixedProperties("Active",new PropertySet().setValue("X", albumArtSize * density).setValue("Y",h-(expandedBarHeight -60) * density));
+        filePathActive=new MixedProperties("Active");
+        filePathActiveArt =new MixedProperties("Art",new PropertySet().setValue("X", albumArtSize * density).setValue("Y",h-(expandedBarHeight -60) * density));
+        filePathActiveNoArt =new MixedProperties("NoArt",new PropertySet().setValue("X", albumArtMargin * density).setValue("Y",h-(expandedBarHeight -60) * density));
+        filePathActiveNoArt.getInfluence().set(0.0f);
+        filePathActive.addProperty(filePathActiveArt);
+        filePathActive.addProperty(filePathActiveNoArt);
         filePathInactive=new MixedProperties("Inactive",new PropertySet().setValue("X", w).setValue("Y",h-(expandedBarHeight -60) * density));
         filePathActive.getInfluence().set(0.0f);
         filePath.getMixedProperties().addProperty(filePathActive);
@@ -358,7 +365,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     }
 
     boolean expanded=false;
-    protected void expand(boolean expand){
+    public void expand(boolean expand){
+        if (this.expanded==expand) return;
         this.expanded=expand;
         if (expand){
             expandedBarHeightMP.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
@@ -409,7 +417,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
             filePathActive.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
             filePathInactive.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            if (currentMusic.hasArt()) buttonsCenter(false);
+            if (currentMusic!=null) if (currentMusic.hasArt()) buttonsCenter(false);
         }
     }
 
@@ -470,7 +478,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             titleAnimatable.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
             filePath.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
-
+            filePathActiveArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            filePathActiveNoArt.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
@@ -483,7 +492,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             titleAnimatable.enableMarquee(w - albumArtMargin * 2 * density, 16 * density);
             filePath.enableMarquee(w - albumArtMargin * 2 * density, 16 * density);
-
+            filePathActiveArt.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            filePathActiveNoArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             albumArtColor.getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
             artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
