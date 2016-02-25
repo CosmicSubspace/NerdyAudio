@@ -38,7 +38,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     int canvasX, canvasY;
     IntBuffer graphBuffer;
     float maxFreq=5000, minFreq=20;
-    int scrollPxPerRedraw=1; //TODO make this setting-able too.
+    int scrollPxPerRedraw=1;
     boolean logScale=false;
     float contrast=2.0f;
 
@@ -174,7 +174,7 @@ sbs.removeSettingsUpdateListener(this);
     }
 
     private float getMagnitude(double[] x, double[] y, float frequency){
-        //TODO Log scale here.
+
         int sr=ap.getSampleRate();
         float frqPerBin=sr/(float)this.fftSize;
         float bin=(float)(frequency/frqPerBin);

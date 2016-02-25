@@ -247,7 +247,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         artistAnimatable.setText(mi.getArtist());
 
         if (mi.hasArt()) {
-            //TODO: move album art decode into seperate thread.
+
 
             new Thread(new Runnable() {
                 @Override
@@ -324,7 +324,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 /*
             if (displayTimeStamp) {
 
-                //TODO Make this prettier.
+
 
                 float xPadding = 4;
                 float density = getContext().getResources().getDisplayMetrics().density;
@@ -361,7 +361,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         pt.setColor(menuColor);
         canvas.drawRect(0, waveformSize * density, w, h, pt);
 
-        if (true) { //TODO better alignment here.
+        if (true) {
             pt.setTextAlign(Paint.Align.LEFT);
             pt.setColor(textPrimary);
             pt.setTextSize(24 * density);
@@ -377,7 +377,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             //canvas.drawText(artist, albumArtSize * density, (waveformSize + 24 + 16) * density, pt);
             artistAnimatable.draw(canvas,pt);
 
-            //TODO Optimize this part. This only needs to be called once per track init.
+
             if (albumArt != null) {
                 pt.setAlpha(Math.round(albumArtColor.update(System.currentTimeMillis()).getValue("alpha")));
                 canvas.drawBitmap(albumArt, null, artBounds, pt);
@@ -464,7 +464,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
         } else if (action == MotionEvent.ACTION_UP) {
             //buttons get priority.
-            if (dragMode) { //TODO : Drag
+            if (dragMode) {
                 buttonFollowerUser.getInfluence().animate(0,0.5f,EasingEquations.DEFAULT_EASE);
                 buttonFollowerProgress.getInfluence().animate(1, 0.5f, EasingEquations.DEFAULT_EASE);
                 float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());

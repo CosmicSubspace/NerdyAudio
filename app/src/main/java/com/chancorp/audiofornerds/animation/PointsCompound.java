@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 public class PointsCompound {
 
-    //TODO : Support for multiple paths.
-
     float[] pointsArray;
     int[] cutsArray;
 
