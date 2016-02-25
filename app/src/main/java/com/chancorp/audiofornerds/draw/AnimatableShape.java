@@ -13,11 +13,10 @@ import com.chancorp.audiofornerds.animation.MixedProperties;
 import com.chancorp.audiofornerds.animation.PointsCompound;
 import com.chancorp.audiofornerds.animation.PropertySet;
 
-public class AnimatableShape {
+public class AnimatableShape extends Animatable{
 
     PointsCompound path;
 
-    MixedProperties mixedProperties;
     Matrix mat;
 
     int color;
@@ -32,7 +31,7 @@ public class AnimatableShape {
      */
 
     public AnimatableShape(PointsCompound path, int color, MixedProperties basisSet){
-        mixedProperties =basisSet;
+        super(basisSet);
 
         this.path =path;
         this.color=color;
@@ -53,6 +52,7 @@ public class AnimatableShape {
         return getPointsCompound().getBounds(padding);
     }
 
+    @Override
     public void draw(Canvas c, Paint pt){
         PropertySet ps= mixedProperties.update(System.currentTimeMillis());
 
@@ -66,10 +66,6 @@ public class AnimatableShape {
         //Log2.log(2,this,path);
         c.drawPath(path.transform(mat).toPath(),pt);
         pt.setAlpha(255);
-    }
-
-    public MixedProperties getMixedProperties(){
-        return mixedProperties;
     }
 
 

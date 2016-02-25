@@ -23,15 +23,14 @@ import com.chancorp.audiofornerds.helper.Log2;
 import javax.xml.transform.stream.StreamSource;
 
 
-public class AnimatableText {
+public class AnimatableText extends Animatable{
     /*
     Required Properties:
     x
     y
-
      */
     public AnimatableText(MixedProperties basisSet, int color, String text, float size) {
-        mixedProperties = basisSet;
+        super(basisSet);
         setColor(color);
         this.text = text;
         this.textSize = size;
@@ -56,9 +55,6 @@ public class AnimatableText {
         this.transpColor = Color.argb(Color.red(color), Color.green(color), Color.blue(color), 0);
     }
 
-    public MixedProperties getMixedProperties() {
-        return mixedProperties;
-    }
 
     public float getTextSize() {
         return textSize;
@@ -85,15 +81,17 @@ public class AnimatableText {
         this.marquee=false;
     }
 
+    public void setVisibility(boolean isVisible){
+        this.visible=isVisible;
+    }
+
     //Instance Variables
     String text;
     int color, transpColor;
     int bgColor;
-    boolean drawBG=false, marquee=false;
+    boolean drawBG=false, marquee=false,visible=true;
 
     float textSize, fadeSize, maxWidth;
-    MixedProperties mixedProperties;
-
 
 
 
@@ -129,23 +127,24 @@ public class AnimatableText {
     float evalTime;
     long timeOffset=0;
     public void draw(Canvas c, Paint pt) {
+        if (!visible) return;
         //TODO : Perf Improvements.
-
-
-
-        current = mixedProperties.update(System.currentTimeMillis());
-        fm = pt.getFontMetrics();
 
         pt.setTextSize(textSize);
         if (align == ALIGN_BOTTOM_LEFT_CORNER) pt.setTextAlign(Paint.Align.LEFT);
         else if (align == ALIGN_CENTER) pt.setTextAlign(Paint.Align.CENTER);
+
+        current = mixedProperties.update(System.currentTimeMillis());
+        fm = pt.getFontMetrics();
+
+
 
         textHeight = fm.descent - fm.ascent;
         textWidth = pt.measureText(text);
 
 
 
-
+        //Log2.log(2,this,current.getValue("X"), current.getValue("Y"));
         if (drawBG) {
             if (align == ALIGN_BOTTOM_LEFT_CORNER) {
                 bounds = new RectF(current.getValue("X"), current.getValue("Y"), current.getValue("X") + textWidth, current.getValue("Y") - fm.ascent + fm.descent);
