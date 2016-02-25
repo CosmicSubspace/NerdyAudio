@@ -84,10 +84,10 @@
         <com.chancorp.audiofornerds.visuals.PlayControlsView
             android:id="@+id/waveform"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-50dp" />
+            android:layout_marginTop="-80dp" />
 <!--
         <View
             android:layout_width="fill_parent"

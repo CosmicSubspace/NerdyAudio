@@ -443,6 +443,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         if (action == MotionEvent.ACTION_DOWN) {
             iniX = ev.getX();
             iniY = ev.getY();
+
+            //Play Button Drag
             if (buttonFollower.getInfluence().getValue()>0.99f){ //if in playing mode and button is in follow state
                 if (playBtn.getBounds(buttonPaddings*density).contains(ev.getX(),ev.getY())){
                     dragMode=true;
@@ -454,14 +456,31 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
                     buttonFollowerUser.getBasis().setValue("X", ev.getX());
                     timestampFollow.getBasis().setValue("X", ev.getX());
+                    return true;
                 }
             }
+
+            //Other buttons
+            if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+                return true;
+            } else if (playBtn.getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
+                return true;
+            } else if (pauseBtn.getBounds(buttonPaddings*density).contains(ev.getX(),ev.getY())){
+                return true;
+            }
+            else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+                return true;
+            }
+
+
         } else if (action == MotionEvent.ACTION_MOVE) {
+            //Dragging in progress
             if (dragMode) {
                 buttonFollowerUser.getBasis().setValue("X",ev.getX());
                 timestampFollow.getBasis().setValue("X", ev.getX());
                 timestampAnim.setText(wf.frameNumberToTimeStamp((long) (wf.getNumOfFrames() * (ev.getX() / (double) w))));
             }
+            return true;
         } else if (action == MotionEvent.ACTION_UP) {
             //buttons get priority.
             if (dragMode) {
@@ -474,9 +493,14 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 timestampRest.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
                 dragMode=false;
-            }else if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
 
+                return true;
+            }
+
+            //Button doing stuff.
+            if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
+                return true;
             } else if (playBtn.getBounds(buttonPaddings *density).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
                     if (ap.isPaused()) {
@@ -487,6 +511,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         animatePlay();
                     }
                 }
+                return true;
             } else if (pauseBtn.getBounds(buttonPaddings*density).contains(ev.getX(),ev.getY())){
                 if (ap != null) {
                     if (ap.isPlaying()) {
@@ -494,15 +519,17 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         animateStop();
                     }
                 }
+                return true;
             }
             else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
+                return true;
             }
 
 
 
         }
-        return true;
+        return false;
     }
 
 
