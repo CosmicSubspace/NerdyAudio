@@ -12,6 +12,7 @@ import com.chancorp.audiofornerds.interfaces.SampleProgressListener;
 import com.chancorp.audiofornerds.interfaces.WaveformReturnListener;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,11 +50,12 @@ public class Waveform implements Serializable {
     }
 
     public static boolean checkExistance(String filename, double barEvery, Context c) {
-        String[] files = c.fileList();
-        for (String i : files) {
-            if (i.equals(getUniqueID(filename, barEvery))) return true;
+        try{
+            c.openFileInput(getUniqueID(filename, barEvery));
+            return true;
+        }catch(FileNotFoundException e){
+            return false;
         }
-        return false;
     }
 
     public static void calculateIfDoesntExist(String filename, double barEvery, Context c, SampleProgressListener spl, WaveformReturnListener wrl) {

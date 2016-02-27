@@ -16,20 +16,24 @@ import android.widget.Button;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.QueueManager;
+import com.chancorp.audiofornerds.interfaces.MusicInformationUpdateListener;
 
 
-public class QueueFragment extends Fragment implements View.OnClickListener{
+public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
     public static final String LOG_TAG="CS_AFN";
 
     RecyclerView mRecyclerView;
     QueueAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     FloatingActionButton fab;
+    QueueManager qm;
 
     Button refreshBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        qm=QueueManager.getInstance();
+        qm.addMusicInformationUpdateListener(this);
         View v = inflater.inflate(R.layout.tab_frag_queue, container, false);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.queue_tab_recyclerview);
@@ -43,7 +47,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener{
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new QueueAdapter(QueueManager.getInstance());
+        mAdapter = new QueueAdapter(qm);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -67,4 +71,17 @@ public class QueueFragment extends Fragment implements View.OnClickListener{
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void musicInformationUpdated(int index) {
+        mAdapter.notifyItemChanged(index);
+    }
+
+    @Override
+    public void onDetach(){
+        qm.removeMusicInformationUpdateListener(this);
+        super.onDetach();
+    }
+
+
 }

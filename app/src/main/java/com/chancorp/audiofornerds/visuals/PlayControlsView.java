@@ -13,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -145,8 +144,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         textPrimary = getResources().getColor(R.color.colorLightPrimaryText);
         textSecondary = getResources().getColor(R.color.colorLightSecondaryText);
 
-        playedColor= ColorFiddler.setAlpha(res.getColor(R.color.colorPrimaryDark), 128);
-        remainingColor= ColorFiddler.setAlpha(res.getColor(R.color.colorPrimary), 128);
+        playedColor= ColorFiddler.setAlpha(res.getColor(R.color.colorPrimary), 200);
+        //Log2.log(2,this,Color.alpha(playedColor),Color.red(playedColor),Color.blue(playedColor),Color.green(playedColor));
+        remainingColor= ColorFiddler.setAlpha(res.getColor(R.color.colorPrimary), 100);
 
         playedColorEX= ColorFiddler.setAlpha(res.getColor(R.color.colorAccentFallbackDark), 255);
         remainingColorEX= ColorFiddler.setAlpha(res.getColor(R.color.colorAccent),255);
@@ -712,7 +712,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         ap.playAudio();
                         animatePlay();
                     } else {
-                        qm.playFile();
+                        qm.play();
                         animatePlay();
                     }
                 }

@@ -149,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wfv.setTimestampVisibility(true);
         wfv.setTimestampSize(16);
         wfv.setTimestampColor(Color.WHITE);
-        wfv.setPlayedColor(Color.argb(128, 0, 0, 0));
-        wfv.setRemainingColor(Color.argb(128, 128, 128, 128));
+
         wfv.setTimestampOffset(30, 10);
         wfv.setTimestampBackgroundColor(Color.argb(128, 0, 0, 0));
 
@@ -274,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ap.playAudio();
                     play.setBackgroundResource(R.drawable.ic_pause_white_48dp);
                 }else{
-                    qm.playFile();
+                    qm.play();
                     play.setBackgroundResource(R.drawable.ic_pause_white_48dp);
                 }
             }

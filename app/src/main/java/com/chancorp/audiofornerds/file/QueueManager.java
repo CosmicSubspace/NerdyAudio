@@ -11,6 +11,7 @@ import com.chancorp.audiofornerds.audio.VisualizationBuffer;
 import com.chancorp.audiofornerds.audio.Waveform;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.CompletionListener;
+import com.chancorp.audiofornerds.interfaces.MusicInformationUpdateListener;
 import com.chancorp.audiofornerds.interfaces.NewSongListener;
 import com.chancorp.audiofornerds.interfaces.ProgressStringListener;
 import com.chancorp.audiofornerds.interfaces.SampleProgressListener;
@@ -21,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -41,8 +41,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     ArrayList<ProgressStringListener> psl=new ArrayList<>();
     ArrayList<NewSongListener> nsl=new ArrayList<>();
+    ArrayList<MusicInformationUpdateListener> miul=new ArrayList<>();
 
-    MusicInformation currentlyCaching = null;
+    int currentlyCachingIndex=-1;
 
     static QueueManager inst;
 
@@ -82,6 +83,18 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
+    public void addMusicInformationUpdateListener(MusicInformationUpdateListener miul){
+        this.miul.add(miul);
+    }
+    public void removeMusicInformationUpdateListener(MusicInformationUpdateListener miul){
+        this.miul.remove(miul);
+    }
+    private void notifyMusicInformationUpdateListeners(int index){
+        for (MusicInformationUpdateListener miul:this.miul){
+            miul.musicInformationUpdated(index);
+        }
+    }
+
     public void parseQueueFromFile(File file) {
         ArrayList<String> files = new ArrayList<>();
         try {
@@ -98,16 +111,12 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         getQueueFromFileList(files);
     }
 
-    public void getQueueFromFileList(String[] list) {
-        for (int i = 0; i < list.length; i++) {
-            addMusicWithoutWaveformPreparation(new MusicInformation(list[i]));
-        }
-        prepareWaveform();
-    }
-
     public void getQueueFromFileList(ArrayList<String> list) {
+        MusicInformation current;
         for (int i = 0; i < list.size(); i++) {
-            addMusicWithoutWaveformPreparation(new MusicInformation(list.get(i)));
+            current=new MusicInformation(list.get(i));
+            current.updateReadyness(ma);
+            addMusicWithoutWaveformPreparation(current);
         }
         prepareWaveform();
     }
@@ -117,6 +126,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void addMusic(MusicInformation mi) {
+        mi.updateReadyness(ma);
         queue.add(mi);
         prepareWaveform();
     }
@@ -129,9 +139,14 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         this.ma = ma;
     }
 
-    public void playFile() {
+    public void play() {
         Log.d(LOG_TAG, "Playing file.");
+
+        queue.get(currentMusicIndex).setPlaying(true);
         notifyNewSongListeners(queue.get(currentMusicIndex));
+        notifyMusicInformationUpdateListeners(currentMusicIndex);
+
+
         vb.clear();
         ap.killThread();
         ap.release();
@@ -140,40 +155,55 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         if (Waveform.checkExistance(queue.get(currentMusicIndex).getFilepath(), 1.0, ma))
             Waveform.getInstance().loadFromFile(queue.get(currentMusicIndex).getFilepath(), 1.0, ma);
         else Waveform.getInstance().loadBlank();
-        updateUI();
-
-
+    }
+    public void playFile(MusicInformation mi){
+        for (int i = 0; i < queue.size(); i++) {
+            if(queue.get(i).equals(mi)){
+                playFile(i);
+                break;
+            }
+        }
+    }
+    public void playFile(int index){
+        setCurrentMusic(index);
+        play();
     }
 
     public void playNextFile() {
         Log.d(LOG_TAG, "Playing next file.");
         nextFile();
-        playFile();
+        play();
     }
 
     public void playPreviousFile() {
         Log.d(LOG_TAG, "Playing Previous file.");
         previousFile();
-        playFile();
+        play();
     }
 
     private void nextFile() {
-        currentMusicIndex++;
-        if (currentMusicIndex >= queue.size()) {
-            currentMusicIndex = 0;
-        }
-
+        setCurrentMusic(currentMusicIndex+1);
     }
 
     private void previousFile() {
-        currentMusicIndex--;
-        if (currentMusicIndex < 0) currentMusicIndex = 0;
+        setCurrentMusic(currentMusicIndex-1);
 
     }
 
     private void firstFile() {
-        currentMusicIndex = 0;
+        setCurrentMusic(0);
     }
+
+    private void setCurrentMusic(int i) {
+        queue.get(currentMusicIndex).setPlaying(false);
+        notifyMusicInformationUpdateListeners(currentMusicIndex);
+        if (i < 0) i = 0;
+        if (i>=queue.size()){
+            i=queue.size()-1;
+        }
+        currentMusicIndex=i;
+    }
+
 
     @Override
     public void onComplete(String s) {
@@ -181,22 +211,14 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         playNextFile();
     }
 
-    private void updateUI() {
-
-        if (ma != null) ma.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ma.updateUI();
-            }
-        });
-    }
-
     public void prepareWaveform() {
-        if (currentlyCaching == null) {
+        if (currentlyCachingIndex <0) {
             for (int i = currentMusicIndex; i < queue.size(); i++) {
-                if (!Waveform.checkExistance(queue.get(i).getFilepath(), 1, ma)) {//TODO Thousands of file I/O everythime this method is called. Fix that.
+                if (!queue.get(i).isReady()) {//TODO Thousands of file I/O everythime this method is called. Fix that.
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
-                    currentlyCaching = queue.get(i);
+                    currentlyCachingIndex=i;
+                    queue.get(currentlyCachingIndex).setCaching(true);
+                    notifyMusicInformationUpdateListeners(currentlyCachingIndex);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
                     break;
                 }
@@ -228,14 +250,18 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
+
     @Override
     public void report(long l) {
-        notifyProgressStringListeners( "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
+        notifyProgressStringListeners( "Caching: " + queue.get(currentlyCachingIndex).getTitle() + " (" + l + " Samples)");
     }
 
     @Override
     public void onReturn(Waveform wf) {
-        currentlyCaching = null;
+        queue.get(currentlyCachingIndex).setCaching(false);
+        queue.get(currentlyCachingIndex).setReady(true);
+        notifyMusicInformationUpdateListeners(currentlyCachingIndex);
+        currentlyCachingIndex = -1;
         prepareWaveform();
         notifyProgressStringListeners("Caching Complete.");
     }

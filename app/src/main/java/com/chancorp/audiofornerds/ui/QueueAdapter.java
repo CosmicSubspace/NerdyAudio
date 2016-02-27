@@ -4,11 +4,13 @@
 
 package com.chancorp.audiofornerds.ui;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,11 +31,13 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder
         public TextView title;
         public TextView artist;
         public RelativeLayout container;
+        public ImageView status;
         public myViewHolder(View v) {
             super(v);
             title = (TextView)v.findViewById(R.id.music_list_element_title);
             artist=(TextView)v.findViewById(R.id.music_list_element_artist);
             container=(RelativeLayout)v.findViewById(R.id.music_list_element_container);
+            status=(ImageView)v.findViewById(R.id.music_list_element_status);
         }
     }
 
@@ -56,18 +60,31 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(myViewHolder holder, int position) {
+    public void onBindViewHolder(myViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final MusicInformation currentMusic=qm.getQueue().get(position);
         holder.title.setText(currentMusic.getTitle());
-        holder.artist.setText(currentMusic.getArtist());
+        holder.artist.setText(currentMusic.getArtist()); //TODO Dynamic updating elements.
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG_TAG, "Clicked");
+                qm.playFile(position);
             }
         });
+        if (qm.getQueue().get(position).getStatus()==MusicInformation.NOT_READY){
+            holder.status.setImageResource(R.drawable.ic_close_black_24dp);
+        }else if (qm.getQueue().get(position).getStatus()==MusicInformation.READY){
+            holder.status.setImageResource(R.drawable.ic_check_black_24dp);
+        }else if (qm.getQueue().get(position).getStatus()==MusicInformation.PLAYING){
+            holder.status.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+        }else if (qm.getQueue().get(position).getStatus()==MusicInformation.PLAYING_WITHOUT_DATA){
+            holder.status.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+        }else if (qm.getQueue().get(position).getStatus()==MusicInformation.CACHING){
+            holder.status.setImageResource(R.drawable.ic_refresh_black_24dp);
+        }else if (qm.getQueue().get(position).getStatus()==MusicInformation.PLAYING_WHILE_CACHING){
+            holder.status.setImageResource(R.drawable.ic_refresh_black_24dp);
+        }
     }
 
     @Override

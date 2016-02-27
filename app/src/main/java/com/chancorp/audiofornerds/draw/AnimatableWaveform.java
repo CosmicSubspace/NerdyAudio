@@ -9,6 +9,7 @@ import com.chancorp.audiofornerds.animation.PropertySet;
 import com.chancorp.audiofornerds.audio.AudioPlayer;
 import com.chancorp.audiofornerds.audio.Waveform;
 import com.chancorp.audiofornerds.helper.ColorFiddler;
+import com.chancorp.audiofornerds.helper.Log2;
 
 /**
  * Created by Chan on 2/25/2016.
@@ -72,6 +73,7 @@ public class AnimatableWaveform extends Animatable{
     }
 
     private int getPlayedColor(PropertySet ps){
+        //Log2.log(2,this,ps.getValue("Played-A"),ps.getValue("Played-R"),ps.getValue("Played-G"),ps.getValue("Played-B"));
         return Color.argb(Math.round(ps.getValue("Played-A") * 255),
                 Math.round(ps.getValue("Played-R")*255),
                 Math.round(ps.getValue("Played-G")*255),
