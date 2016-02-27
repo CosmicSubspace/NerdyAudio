@@ -233,9 +233,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         if (id==R.id.db_5){
             for (int i=0;i<fm.getMusics().size();i++) {
-                qm.addMusicWithoutWaveformPreparation(fm.getMusics().get(i));
+                qm.addMusic(fm.getMusics().get(i));
             }
-            qm.prepareWaveform();
+            //qm.prepareWaveform();
 
         }else if (id==R.id.db_2){
             randomToast();

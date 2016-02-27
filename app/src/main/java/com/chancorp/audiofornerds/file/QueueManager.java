@@ -116,9 +116,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         for (int i = 0; i < list.size(); i++) {
             current=new MusicInformation(list.get(i));
             current.updateReadyness(ma);
-            addMusicWithoutWaveformPreparation(current);
+            addMusic(current);
         }
-        prepareWaveform();
+        //prepareWaveform();
     }
 
     public ArrayList<MusicInformation> getQueue() {
@@ -130,10 +130,10 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         queue.add(mi);
         prepareWaveform();
     }
-
+/*
     public void addMusicWithoutWaveformPreparation(MusicInformation mi) {
         queue.add(mi);
-    }
+    }*/
 
     public void passActivity(MainActivity ma) {
         this.ma = ma;
@@ -152,8 +152,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         ap.release();
         ap.setFileStr(queue.get(currentMusicIndex).getFilepath());
         ap.playAudio();
-        if (Waveform.checkExistance(queue.get(currentMusicIndex).getFilepath(), 1.0, ma))
+        if (queue.get(currentMusicIndex).isReady()) {
             Waveform.getInstance().loadFromFile(queue.get(currentMusicIndex).getFilepath(), 1.0, ma);
+        }
         else Waveform.getInstance().loadBlank();
     }
     public void playFile(MusicInformation mi){
@@ -211,7 +212,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         playNextFile();
     }
 
-    public void prepareWaveform() {
+    private void prepareWaveform() {
         if (currentlyCachingIndex <0) {
             for (int i = currentMusicIndex; i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {//TODO Thousands of file I/O everythime this method is called. Fix that.

@@ -91,7 +91,7 @@ public class MusicInformation {
     }
 
     public void updateReadyness(Context c) {
-        if (Waveform.checkExistance(filepath, 1.0, c)) isReady=true;
+        if (Waveform.checkExistance(filepath, 1, c)) isReady=true;
         else isReady=false;
     }
     public void setReady(boolean ready){
