@@ -65,7 +65,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder
         // - replace the contents of the view with that element
         final MusicInformation currentMusic=qm.getQueue().get(position);
         holder.title.setText(currentMusic.getTitle());
-        holder.artist.setText(currentMusic.getArtist()); //TODO Dynamic updating elements.
+        holder.artist.setText(currentMusic.getArtist());
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

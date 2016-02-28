@@ -67,7 +67,7 @@ public class MusicInformation {
     boolean hasArt;
     boolean isReady = false, isPlaying = false, isCaching=false;
 
-    //TODO : Boolean isCached, isPlaying
+
     public MusicInformation(String source) {
         this.filepath = source;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();

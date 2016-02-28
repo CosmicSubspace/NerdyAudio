@@ -33,7 +33,7 @@ public class VisualsRenderThread extends Thread{
     public VisualsRenderThread(){
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
-    public void setSurfaceHolder(SurfaceHolder sf){ //TODO is this valid?
+    public void setSurfaceHolder(SurfaceHolder sf){ //is this valid?
         this.sf=sf;
     }
     public void stopRender(){

@@ -36,6 +36,8 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
     Paint pt;
 
+    //TODO there is a bug where the player freezes when a new song is loaded with this visual active.
+
     public WaveformVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);

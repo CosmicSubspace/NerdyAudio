@@ -41,7 +41,6 @@ public abstract class BaseRenderer {
     }
     public short[] getLSamples(long start, long end) throws BufferNotPresentException{
         if (vb != null) {
-
             return vb.getFrames(start, end, VisualizationBuffer.LEFT_CHANNEL);
 
         }else return null;

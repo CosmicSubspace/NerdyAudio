@@ -64,6 +64,7 @@ public class VisualizationBuffer implements BufferFeedListener {
 
     public synchronized short[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
         Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
+        Log.v(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
         checkRange(startFrame);
         checkRange(endFrame);
 
@@ -81,12 +82,15 @@ public class VisualizationBuffer implements BufferFeedListener {
                     else return null;
                     break;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    //Log.d(LOG_TAG,"AIOOB");
+                    Log.v(LOG_TAG, "AIOOB");
                     currentBuffer++;
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
-                } catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e){ //TODO this exception is caught at random points. Fix that.
                     Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer.");
+                    Log.e(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
+                    Log.e(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
                     ErrorLogger.log(e);
+                    break;
                 }
             }
 
@@ -129,8 +133,8 @@ public class VisualizationBuffer implements BufferFeedListener {
         if (bufferR.size()<1) return;
 
         while ((getNthBufferInitialFrameNumber(0) + bufferR.get(0).length ) <= frameNumber) {
-            //Log.d(LOG_TAG, "Deleting buffer");
-            //Log.d(LOG_TAG, "First Buffer Starting Frame: " + firstBufferStartingFrame);
+            Log.v(LOG_TAG, "Deleting buffer");
+            Log.v(LOG_TAG, "First Buffer Starting Frame: " + firstBufferStartingFrame);
             firstBufferStartingFrame += bufferR.get(0).length;
             //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
             bufferR.remove(0);

@@ -215,7 +215,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     private void prepareWaveform() {
         if (currentlyCachingIndex <0) {
             for (int i = currentMusicIndex; i < queue.size(); i++) {
-                if (!queue.get(i).isReady()) {//TODO Thousands of file I/O everythime this method is called. Fix that.
+                if (!queue.get(i).isReady()) {
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCachingIndex=i;
                     queue.get(currentlyCachingIndex).setCaching(true);

@@ -127,9 +127,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     MixedProperties filePathActiveNoArt;
     MixedProperties filePathInactive;
 
-    //TODO : Animate _EVERYTHING_
 
 
+    //TODO Performance. Srsly.
 
     public PlayControlsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -615,7 +615,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         nextBtn.draw(canvas,pt);
 
 
-        invalidate(); //TODO is this good practice?
+        invalidate();
 
     }
 
