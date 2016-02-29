@@ -65,35 +65,23 @@
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-
-        fab:fab_shadowYOffset="0dp"
-        fab:fab_shadowXOffset="0dp"
-
-        fab:menu_animationDelayPerItem="0"
-        fab:menu_shadowColor="#444"
-        fab:menu_colorNormal="#FFB805"
-        fab:menu_colorPressed="#F2AB00"
-        fab:menu_colorRipple="#D99200">
+        style="@style/fab_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/filters_tab_fab_sub_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_white_24dp"
-            fab:fab_size="mini"
             fab:fab_label="Volume"
-            fab:fab_shadowYOffset="0dp"
-            fab:fab_shadowXOffset="0dp"
+            style="@style/fab_sub"
              />
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/filters_tab_fab_sub_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_white_24dp"
-            fab:fab_size="mini"
             fab:fab_label="Auto Gain"
-            fab:fab_shadowYOffset="0dp"
-            fab:fab_shadowXOffset="0dp"
+            style="@style/fab_sub"
             />
 
 

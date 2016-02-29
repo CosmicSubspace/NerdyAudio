@@ -49,7 +49,7 @@
                 android:layout_height="48dp"
                 android:id="@+id/settings_btn">
 
-                <Button
+                <ImageView
                     android:id="@+id/settings_image"
                     android:clickable="false"
                     android:layout_width="24dp"

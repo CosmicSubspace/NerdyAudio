@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="36dp"
         android:id="@+id/library_tab_selection"
         android:background="@color/colorPrimaryLight">
 
@@ -28,19 +28,26 @@
             android:layout_height="24dp"
             android:background="@color/colorPrimaryDark"
             android:id="@+id/library_tab_seperator"
-            android:layout_margin="2dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tab_library_dir" />
+            android:layout_toRightOf="@+id/tab_library_dir"
+            android:layout_margin="2dp" />
 
-        <Button
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:id="@+id/tab_library_dir"
-            android:layout_alignParentTop="false"
-            android:background="@drawable/ic_folder_white_24dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="false"
-            android:layout_margin="10dp" />
+        <RelativeLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/tab_library_dir">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:clickable="false"
+                android:layout_alignParentTop="false"
+                android:background="@drawable/ic_folder_white_24dp"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

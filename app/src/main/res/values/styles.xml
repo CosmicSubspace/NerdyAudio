@@ -49,4 +49,24 @@
         <item name="android:textColor">@color/colorDarkPrimaryText</item>
     </style>
 
+    <style name="fab_menu"
+        >
+        <item name="fab_shadowYOffset">0dp</item>
+        <item name="fab_shadowXOffset">0dp</item>
+
+        <item name="menu_shadowColor">#444</item>
+        <item name="menu_colorNormal">@color/colorAccent</item>
+        <item name="menu_colorPressed">@color/colorAccentFallbackLight</item>
+        <item name="menu_colorRipple">@color/colorAccentFallbackDark</item>
+    </style>
+    <style name="fab_sub"
+        >
+        <item name="fab_shadowYOffset">0dp</item>
+        <item name="fab_shadowXOffset">0dp</item>
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">@color/colorAccentFallbackLight</item>
+        <item name="fab_colorPressed">@color/colorAccentFallbackLight</item>
+        <item name="fab_colorRipple">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -45,11 +45,13 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     ArrayList<NewSongListener> nsl=new ArrayList<>();
     ArrayList<MusicInformationUpdateListener> miul=new ArrayList<>();
 
-    int currentlyCachingIndex=-1;
+    //int currentlyCachingIndex=-1;
 
     static QueueManager inst;
 
-    int currentMusicIndex = 0;
+    //int currentMusicIndex = 0;
+
+    MusicInformation currentlyPlaying, currentlyCaching;
 
 
     public static QueueManager getInstance() {
@@ -141,21 +143,25 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         this.ma = ma;
     }
 
-    public void play() {
+    public void play() { //plays the CurrentlyPlaying.
+        if (queue.size()==0) return;
         Log.d(LOG_TAG, "Playing file.");
+        if (currentlyPlaying==null){ //first play
+            setCurrentMusicIndex(0);
+        }
 
-        queue.get(currentMusicIndex).setPlaying(true);
-        notifyNewSongListeners(queue.get(currentMusicIndex));
-        notifyMusicInformationUpdateListeners(currentMusicIndex);
+        currentlyPlaying.setPlaying(true);
+        notifyNewSongListeners(currentlyPlaying);
+        notifyMusicInformationUpdateListeners(currentlyPlayingIndex());
 
 
         vb.clear();
         ap.killThread();
         ap.release();
-        ap.setFileStr(queue.get(currentMusicIndex).getFilepath());
+        ap.setFileStr(currentlyPlaying.getFilepath());
         ap.playAudio();
-        if (queue.get(currentMusicIndex).isReady()) {
-            Waveform.getInstance().loadFromFile(queue.get(currentMusicIndex).getFilepath(), 1.0, ma);
+        if (currentlyPlaying.isReady()) {
+            Waveform.getInstance().loadFromFile(currentlyPlaying.getFilepath(), 1.0, ma);
         }
         else Waveform.getInstance().loadBlank();
     }
@@ -168,7 +174,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
     public void playFile(int index){
-        setCurrentMusic(index);
+        setCurrentMusicIndex(index);
         play();
     }
 
@@ -185,26 +191,30 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     private void nextFile() {
-        setCurrentMusic(currentMusicIndex + 1);
+        setCurrentMusicIndex(currentlyPlayingIndex() + 1);
     }
 
     private void previousFile() {
-        setCurrentMusic(currentMusicIndex-1);
-
+        setCurrentMusicIndex(currentlyPlayingIndex()-1);
     }
 
-    private void firstFile() {
-        setCurrentMusic(0);
-    }
 
-    private void setCurrentMusic(int i) {
-        queue.get(currentMusicIndex).setPlaying(false);
-        notifyMusicInformationUpdateListeners(currentMusicIndex);
+    private void setCurrentMusicIndex(int i) {
+        if (currentlyPlaying!=null) currentlyPlaying.setPlaying(false);
+        notifyMusicInformationUpdateListeners(currentlyPlayingIndex());
         if (i < 0) i = 0;
         if (i>=queue.size()){
             i=queue.size()-1;
         }
-        currentMusicIndex=i;
+        currentlyPlaying=queue.get(i);
+    }
+    private int getIndex(MusicInformation mi){
+        int idx=this.queue.indexOf(mi);
+        if (idx<0) idx=0;
+        return idx;
+    }
+    private int currentlyPlayingIndex(){
+        return getIndex(currentlyPlaying);
     }
 
 
@@ -215,13 +225,13 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     private void prepareWaveform() {
-        if (currentlyCachingIndex <0) {
-            for (int i = currentMusicIndex; i < queue.size(); i++) {
+        if (currentlyCaching==null) {
+            for (int i = currentlyPlayingIndex(); i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
-                    currentlyCachingIndex=i;
-                    queue.get(currentlyCachingIndex).setCaching(true);
-                    notifyMusicInformationUpdateListeners(currentlyCachingIndex);
+                    currentlyCaching=queue.get(i);
+                    currentlyCaching.setCaching(true);
+                    notifyMusicInformationUpdateListeners(i);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
                     break;
                 }
@@ -233,28 +243,40 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         ArrayList<MusicInformation> newQueue = new ArrayList<>(queue.size());
         Random rand = new Random();
         while (queue.size() > 0) {
-
             int idx = rand.nextInt(queue.size());
             newQueue.add(queue.get(idx));
             queue.remove(idx);
         }
-
         queue = newQueue;
-
-        firstFile();
     }
+    public void reverseQueue() {
+        ArrayList<MusicInformation> newQueue = new ArrayList<>(queue.size());
+        for (int i = 0; i < queue.size(); i++) {
+            newQueue.add(queue.get(queue.size()-i-1));
+        }
+        queue = newQueue;
+    }
+    public void sortByTitle() {
+        Collections.sort(queue,new MusicInformation.TitleComparator());
+    }
+    public void sortByArtist() {
+        Collections.sort(queue, new MusicInformation.ArtistComparator());
+    }
+
+
 
     public void move(int from, int to){
         MusicInformation target=queue.get(from);
         queue.remove(from);
         queue.add(to, target);
+        /*
         int origIdx=currentMusicIndex;
 
         currentMusicIndex=shiftIndex(currentMusicIndex,from,to);
         currentlyCachingIndex=shiftIndex(currentlyCachingIndex,from,to);
 
         Log.i(LOG_TAG,"Shift from "+from+" to "+to);
-        Log.i(LOG_TAG,"CurrentMusicIndex Shift from "+origIdx+" to "+currentMusicIndex);
+        Log.i(LOG_TAG,"CurrentMusicIndex Shift from "+origIdx+" to "+currentMusicIndex);*/
         notifyMusicInformationUpdateListeners(-1);
     }
 
@@ -278,26 +300,17 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
 
-    public MusicInformation getCurrentMusic() {
-        try {
-            return queue.get(currentMusicIndex);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
     @Override
     public void report(long l) {
-        notifyProgressStringListeners( "Caching: " + queue.get(currentlyCachingIndex).getTitle() + " (" + l + " Samples)");
+        notifyProgressStringListeners( "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
     }
 
     @Override
     public void onReturn(Waveform wf) {
-        queue.get(currentlyCachingIndex).setCaching(false);
-        queue.get(currentlyCachingIndex).setReady(true);
-        notifyMusicInformationUpdateListeners(currentlyCachingIndex);
-        currentlyCachingIndex = -1;
+        currentlyCaching.setCaching(false);
+        currentlyCaching.setReady(true);
+        notifyMusicInformationUpdateListeners(getIndex(currentlyCaching));
+        currentlyCaching = null;
         prepareWaveform();
         notifyProgressStringListeners("Caching Complete.");
     }

@@ -68,7 +68,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
             @Override
             public void onClick(View view) {
                 Log.i(LOG_TAG, "Clicked");
-                QueueManager.getInstance().addMusic(currentMusic);
+                QueueManager.getInstance().addMusic(new MusicInformation(currentMusic));
             }
         });
     }

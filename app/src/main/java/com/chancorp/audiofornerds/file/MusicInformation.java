@@ -12,8 +12,30 @@ import android.media.MediaMetadataRetriever;
 import com.chancorp.audiofornerds.audio.Waveform;
 
 import java.io.File;
+import java.util.Comparator;
 
 public class MusicInformation {
+
+    static class TitleComparator implements Comparator<MusicInformation>{
+        @Override
+        public int compare(MusicInformation a, MusicInformation b){
+            return a.title.compareToIgnoreCase(b.title);
+        }
+        @Override
+        public boolean equals(Object o){
+            return this.equals(o);
+        }
+    }
+    static class ArtistComparator implements Comparator<MusicInformation>{
+        @Override
+        public int compare(MusicInformation a, MusicInformation b){
+            return a.artist.compareToIgnoreCase(b.artist);
+        }
+        @Override
+        public boolean equals(Object o){
+            return this.equals(o);
+        }
+    }
 
     public String getFilepath() {
         return filepath;
@@ -67,7 +89,12 @@ public class MusicInformation {
     boolean hasArt;
     boolean isReady = false, isPlaying = false, isCaching=false;
 
-
+    public MusicInformation(MusicInformation mi){
+        this.filepath=mi.filepath;
+        this.title=mi.title;
+        this.artist=mi.artist;
+        this.hasArt=mi.hasArt;
+    }
     public MusicInformation(String source) {
         this.filepath = source;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();

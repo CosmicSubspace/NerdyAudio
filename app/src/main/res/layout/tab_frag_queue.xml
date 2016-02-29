@@ -15,7 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/tab_queue_refresh" />
-
+<!--
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,4 +26,58 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true" />
+        -->
+    <com.github.clans.fab.FloatingActionMenu
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/queue_tab_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        fab:menu_icon="@drawable/ic_sort_white_24dp"
+        style="@style/fab_menu">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/queue_tab_fab_sub_sort_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sort_white_24dp"
+
+            fab:fab_label="Sort (Name)"
+            style="@style/fab_sub"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/queue_tab_fab_sub_sort_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sort_white_24dp"
+
+            fab:fab_label="Sort (Artist)"
+            style="@style/fab_sub"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/queue_tab_fab_sub_shuffle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shuffle_white_24dp"
+
+            fab:fab_label="Shuffle"
+            style="@style/fab_sub"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/queue_tab_fab_sub_reverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_swap_vert_white_24dp"
+
+            fab:fab_label="Reverse"
+            style="@style/fab_sub"
+            />
+
+
+    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

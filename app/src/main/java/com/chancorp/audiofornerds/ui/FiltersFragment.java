@@ -18,6 +18,7 @@ import com.chancorp.audiofornerds.filters.AutoGainFilter;
 import com.chancorp.audiofornerds.filters.BaseFilter;
 import com.chancorp.audiofornerds.filters.FilterManager;
 import com.chancorp.audiofornerds.filters.VolumeFilter;
+import com.chancorp.audiofornerds.helper.ClansFABHelper;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class FiltersFragment extends Fragment implements View.OnClickListener{
     private static final String LOG_TAG="CS_AFN";
     LinearLayout lv;
-    FloatingActionMenu fab;
+    FloatingActionMenu fam;
     FloatingActionButton[] fabs=new FloatingActionButton[3];
     FilterManager fm;
     @Override
@@ -35,8 +36,9 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
         fm=FilterManager.getInstance();
         View v=inflater.inflate(R.layout.tab_frag_filters, container, false);
         lv=(LinearLayout)v.findViewById(R.id.filters_tab_filters);
-        fab=(FloatingActionMenu)v.findViewById(R.id.filters_tab_fab);
-        fab.setClosedOnTouchOutside(true);
+        fam =(FloatingActionMenu)v.findViewById(R.id.filters_tab_fab);
+        fam.setClosedOnTouchOutside(true);
+        ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_add_white_24dp);
 
         fabs[0]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_1);
         fabs[0].setOnClickListener(this);
@@ -61,7 +63,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
             BaseFilter newFilter=new VolumeFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
             lv.addView(newFilter.getView(getLayoutInflater(null), lv));
-            //fab.close(true);
+            //fam.close(true);
         }else if (id==R.id.filters_tab_fab_sub_2){
             BaseFilter newFilter=new AutoGainFilter(FilterManager.getInstance());
             Log.i(LOG_TAG,"BaseFilter:"+newFilter);
@@ -71,7 +73,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
             Log.i(LOG_TAG, "vvvvv:" + vvvvv);
             Log.i(LOG_TAG, "lv:" + lv);
             lv.addView(vvvvv);
-            //fab.close(true);
+            //fam.close(true);
         }
     }
 }

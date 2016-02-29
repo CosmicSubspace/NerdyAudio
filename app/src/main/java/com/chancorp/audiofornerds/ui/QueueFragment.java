@@ -5,11 +5,9 @@
 package com.chancorp.audiofornerds.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +15,11 @@ import android.widget.Button;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.QueueManager;
+import com.chancorp.audiofornerds.helper.ClansFABHelper;
 import com.chancorp.audiofornerds.interfaces.MusicInformationUpdateListener;
 import com.emtronics.dragsortrecycler.DragSortRecycler;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 
 public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
@@ -27,7 +28,8 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     RecyclerView mRecyclerView;
     QueueAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
-    FloatingActionButton fab;
+    FloatingActionMenu fam;
+    FloatingActionButton[] fabs=new FloatingActionButton[4];
     QueueManager qm;
 
     Button refreshBtn;
@@ -73,9 +75,21 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         refreshBtn = (Button) v.findViewById(R.id.tab_queue_refresh);
         refreshBtn.setOnClickListener(this);
 
-        //TODO more options for fab: shuffle, order, etc
-        fab=(FloatingActionButton)v.findViewById(R.id.tab_queue_fab);
-        fab.setOnClickListener(this);
+        //TODO more options for fam: shuffle, order, etc
+        fam =(FloatingActionMenu)v.findViewById(R.id.queue_tab_fab);
+        fam.setOnClickListener(this);
+        ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_sort_white_24dp);
+
+        fabs[0]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_shuffle);
+        fabs[1]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_reverse);
+        fabs[2]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_sort_artist);
+        fabs[3]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_sort_name);
+        fabs[0].setOnClickListener(this);
+        fabs[1].setOnClickListener(this);
+        fabs[2].setOnClickListener(this);
+        fabs[3].setOnClickListener(this);
+
+
         return v;
 
     }
@@ -85,10 +99,20 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         int id=view.getId();
         if (id==R.id.tab_queue_refresh){
             mAdapter.notifyDataSetChanged();
-        }else if (id==R.id.tab_queue_fab){
-            QueueManager.getInstance().shuffleQueue();
+        }else if (id==R.id.queue_tab_fab_sub_shuffle){
+            qm.shuffleQueue();
+            mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_fab_sub_sort_name){
+            qm.sortByTitle();
+            mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_fab_sub_sort_artist){
+            qm.sortByArtist();
+            mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_fab_sub_reverse){
+            qm.reverseQueue();
             mAdapter.notifyDataSetChanged();
         }
+
     }
 
     @Override

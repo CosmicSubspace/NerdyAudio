@@ -33,7 +33,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     RecyclerView.LayoutManager mLayoutManager;
 
     TextView currentDir, scanning;
-    Button dirBtn;
+    View dirBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        dirBtn = (Button) v.findViewById(R.id.tab_library_dir);
+        dirBtn = v.findViewById(R.id.tab_library_dir);
         dirBtn.setOnClickListener(this);
 
         currentDir=(TextView)v.findViewById(R.id.library_tab_current_directory);
@@ -113,7 +113,6 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
                                 @Override
                                 public void run() {
                                     updateUI();
-
                                     scanCompleteUI();
 
                                 }
