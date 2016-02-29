@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.QueueManager;
 import com.chancorp.audiofornerds.interfaces.MusicInformationUpdateListener;
+import com.emtronics.dragsortrecycler.DragSortRecycler;
 
 
 public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
@@ -42,9 +44,26 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
+
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.setItemAnimator(null);
+
+        DragSortRecycler dragSortRecycler = new DragSortRecycler();
+        dragSortRecycler.setViewHandleId(R.id.music_list_element_handle); //View you wish to use as the handle
+
+        dragSortRecycler.setOnItemMovedListener(new DragSortRecycler.OnItemMovedListener() {
+            @Override
+            public void onItemMoved(int from, int to) {
+                qm.move(from, to);
+            }
+        });
+
+        mRecyclerView.addItemDecoration(dragSortRecycler);
+        mRecyclerView.addOnItemTouchListener(dragSortRecycler);
+        mRecyclerView.setOnScrollListener(dragSortRecycler.getScrollListener());
 
         // specify an adapter (see also next example)
         mAdapter = new QueueAdapter(qm);
@@ -74,7 +93,12 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
     @Override
     public void musicInformationUpdated(int index) {
-        mAdapter.notifyItemChanged(index);
+        if (index<0){
+            mAdapter.notifyDataSetChanged();
+        }else{
+            mAdapter.notifyItemChanged(index);
+        }
+
     }
 
     @Override

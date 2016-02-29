@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -183,7 +185,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     private void nextFile() {
-        setCurrentMusic(currentMusicIndex+1);
+        setCurrentMusic(currentMusicIndex + 1);
     }
 
     private void previousFile() {
@@ -240,6 +242,39 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         queue = newQueue;
 
         firstFile();
+    }
+
+    public void move(int from, int to){
+        MusicInformation target=queue.get(from);
+        queue.remove(from);
+        queue.add(to, target);
+        int origIdx=currentMusicIndex;
+
+        currentMusicIndex=shiftIndex(currentMusicIndex,from,to);
+        currentlyCachingIndex=shiftIndex(currentlyCachingIndex,from,to);
+
+        Log.i(LOG_TAG,"Shift from "+from+" to "+to);
+        Log.i(LOG_TAG,"CurrentMusicIndex Shift from "+origIdx+" to "+currentMusicIndex);
+        notifyMusicInformationUpdateListeners(-1);
+    }
+
+    private int shiftIndex(int index, int from, int to){
+        if (index<from && index<to) {
+            //do nothing
+        }else if (index>from && index>to) {
+            //do nothing
+        }else if (index<from && index>to) {
+            index++;
+        }else if (index>from && index<to) {
+            index--;
+        }else if (index==from) {
+            index=to;
+        }else if (index<from && index==to) {
+            index++;
+        }else if (index>from && index==to) {
+            index--;
+        }
+        return index;
     }
 
 

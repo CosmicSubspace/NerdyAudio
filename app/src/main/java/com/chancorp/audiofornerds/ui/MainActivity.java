@@ -50,7 +50,14 @@ import java.util.Random;
 //TODO : Queue Remove/reorder
 //TODO : Better Library Browser
 
-
+/**
+ * Other Libraries:
+ * Clans FAB [Apache]
+ * Ringdroid [Apache]
+ * Ninthavenue FileChooser [PD]
+ * Meapsoft FFT [GPL v2]
+ * Dragsortrecycler [Apache]
+ */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerLayout.DrawerListener{
     public final String LOG_TAG="CS_AFN";
