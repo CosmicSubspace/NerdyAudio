@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,24 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         mRecyclerView.addOnItemTouchListener(dragSortRecycler);
         mRecyclerView.setOnScrollListener(dragSortRecycler.getScrollListener());
 
+        //This _may_ conflict with the DragSortRecycler...
+        //Probably not though.
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                qm.remove(viewHolder.getAdapterPosition());
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
         // specify an adapter (see also next example)
         mAdapter = new QueueAdapter(qm);
         mRecyclerView.setAdapter(mAdapter);

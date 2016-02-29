@@ -280,6 +280,17 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyMusicInformationUpdateListeners(-1);
     }
 
+    public void remove(int index){
+        if (queue.get(index)==currentlyPlaying){
+            playFile(currentlyPlayingIndex()+1);
+        }
+        if (queue.get(index)==currentlyCaching){
+
+        }
+        queue.remove(index);
+        notifyMusicInformationUpdateListeners(-1);
+    }
+
     private int shiftIndex(int index, int from, int to){
         if (index<from && index<to) {
             //do nothing
