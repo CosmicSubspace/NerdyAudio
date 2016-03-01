@@ -118,8 +118,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     public void getQueueFromFileList(ArrayList<String> list) {
         MusicInformation current;
         for (int i = 0; i < list.size(); i++) {
-            current=new MusicInformation(list.get(i));
-            current.updateReadyness(ma);
+            current=new MusicInformation(list.get(i),ma);
             addMusic(current);
         }
         //prepareWaveform();
@@ -130,7 +129,6 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void addMusic(MusicInformation mi) {
-        mi.updateReadyness(ma);
         queue.add(mi);
         prepareWaveform();
     }
@@ -160,7 +158,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         ap.release();
         ap.setFileStr(currentlyPlaying.getFilepath());
         ap.playAudio();
-        if (currentlyPlaying.isReady()) {
+        if (currentlyPlaying.updateReadyness(ma).isReady()) {
             Waveform.getInstance().loadFromFile(currentlyPlaying.getFilepath(), 1.0, ma);
         }
         else Waveform.getInstance().loadBlank();
@@ -226,7 +224,19 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     private void prepareWaveform() {
         if (currentlyCaching==null) {
+            //Songs that are in front of the currently playing gets priority.
             for (int i = currentlyPlayingIndex(); i < queue.size(); i++) {
+                if (!queue.get(i).isReady()) {
+                    Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
+                    currentlyCaching=queue.get(i);
+                    currentlyCaching.setCaching(true);
+                    notifyMusicInformationUpdateListeners(i);
+                    Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
+                    break;
+                }
+            }
+            //But the ones in the back should be calculated too.
+            for (int i = 0; i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCaching=queue.get(i);

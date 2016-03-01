@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if (id==R.id.db_3){
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
         }else if (id==R.id.db_4){
-            qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3"));
+            qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3",this));
         }
         return true;
     }

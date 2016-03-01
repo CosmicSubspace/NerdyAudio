@@ -54,20 +54,8 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
         mRecyclerView.setItemAnimator(null);
 
-        DragSortRecycler dragSortRecycler = new DragSortRecycler();
-        dragSortRecycler.setViewHandleId(R.id.music_list_element_handle); //View you wish to use as the handle
 
-        dragSortRecycler.setOnItemMovedListener(new DragSortRecycler.OnItemMovedListener() {
-            @Override
-            public void onItemMoved(int from, int to) {
-                qm.move(from, to);
-            }
-        });
-
-        mRecyclerView.addItemDecoration(dragSortRecycler);
-        mRecyclerView.addOnItemTouchListener(dragSortRecycler);
-        mRecyclerView.setOnScrollListener(dragSortRecycler.getScrollListener());
-
+        //TODO list scrolling is not working well.
         //This _may_ conflict with the DragSortRecycler...
         //Probably not though.
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -86,7 +74,23 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
-        // specify an adapter (see also next example)
+
+
+        DragSortRecycler dragSortRecycler = new DragSortRecycler();
+        dragSortRecycler.setViewHandleId(R.id.music_list_element_handle); //View you wish to use as the handle
+
+        dragSortRecycler.setOnItemMovedListener(new DragSortRecycler.OnItemMovedListener() {
+            @Override
+            public void onItemMoved(int from, int to) {
+                qm.move(from, to);
+            }
+        });
+
+        mRecyclerView.addItemDecoration(dragSortRecycler);
+        mRecyclerView.addOnItemTouchListener(dragSortRecycler);
+        mRecyclerView.setOnScrollListener(dragSortRecycler.getScrollListener());
+
+
         mAdapter = new QueueAdapter(qm);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -139,6 +143,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         if (index<0){
             mAdapter.notifyDataSetChanged();
         }else{
+            //TODO this sometimes causes [java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling]
             mAdapter.notifyItemChanged(index);
         }
 

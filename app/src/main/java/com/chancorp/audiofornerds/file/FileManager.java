@@ -4,6 +4,7 @@
 
 package com.chancorp.audiofornerds.file;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -46,10 +47,10 @@ public class FileManager implements FileListReturnListener{
         this.psl=psl;
     }
 
-    public void discover(String path, CompletionListener cl){
+    public void discover(String path, CompletionListener cl, Context c){
         if (scanning) return;
         scanning=true;
-        FileLister fl=new FileLister(path,psl,this);
+        FileLister fl=new FileLister(path,psl,this,c);
         this.cl=cl;
         fl.start();
     }

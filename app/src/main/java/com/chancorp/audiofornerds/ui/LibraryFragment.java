@@ -118,7 +118,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
                                 }
                             });
                         }
-                    });
+                    },getContext());
                 }}).showDialog();
         }
     }

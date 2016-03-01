@@ -94,8 +94,9 @@ public class MusicInformation {
         this.title=mi.title;
         this.artist=mi.artist;
         this.hasArt=mi.hasArt;
+        this.isReady=mi.isReady;
     }
-    public MusicInformation(String source) {
+    public MusicInformation(String source, Context c) {
         this.filepath = source;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(source);
@@ -109,6 +110,8 @@ public class MusicInformation {
         }
         if (mmr.getEmbeddedPicture() == null) hasArt = false;
         else hasArt = true;
+
+        updateReadyness(c);
     }
 
     public byte[] getArtByteArray() {
@@ -117,9 +120,10 @@ public class MusicInformation {
         return mmr.getEmbeddedPicture();
     }
 
-    public void updateReadyness(Context c) {
+    public MusicInformation updateReadyness(Context c) {
         if (Waveform.checkExistance(filepath, 1, c)) isReady=true;
         else isReady=false;
+        return this;
     }
     public void setReady(boolean ready){
         this.isReady=ready;

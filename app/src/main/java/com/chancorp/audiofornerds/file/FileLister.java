@@ -4,6 +4,8 @@
 
 package com.chancorp.audiofornerds.file;
 
+import android.content.Context;
+
 import com.chancorp.audiofornerds.interfaces.FileListReturnListener;
 import com.chancorp.audiofornerds.interfaces.ProgressStringListener;
 
@@ -16,13 +18,15 @@ public class FileLister extends Thread{
     ArrayList<MusicInformation> musics=new ArrayList<>();
     FileListReturnListener flrl;
     ProgressStringListener psl;
+    Context c;
     public static String[] getSupportedExtensions() {
         return new String[] {"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg"};
     }
-    public FileLister(String path, ProgressStringListener psl , FileListReturnListener flrl){
+    public FileLister(String path, ProgressStringListener psl , FileListReturnListener flrl, Context c){
         this.path=path;
         this.flrl=flrl;
         this.psl=psl;
+        this.c=c;
     }
     public void run(){
         discover(path);
@@ -40,7 +44,7 @@ public class FileLister extends Thread{
                 if (psl!=null) psl.report("Scanned Directory:" + f.getAbsolutePath());
             }
             else {
-                if (checkFileValidity(f.getAbsolutePath())) musics.add(new MusicInformation(f.getAbsolutePath()));
+                if (checkFileValidity(f.getAbsolutePath())) musics.add(new MusicInformation(f.getAbsolutePath(),c));
             }
         }
     }
