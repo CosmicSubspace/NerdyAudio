@@ -47,7 +47,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
             vv.getRenderThread().setMaxFPS(60);
         }
 
-
+        updated(sbs.getSetting(BaseSetting.VISUALIZATION));
         return v;
 
 

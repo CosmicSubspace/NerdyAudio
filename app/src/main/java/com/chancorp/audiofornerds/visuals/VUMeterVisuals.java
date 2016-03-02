@@ -19,7 +19,8 @@ import com.chancorp.audiofornerds.settings.VUMeterSettings;
 public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListener{
     Paint pt;
     int range = 2048; //Should be Synchronized.
-    float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory; //TODO circular buffers for performance
+    float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory;
+
     int historySize=64; //Should be Synchronized.
 
     float textDp=16; //No need for Synchronization.
@@ -49,6 +50,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
         lPeakHistory=new float[historySize];
         rPeakHistory=new float[historySize];
     }
+
     private void pushArrays(){
         for (int i = historySize-1; i >0; i--) {
             lAvgHistory[i]=lAvgHistory[i-1];
@@ -74,6 +76,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
             newSetting=null;
         }
     }
+
 
     @Override
     public void draw(Canvas c, int w, int h) {
@@ -112,6 +115,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
 
                 peakLf=peakL/32767.0f;
                 peakRf=peakR/32767.0f;
+
 
 
                 pushArrays();

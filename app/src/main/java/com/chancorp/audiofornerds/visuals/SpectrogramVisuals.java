@@ -38,6 +38,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     int canvasX, canvasY;
     IntBuffer graphBuffer;
     float maxFreq=5000, minFreq=20;
+    double startLog=Math.log(20), endLog=Math.log(5000);
     int scrollPxPerRedraw=1;
     boolean logScale=false;
     float contrast=2.0f;
@@ -88,6 +89,8 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     public void setFrequencyRange(float min, float max) throws InvalidParameterException {
         this.maxFreq=max;
         this.minFreq=min;
+        this.startLog=Math.log(max);
+        this.endLog=Math.log(min);
         if (maxFreq<=minFreq) throw new InvalidParameterException("Min is larger than Max.");
     }
     public void setScrollPerRedraw(int pixels){
@@ -164,9 +167,7 @@ sbs.removeSettingsUpdateListener(this);
     }
 
     private float coordsToFrequency(float coord){
-        if (logScale){ //TODO this is called hundred of times per redraw. Performance.
-            double startLog=Math.log(minFreq);
-            double endLog=Math.log(maxFreq);
+        if (logScale){
             return (float)Math.exp(startLog+(endLog-startLog)*coord/(float)canvasX);
         }else{
             return minFreq+(maxFreq-minFreq)*coord/(float)canvasX;

@@ -36,7 +36,7 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
     Paint pt;
 
-    //TODO there is a bug where the player freezes when a new song is loaded with this visual active.
+
 
     public WaveformVisuals(float density) {
         super(density);
@@ -91,8 +91,6 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
                         lines[i * 4 + 1] = ((pcmL[pcmIndex]+pcmR[pcmIndex]) / 65534.0f + 1) * h / 2.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
                         lines[i * 4 + 3] = ((pcmL[pcmIndex + drawEvery]+pcmR[pcmIndex + drawEvery]) / 65534.0f + 1) * h / 2.0f;
-                        //points[i*2] = i / (float) numberOfLinePoints * w;
-                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
                     }
                     c.drawLines(lines, pt);
                 }else{
@@ -102,8 +100,6 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
                         lines[i * 4 + 1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 4.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
                         lines[i * 4 + 3] = (pcmL[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f;
-                        //points[i*2] = i / (float) numberOfLinePoints * w;
-                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
                     }
                     c.drawLines(lines, pt);
 
@@ -113,8 +109,7 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
                         lines[i * 4 + 1] = (pcmR[pcmIndex] / 32767.0f + 1) * h / 4.0f+h/2.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
                         lines[i * 4 + 3] = (pcmR[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f+h/2.0f;
-                        //points[i*2] = i / (float) numberOfLinePoints * w;
-                        //points[i*2+1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 2.0f;
+
                     }
                     c.drawLines(lines, pt);
                 }
@@ -137,5 +132,5 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
     @Override
     public void release(){
         sbs.removeSettingsUpdateListener(this);
-    } //TODO release() is not actually called anywhere.
+    }
 }

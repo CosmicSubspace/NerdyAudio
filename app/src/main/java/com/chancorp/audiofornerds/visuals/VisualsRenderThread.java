@@ -41,6 +41,7 @@ public class VisualsRenderThread extends Thread{
     }
 
     public void setRenderer(BaseRenderer r){
+        if (this.renderer!=null) this.renderer.release();
         this.renderer=r;
     }
     public void setSize(int w,int h){

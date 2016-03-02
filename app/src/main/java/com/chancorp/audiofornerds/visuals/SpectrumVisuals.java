@@ -24,6 +24,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     int bars=100;
     float spacing = 0.0f;
     float startFreq=20, endFreq=1000;
+    double startLog=Math.log(20), endLog=Math.log(1000);
     boolean logScale=false;
     float barHeightMultiplier=1.0f;
 
@@ -57,7 +58,9 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
             bars=newSettings.getBars();
             spacing=newSettings.getSpacing();
             startFreq=newSettings.getStartFreq();
+            startLog=Math.log(startFreq);
             endFreq=newSettings.getEndFreq();
+            endLog=Math.log(endFreq);
             barHeightMultiplier=newSettings.getBarHeight();
             logScale=newSettings.getLogScale();
 
@@ -112,9 +115,7 @@ public class SpectrumVisuals extends BaseRenderer implements SettingsUpdateListe
     }
 
     private float barNumToFrequency(int barNumber){
-        if (logScale){ //TODO this is called hundred of times per redraw. Performance.
-            double startLog=Math.log(startFreq);
-            double endLog=Math.log(endFreq);
+        if (logScale){
             return (float)Math.exp(startLog+(endLog-startLog)*barNumber/(float)bars);
         }else{
             return startFreq+(endFreq-startFreq)*barNumber/(float)bars;

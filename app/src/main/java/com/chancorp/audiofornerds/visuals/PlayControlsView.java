@@ -474,30 +474,30 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
 
-            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            titleNoArt.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
             titleAnimatable.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
             filePath.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
             filePathActiveArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             filePathActiveNoArt.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getProperty("Normal").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getProperty("NoArt").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            artistNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            artistNoArt.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            albumArtNormal.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            albumArtNone.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
             if (!expanded) buttonsCenter(false);
 
         }else{
-            titleAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            titleAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            titleNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            titleNoArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
             titleAnimatable.enableMarquee(w - albumArtMargin * 2 * density, 16 * density);
             filePath.enableMarquee(w - albumArtMargin * 2 * density, 16 * density);
             filePathActiveArt.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
             filePathActiveNoArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            albumArtColor.getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            albumArtColor.getProperty("NoArt").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getMixedProperties().getProperty("Normal").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-            artistAnimatable.getMixedProperties().getProperty("NoArt").getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            albumArtNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            albumArtNone.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+            artistNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+            artistNoArt.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
             if (!expanded) buttonsCenter(true);
         }
@@ -623,18 +623,18 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     private void animatePlay(){
         //TODO replace getProperty with direct references
         playBtnRestPosition.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        buttonFollower.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
         //We et influence to 1000 so it will override both Basis and Centered.
 
-        pauseBtn.getMixedProperties().getProperty("PauseVisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        pauseBtn.getMixedProperties().getProperty("PauseInvisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pauseVisible.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pauseInvisible.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
     }
     private void animateStop(){
         playBtnRestPosition.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        playBtn.getMixedProperties().getProperty("Follower").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        buttonFollower.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
 
-        pauseBtn.getMixedProperties().getProperty("PauseVisible").getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        pauseBtn.getMixedProperties().getProperty("PauseInvisible").getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pauseVisible.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pauseInvisible.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
     }
 
     float iniX, iniY;

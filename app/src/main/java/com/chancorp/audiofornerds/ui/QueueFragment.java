@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     RecyclerView mRecyclerView;
     QueueAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
-    FloatingActionMenu fam;
+    FloatingActionMenu fam, famPlaceholder;
     FloatingActionButton[] fabs=new FloatingActionButton[4];
     QueueManager qm;
 
@@ -52,12 +53,12 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.setItemAnimator(null);
+        //mRecyclerView.setItemAnimator(null);
 
 
-        //TODO list scrolling is not working well.
         //This _may_ conflict with the DragSortRecycler...
         //Probably not though.
+
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -74,7 +75,6 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
-
 
         DragSortRecycler dragSortRecycler = new DragSortRecycler();
         dragSortRecycler.setViewHandleId(R.id.music_list_element_handle); //View you wish to use as the handle
@@ -99,9 +99,10 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         refreshBtn.setOnClickListener(this);
 
         //TODO more options for fam: shuffle, order, etc
+
         fam =(FloatingActionMenu)v.findViewById(R.id.queue_tab_fab);
-        fam.setOnClickListener(this);
-        ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_sort_white_24dp);
+
+
 
         fabs[0]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_shuffle);
         fabs[1]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_reverse);
@@ -111,6 +112,9 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         fabs[1].setOnClickListener(this);
         fabs[2].setOnClickListener(this);
         fabs[3].setOnClickListener(this);
+
+        ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_sort_white_24dp);
+
 
 
         return v;
@@ -146,7 +150,6 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
             //TODO this sometimes causes [java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling]
             mAdapter.notifyItemChanged(index);
         }
-
     }
 
     @Override
