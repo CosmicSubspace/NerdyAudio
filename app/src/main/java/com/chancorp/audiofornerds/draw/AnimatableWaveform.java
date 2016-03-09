@@ -47,15 +47,15 @@ public class AnimatableWaveform extends Animatable{
         this.wf = wf;
         this.ap = ap;
         this.notAvailableText=new AnimatableText(new MixedProperties("Final",new PropertySet().setValue("X",0).setValue("Y",0)),Color.BLACK,"Waveorm not yet prepared...",16*density);
+        this.notAvailableText.setAlign(AnimatableText.ALIGN_CENTER);
     }
 
 
     float currentPosition;
     PropertySet current;
     public void draw(Canvas c, Paint pt) {
-        //TODO something that tells the user if the waveform is not yet prepared.
         current = mixedProperties.update(System.currentTimeMillis());
-
+        notAvailableText.getMixedProperties().getBasis().setValue("X",current.getValue("X")+current.getValue("XSize")/2.0f).setValue("Y",current.getValue("Y")-current.getValue("YSize")/2.0f);
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             currentPosition=(float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames());
             float spacing = current.getValue("XSize") / (wf.getDivisions() * (1.0f + barSpacing) - barSpacing) * (barSpacing + 1.0f);
@@ -72,6 +72,7 @@ public class AnimatableWaveform extends Animatable{
                 c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- wf.getRatio(i)*current.getValue("YSize"), current.getValue("X")+i * spacing + width, current.getValue("Y"), pt);
             }
         }else{
+
             notAvailableText.draw(c,pt);
         }
     }

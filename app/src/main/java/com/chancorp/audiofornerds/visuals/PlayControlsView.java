@@ -509,54 +509,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         pt.setColor(menuColor);
         canvas.drawRect(0, h-barHeight.update(System.currentTimeMillis()).getValue("Height"), w, h, pt);
-
+        waveform.draw(canvas,pt);
         //Log.d(LOG_TAG, "Drawing WaveformView" + w + " | " + h);
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
-            /*
-            setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
-            float spacing = getSpacingBetween();
-            float width = getBarWidth();
-            float perBar = 1 / (float) wf.getDivisions();
-            for (int i = 0; i < wf.getDivisions(); i++) {
-
-                if (i * perBar > currentPosition) pt.setColor(remainingColor);
-                else if ((i + 1) * perBar < currentPosition) pt.setColor(playedColor);
-                else
-                    pt.setColor(rampColor(playedColor, remainingColor, (currentPosition - i * perBar) / perBar));
-
-                //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
-                canvas.drawRect(i * spacing, normalBarHeight * density, i * spacing + width, normalBarHeight * density * (1 - wf.getRatio(i)), pt);
-            }*/
-
-/*
-            if (displayTimeStamp) {
 
 
-
-                float xPadding = 4;
-                float density = getContext().getResources().getDisplayMetrics().density;
-
-
-                pt.setTextSize(timestampSize * density);
-
-                String s = wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame());
-                Paint.FontMetrics fm = new Paint.FontMetrics();
-                pt.setTextAlign(Paint.Align.CENTER);
-                pt.getFontMetrics(fm);
-
-                pt.setColor(timestampBackgroundColor);
-                //Log.d(LOG_TAG, "Drawing rect at ");
-                //canvas.drawRect(canvasX - pt.measureText(s) / 2.0f, canvasY+fm.ascent, canvasX + pt.measureText(s) / 2.0f, canvasY+fm.descent, pt);
-                canvas.drawRect(w - pt.measureText(s) - timestampOffsetX * density - xPadding * density, h - fm.descent + fm.ascent - timestampOffsetY * density, w - timestampOffsetX * density + xPadding * density, h - timestampOffsetY * density, pt);
-                pt.setColor(timestampColor);
-
-                //Log.d(LOG_TAG, "Drawing text at " + canvasX + " | " + (canvasY + -(fm.ascent + fm.descent)));
-                //canvas.drawText(s, canvasX, canvasY, pt);
-                canvas.drawText(s, w - pt.measureText(s) / 2.0f - timestampOffsetX * density, h - fm.descent - timestampOffsetY * density, pt);
-            }
-*/
-            waveform.draw(canvas,pt);
 
             if (!dragMode) {
                 timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
@@ -568,16 +526,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
 
-
-
-
-            //canvas.drawText(title, albumArtSize * density, (normalBarHeight + 24) * density, pt);
-
             titleAnimatable.draw(canvas,pt);
 
-
-
-            //canvas.drawText(artist, albumArtSize * density, (normalBarHeight + 24 + 16) * density, pt);
             artistAnimatable.draw(canvas,pt);
 
             filePath.draw(canvas,pt);
@@ -621,7 +571,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
     private void animatePlay(){
-        //TODO replace getProperty with direct references
+
         playBtnRestPosition.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
         //We et influence to 1000 so it will override both Basis and Centered.
