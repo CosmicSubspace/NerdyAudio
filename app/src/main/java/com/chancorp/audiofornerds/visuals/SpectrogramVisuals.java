@@ -28,12 +28,11 @@ import java.nio.IntBuffer;
 
 
 
-public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateListener{
+public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateListener{
     public static final int LOG_SCALE=1235236;
     public static final int LINEAR_SCALE=4537;
     Paint pt;
-    int fftSize = 2048;
-    FFT fft;
+
     Bitmap graph;
     int canvasX, canvasY;
     IntBuffer graphBuffer;
@@ -48,9 +47,9 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
 
     private void syncChanges(){
         if (newSettings!=null){
-            fftSize=newSettings.getFftSize();
-            Log.i(LOG_TAG,"Spectrum: size changing"+fftSize);
             setFFTSize(newSettings.getFftSize());
+            Log.i(LOG_TAG, "Spectrum: size changing" + fftSize);
+
             try {
                 setFrequencyRange(newSettings.getStartFreq(), newSettings.getEndFreq());
             }catch(InvalidParameterException e){
@@ -73,8 +72,6 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     public SpectrogramVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
-        fft = new FFT(fftSize);
-
         sbs= SidebarSettings.getInstance();
         sbs.addSettingsUpdateListener(this);
 
@@ -82,10 +79,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
         updated(sbs.getSetting(BaseSetting.SPECTROGRAM));
     }
 
-    public void setFFTSize(int samples) {
-        this.fftSize = samples;
-        fft = new FFT(samples);
-    }
+
     public void setFrequencyRange(float min, float max) throws InvalidParameterException {
         this.maxFreq=max;
         this.minFreq=min;
@@ -112,18 +106,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
             if (w!=canvasX||h!=canvasY) newGraph(w, h);
             long currentFrame = getCurrentFrame();
             try {
-                //TODO increase temporal resolution
-                short[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
-                short[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
-                deleteBefore(currentFrame - fftSize / 2 + 1);
-
-                double[] x = new double[fftSize], y = new double[fftSize];
-                for (int i = 0; i < pcmL.length; i++) {
-                    x[i] = pcmL[i] / 32767.0;
-                    y[i] = 0;
-                }
-
-                fft.fft(x, y);
+                updateFFT(currentFrame);
 
                 graphBuffer.position(canvasX *scrollPxPerRedraw);
                 graphBuffer.compact();
@@ -138,7 +121,7 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
                         continue;
                     }*/
                     //newColors[i]=magnitudeToColor(magnitude(x[targetBin],y[targetBin]));
-                    newColors[i]=magnitudeToColor(getMagnitude(x,y,coordsToFrequency(i)));
+                    newColors[i]=magnitudeToColor(getMagnitude(coordsToFrequency(i)));
                 }
                 for (int i=0;i<scrollPxPerRedraw;i++) graphBuffer.put(newColors);
                 graphBuffer.rewind();
@@ -174,19 +157,7 @@ sbs.removeSettingsUpdateListener(this);
         }
     }
 
-    private float getMagnitude(double[] x, double[] y, float frequency){
 
-        int sr=ap.getSampleRate();
-        float frqPerBin=sr/(float)this.fftSize;
-        float bin=(float)(frequency/frqPerBin);
-        int ceilBin=(int)Math.round(Math.ceil(bin));
-        int floorBin=(int)Math.round(Math.floor(bin));
-
-        //Linear Interpolation.
-        float ceilFactor=(bin-floorBin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
-        float floorFactor=(ceilBin-bin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
-        return ceilFactor+floorFactor;
-    }
 
     /*
     private double magnitude(double x, double y){
