@@ -89,8 +89,8 @@ public class SpectrogramVisuals extends BaseRenderer implements SettingsUpdateLi
     public void setFrequencyRange(float min, float max) throws InvalidParameterException {
         this.maxFreq=max;
         this.minFreq=min;
-        this.startLog=Math.log(max);
-        this.endLog=Math.log(min);
+        this.startLog=Math.log(min);
+        this.endLog=Math.log(max);
         if (maxFreq<=minFreq) throw new InvalidParameterException("Min is larger than Max.");
     }
     public void setScrollPerRedraw(int pixels){

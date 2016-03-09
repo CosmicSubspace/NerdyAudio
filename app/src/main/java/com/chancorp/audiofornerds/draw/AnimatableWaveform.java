@@ -17,13 +17,14 @@ import com.chancorp.audiofornerds.helper.Log2;
 public class AnimatableWaveform extends Animatable{
     Waveform wf;
     AudioPlayer ap;
+    AnimatableText notAvailableText;
 
     float barSpacing=0.0f;
 
     /**
      * Required Properties:
-     * X
-     * Y
+     * X  - The Left corner
+     * Y  - The Bottom corner
      * XSize
      * YSize
      *
@@ -41,17 +42,18 @@ public class AnimatableWaveform extends Animatable{
 
 
 
-    public AnimatableWaveform(Waveform wf, AudioPlayer ap, MixedProperties basis) {
+    public AnimatableWaveform(Waveform wf, AudioPlayer ap, MixedProperties basis, float density) {
         super(basis);
         this.wf = wf;
         this.ap = ap;
-
+        this.notAvailableText=new AnimatableText(new MixedProperties("Final",new PropertySet().setValue("X",0).setValue("Y",0)),Color.BLACK,"Waveorm not yet prepared...",16*density);
     }
 
 
     float currentPosition;
     PropertySet current;
     public void draw(Canvas c, Paint pt) {
+        //TODO something that tells the user if the waveform is not yet prepared.
         current = mixedProperties.update(System.currentTimeMillis());
 
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
@@ -69,6 +71,8 @@ public class AnimatableWaveform extends Animatable{
                 //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
                 c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- wf.getRatio(i)*current.getValue("YSize"), current.getValue("X")+i * spacing + width, current.getValue("Y"), pt);
             }
+        }else{
+            notAvailableText.draw(c,pt);
         }
     }
 

@@ -325,7 +325,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         timestampAnim.setAlign(AnimatableText.ALIGN_CENTER);
         //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
 
-        waveform=new AnimatableWaveform(wf,ap,new MixedProperties("Final"));
+        waveform=new AnimatableWaveform(wf,ap,new MixedProperties("Final"),density);
         waveformNotExpanded=new MixedProperties("NotExpanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - normalBarHeight * density)
                 .setValue("XSize", w).setValue("YSize", 50 * density)
