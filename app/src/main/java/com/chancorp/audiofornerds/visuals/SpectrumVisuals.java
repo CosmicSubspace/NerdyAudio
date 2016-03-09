@@ -59,7 +59,7 @@ public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListen
             endFreq=newSettings.getEndFreq();
             endLog=Math.log(endFreq);
             barHeightMultiplier=newSettings.getBarHeight();
-            logScale=newSettings.getLogScale();
+            setLogScale(newSettings.getLogScale());
 
             newSettings=null;
         }
@@ -85,8 +85,7 @@ public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListen
                 //Log.d(LOG_TAG,"BetweenBars: "+betweenBars);
                 float betweenBars=w/(float)bars;
                 for (int i = 0; i < bars; i++) {
-
-                    c.drawRect(i * betweenBars, h - barHeightMultiplier*getMagnitude(barNumToFrequency(i)), (i + 1 - spacing) * betweenBars, h, pt);
+                    c.drawRect(i * betweenBars, h - barHeightMultiplier*getMagnitudeRatio(i / (float)bars), (i + 1 - spacing) * betweenBars, h, pt);
                 }
 
                 //c.drawRect(0,0,300,300,pt);
@@ -99,13 +98,6 @@ public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListen
         }
     }
 
-    private float barNumToFrequency(int barNumber){
-        if (logScale){
-            return (float)Math.exp(startLog+(endLog-startLog)*barNumber/(float)bars);
-        }else{
-            return startFreq+(endFreq-startFreq)*barNumber/(float)bars;
-        }
-    }
 
 
     @Override

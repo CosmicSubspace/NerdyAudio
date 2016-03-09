@@ -29,17 +29,13 @@ import java.nio.IntBuffer;
 
 
 public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateListener{
-    public static final int LOG_SCALE=1235236;
-    public static final int LINEAR_SCALE=4537;
     Paint pt;
 
     Bitmap graph;
     int canvasX, canvasY;
     IntBuffer graphBuffer;
-    float maxFreq=5000, minFreq=20;
-    double startLog=Math.log(20), endLog=Math.log(5000);
     int scrollPxPerRedraw=1;
-    boolean logScale=false;
+
     float contrast=2.0f;
 
     SidebarSettings sbs;
@@ -80,19 +76,11 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
     }
 
 
-    public void setFrequencyRange(float min, float max) throws InvalidParameterException {
-        this.maxFreq=max;
-        this.minFreq=min;
-        this.startLog=Math.log(min);
-        this.endLog=Math.log(max);
-        if (maxFreq<=minFreq) throw new InvalidParameterException("Min is larger than Max.");
-    }
+
     public void setScrollPerRedraw(int pixels){
         this.scrollPxPerRedraw=pixels;
     }
-    public void setLogScale(boolean logScale){
-        this.logScale=logScale;
-    }
+
     public void setContrast(float contrast){
         this.contrast=contrast;
     }
@@ -121,7 +109,7 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
                         continue;
                     }*/
                     //newColors[i]=magnitudeToColor(magnitude(x[targetBin],y[targetBin]));
-                    newColors[i]=magnitudeToColor(getMagnitude(coordsToFrequency(i)));
+                    newColors[i]=magnitudeToColor(getMagnitudeRatio(i/(float)canvasX));
                 }
                 for (int i=0;i<scrollPxPerRedraw;i++) graphBuffer.put(newColors);
                 graphBuffer.rewind();
@@ -140,7 +128,7 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
 
     @Override
     public void release() {
-sbs.removeSettingsUpdateListener(this);
+        sbs.removeSettingsUpdateListener(this);
     }
 
     private int magnitudeToColor(double mag){
@@ -149,13 +137,7 @@ sbs.removeSettingsUpdateListener(this);
         return Color.argb(255,inten,inten,inten);
     }
 
-    private float coordsToFrequency(float coord){
-        if (logScale){
-            return (float)Math.exp(startLog+(endLog-startLog)*coord/(float)canvasX);
-        }else{
-            return minFreq+(maxFreq-minFreq)*coord/(float)canvasX;
-        }
-    }
+
 
 
 
