@@ -138,7 +138,6 @@ public class AnimatableText extends Animatable{
         fm = pt.getFontMetrics();
 
 
-
         textHeight = fm.descent - fm.ascent;
         textWidth = pt.measureText(text);
 
@@ -156,9 +155,6 @@ public class AnimatableText extends Animatable{
         }
 
         pt.setColor(color);
-        //pt.setShader(new ComposeShader(new LinearGradient(0, 0, 500, 0, Color.argb(0, 255, 255, 255), Color.argb(255, 255, 255, 255),Shader.TileMode.CLAMP), new RadialGradient(0, 0, 1, color, color, Shader.TileMode.CLAMP), new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)));
-        //pt.setShader(new LinearGradient(0,0,500,0, Color.argb(0, 255, 255, 255), Color.argb(255, 255, 255, 255), Shader.TileMode.CLAMP));
-
 
         if (marquee&& textWidth>maxWidth) {
             if (align == ALIGN_BOTTOM_LEFT_CORNER) {
@@ -181,19 +177,13 @@ public class AnimatableText extends Animatable{
 
         //pt.setShader(new RadialGradient(0, 0, 1, color, color, Shader.TileMode.CLAMP));
         if (align == ALIGN_BOTTOM_LEFT_CORNER) {
-
             if (marquee && textWidth>maxWidth) c.drawText(text, current.getValue("X")-marqueeProgress*(textWidth-maxWidth+fadeSize*2)+fadeSize, current.getValue("Y") - fm.ascent, pt);
             else c.drawText(text, current.getValue("X"), current.getValue("Y") - fm.ascent, pt);
-
         } else if (align == ALIGN_CENTER) {
             if (marquee && textWidth>maxWidth) c.drawText(text, current.getValue("X")-marqueeProgress*(textWidth-maxWidth+fadeSize*2)+fadeSize, current.getValue("Y") - fm.ascent - textHeight / 2, pt);
             else c.drawText(text, current.getValue("X"), current.getValue("Y") - fm.ascent - textHeight / 2, pt);
         }
-/*
-        pt.setShader(new LinearGradient(0,0,500,0, Color.TRANSPARENT,Color.WHITE, Shader.TileMode.CLAMP));
-        pt.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        c.drawRect(0,0,500,0,pt);
-        pt.setXfermode(null);*/
+
         pt.setShader(null);
 
     }

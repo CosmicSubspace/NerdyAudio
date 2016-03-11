@@ -49,6 +49,7 @@ public class VisualizationBuffer implements BufferFeedListener {
     }
     @Override
     public synchronized void feed(short[] buff) {
+        //TODO we're creating new short[] each time... GC gets sad.
         short[] right = new short[buff.length/2];
         for (int i = 0; i < right.length; i++) {
             right[i] = buff[i *2+1];
