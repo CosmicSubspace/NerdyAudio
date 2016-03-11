@@ -19,6 +19,7 @@ public class VisualizationBuffer implements BufferFeedListener {
     public static final String LOG_TAG = "CS_AFN";
     ArrayList<short[]> bufferR, bufferL;
     long firstBufferStartingFrame = 0;
+    long lastFrameNumber=0;
     int numChannels = 2;
     //int bufferSize = 2048;
     long maximumBufferSize=48000*20*2;
@@ -40,6 +41,7 @@ public class VisualizationBuffer implements BufferFeedListener {
         bufferR = new ArrayList<short[]>();
         bufferL = new ArrayList<short[]>();
         firstBufferStartingFrame=0;
+        lastFrameNumber=0;
     }
     public void setNumChannels(int n){
         this.numChannels = n;
@@ -49,7 +51,7 @@ public class VisualizationBuffer implements BufferFeedListener {
     }
     @Override
     public synchronized void feed(short[] buff) {
-        //TODO we're creating new short[] each time... GC gets sad.
+        //TODO we're creating new short[] each time... GC disapproves.
         short[] right = new short[buff.length/2];
         for (int i = 0; i < right.length; i++) {
             right[i] = buff[i *2+1];
@@ -60,12 +62,14 @@ public class VisualizationBuffer implements BufferFeedListener {
             left[i] = buff[i *2];
         }
         bufferL.add(left);
-        deleteBefore(getLastFrameNumber()-maximumBufferSize);
+        lastFrameNumber+=left.length;
+        deleteBefore(lastFrameNumber-maximumBufferSize);
     }
 
     public synchronized short[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
-        Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
+        Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
         Log.v(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
+
         checkRange(startFrame);
         checkRange(endFrame);
 
@@ -88,7 +92,7 @@ public class VisualizationBuffer implements BufferFeedListener {
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
                 } catch (IndexOutOfBoundsException e){ //TODO this exception is caught at random points. Fix that.
                     Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer.");
-                    Log.e(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
+                    Log.e(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
                     Log.e(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
                     ErrorLogger.log(e);
                     break;
@@ -114,12 +118,12 @@ public class VisualizationBuffer implements BufferFeedListener {
 
 
     private void checkRange(long num) throws BufferNotPresentException {
-        if (num > getLastFrameNumber())
-            throw new BufferNotPresentException("Buffer out of bounds!\nPresent buffers: " + firstBufferStartingFrame + " ~ " + getLastFrameNumber() + "\nRequested: " + num);
+        if (num > lastFrameNumber)
+            throw new BufferNotPresentException("Buffer out of bounds!\nPresent buffers: " + firstBufferStartingFrame + " ~ " + lastFrameNumber + "\nRequested: " + num);
         else if (num < firstBufferStartingFrame)
-            throw new BufferNotPresentException("Buffer out of bounds!\nPresent buffers: " + firstBufferStartingFrame + " ~ " + getLastFrameNumber() + "\nRequested: " + num);
+            throw new BufferNotPresentException("Buffer out of bounds!\nPresent buffers: " + firstBufferStartingFrame + " ~ " + lastFrameNumber + "\nRequested: " + num);
     }
-
+/*
     private long getLastFrameNumber() {
         long res = firstBufferStartingFrame;
         for (int i = 0; i < bufferR.size(); i++) {
@@ -127,7 +131,7 @@ public class VisualizationBuffer implements BufferFeedListener {
         }
         return res;
     }
-
+*/
     public synchronized void deleteBefore(long frameNumber) {
         Log.v(LOG_TAG, "Deletion request for frames less than " + frameNumber);
 
@@ -137,6 +141,7 @@ public class VisualizationBuffer implements BufferFeedListener {
             Log.v(LOG_TAG, "Deleting buffer");
             Log.v(LOG_TAG, "First Buffer Starting Frame: " + firstBufferStartingFrame);
             firstBufferStartingFrame += bufferR.get(0).length;
+            //lastFrameNumber-=bufferR.get(0).length;
             //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
             bufferR.remove(0);
             bufferL.remove(0);

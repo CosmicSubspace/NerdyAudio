@@ -24,6 +24,8 @@ public class MixedProperties {
 
     private String name;
     private AnimatableValue influence;
+    private PropertySet memoized;
+    private long memoizedTime;
 
     public MixedProperties(String name, PropertySet basis){
         this.name=name;
@@ -55,8 +57,12 @@ public class MixedProperties {
         //TODO perf Improvements
         if (basis!=null) return basis;
 
+        if (memoizedTime==time && memoized!=null){
+            return memoized;
+        }
+
+
         PropertySet res=new PropertySet();
-        //float influenceSum=0;
         float influence;
         int size=-1;
 
@@ -66,28 +72,17 @@ public class MixedProperties {
 
             PropertySet ps=mp.update(time);
 
-
             if (size>0 && ps.getNumKeys()!=size){
-                //throw new PropertySetException("Property Set Size Mismatch!");
-                //Log.w(LOG_TAG, "Property Set Size Mismatch!");
             }else size=ps.getNumKeys();
-
-            //Log2.log(2,this,ps.toString());
 
             influence=mp.getInfluence().getValue(time);
 
-            //influenceSum+=influence;
             for (Object k:ps.getIter()){
                 String key=(String)k;
-
                 if (influences.get(key)==null) influences.put(key,0.0f);
-
                 influences.put(key,influences.get(key)+influence);
-                //Log2.log(2,this,key,k,ps.getName());
                 res.setValue(key, res.getValue(key,0)+ps.getValue(key)*influence);
-
             }
-
         }
         for (Object k:res.getIter()){
             String key=(String)k;
@@ -95,6 +90,10 @@ public class MixedProperties {
             res.setValue(key, res.getValue(key)/influences.get(key));
 
         }
+
+
+        memoized=res;
+        memoizedTime=time;
 
         return res;
 
