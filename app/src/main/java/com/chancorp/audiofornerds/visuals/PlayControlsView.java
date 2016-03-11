@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -501,10 +502,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     @Override
     protected void onDraw(Canvas canvas) {
-
+        Log.d(LOG_TAG,"Draw Start: "+System.currentTimeMillis());
         pt.setColor(menuColor);
         canvas.drawRect(0, h - barHeight.update(System.currentTimeMillis()).getValue("Height"), w, h, pt);
+
+        Log.d(LOG_TAG, "Draw 1: " + System.currentTimeMillis());
         waveform.draw(canvas, pt);
+        Log.d(LOG_TAG, "Draw 2: " + System.currentTimeMillis());
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
 
@@ -516,7 +520,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
             buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
-
+        Log.d(LOG_TAG,"Draw 3: "+System.currentTimeMillis());
         titleAnimatable.draw(canvas, pt);
 
         artistAnimatable.draw(canvas, pt);
@@ -529,7 +533,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             pt.setAlpha(255);
         }
 
-
+        Log.d(LOG_TAG,"Draw 4: "+System.currentTimeMillis());
         pt.setColor(Color.argb(50, 0, 0, 0));
 
         pt.setColor(buttonColor);
@@ -540,7 +544,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         prevBtn.draw(canvas, pt);
         nextBtn.draw(canvas, pt);
-
+        Log.d(LOG_TAG, "Draw 5: " + System.currentTimeMillis());
         invalidate();
 
     }

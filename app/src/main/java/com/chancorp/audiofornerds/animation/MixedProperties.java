@@ -52,7 +52,7 @@ public class MixedProperties {
     }
 
     public PropertySet update(long time){
-
+        //TODO perf Improvements
         if (basis!=null) return basis;
 
         PropertySet res=new PropertySet();

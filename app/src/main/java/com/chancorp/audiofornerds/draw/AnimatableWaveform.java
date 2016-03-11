@@ -50,9 +50,13 @@ public class AnimatableWaveform extends Animatable {
 
     float currentPosition;
     PropertySet current;
+
     public void draw(Canvas c, Paint pt) {
-        //TODO something that tells the user if the waveform is not yet prepared.
         current = mixedProperties.update(System.currentTimeMillis());
+        notAvailableText.getMixedProperties().getBasis().setValue("X",current.getValue("X")+current.getValue("XSize")/2.0f).setValue("Y",current.getValue("Y")-current.getValue("YSize")/2.0f);
+
+        int playedColor=getPlayedColor(current);
+        int remainingColor=getRemainingColor(current);
 
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             currentPosition=(float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames());
@@ -62,14 +66,15 @@ public class AnimatableWaveform extends Animatable {
             for (int i = 0; i < wf.getDivisions(); i++) {
 
 
-                if (i * progressPerBar > currentPosition) pt.setColor(getRemainingColor(current));
-                else if ((i + 1) * progressPerBar < currentPosition) pt.setColor(getPlayedColor(current));
-                else pt.setColor(ColorFiddler.rampColor(getPlayedColor(current), getRemainingColor(current), (currentPosition - i * progressPerBar) / progressPerBar));
+                if (i * progressPerBar > currentPosition) pt.setColor(remainingColor);
+                else if ((i + 1) * progressPerBar < currentPosition) pt.setColor(playedColor);
+                else pt.setColor(ColorFiddler.rampColor( playedColor, remainingColor,(currentPosition - i * progressPerBar) / progressPerBar));
 
                 //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
                 c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- wf.getRatio(i)*current.getValue("YSize"), current.getValue("X")+i * spacing + width, current.getValue("Y"), pt);
             }
         }else{
+
             notAvailableText.draw(c,pt);
         }
     }
