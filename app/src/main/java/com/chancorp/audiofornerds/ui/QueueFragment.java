@@ -15,14 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chancorp.audiofornerds.R;
+import com.chancorp.audiofornerds.file.Playlist;
 import com.chancorp.audiofornerds.file.QueueManager;
 import com.chancorp.audiofornerds.helper.ClansFABHelper;
+import com.chancorp.audiofornerds.helper.ErrorLogger;
 import com.chancorp.audiofornerds.interfaces.MusicInformationUpdateListener;
 import com.emtronics.dragsortrecycler.DragSortRecycler;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
+import java.util.TooManyListenersException;
 
 
 public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
@@ -35,7 +40,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     FloatingActionButton[] fabs=new FloatingActionButton[4];
     QueueManager qm;
 
-    TextView refreshBtn;
+    TextView refreshBtn, saveBtn,loadBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,8 +103,11 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
         refreshBtn = (TextView) v.findViewById(R.id.queue_tab_refresh);
         refreshBtn.setOnClickListener(this);
+        saveBtn = (TextView) v.findViewById(R.id.queue_tab_save);
+        saveBtn.setOnClickListener(this);
+        loadBtn = (TextView) v.findViewById(R.id.queue_tab_load);
+        loadBtn.setOnClickListener(this);
 
-        //TODO more options for fam: shuffle, order, etc
 
         fam =(FloatingActionMenu)v.findViewById(R.id.queue_tab_fab);
 
@@ -127,6 +135,15 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         int id=view.getId();
         if (id==R.id.queue_tab_refresh){
             mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_save){
+            new PlaylistSaveDialog(getContext(),qm.getQueue()).init();
+        }else if (id==R.id.queue_tab_load){
+            try {
+                qm.parsePlaylist(Playlist.load(getContext(), "TEST"),QueueManager.OVERWRITE, getContext());
+            }catch (Exception e) {
+                ErrorLogger.log(e);
+                Toast.makeText(getContext(), "Error while Loading!", Toast.LENGTH_SHORT).show();
+            }
         }else if (id==R.id.queue_tab_fab_sub_shuffle){
             qm.shuffleQueue();
             mAdapter.notifyDataSetChanged();

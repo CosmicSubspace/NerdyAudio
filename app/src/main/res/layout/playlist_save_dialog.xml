@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        style="@style/playlist_save_desc"
+        android:text="Playlist Name"
+        android:id="@+id/playlist_save_name" />
+    <EditText
+        android:id="@+id/playlist_save_name_input"
+        style="@style/playlist_save_input"
+        android:hint="" />
+
+    <TextView
+        style="@style/playlist_save_desc"
+        android:text="Description"
+        android:id="@+id/playlist_save_desc" />
+    <EditText
+        android:id="@+id/playlist_save_desc_input"
+        style="@style/playlist_save_input"
+        android:hint="" />
+
+
+</LinearLayout>

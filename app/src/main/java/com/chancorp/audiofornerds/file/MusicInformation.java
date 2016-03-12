@@ -12,9 +12,10 @@ import android.media.MediaMetadataRetriever;
 import com.chancorp.audiofornerds.audio.Waveform;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class MusicInformation {
+public class MusicInformation{
 
     static class TitleComparator implements Comparator<MusicInformation>{
         @Override

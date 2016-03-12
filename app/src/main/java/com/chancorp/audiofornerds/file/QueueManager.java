@@ -4,6 +4,7 @@
 
 package com.chancorp.audiofornerds.file;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.chancorp.audiofornerds.audio.AudioPlayer;
@@ -321,6 +322,34 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
 
+    public static final int OVERWRITE=6423916;
+    public static final int APPEND=27523;
+    public static final int LOGICAL_AND=361236;
+    public static final int LOGICAL_XOR=6324648;
+    public static final int SUBTRACT=275845;
+    public void parsePlaylist(Playlist pl, int mode, Context c){
+
+        switch (mode){
+            case OVERWRITE:
+                queue.clear();
+                for (int i = 0; i < pl.files.length; i++) {
+                    addMusic(new MusicInformation(pl.files[i],c));
+                }
+                break;
+            case APPEND:
+                break;
+            case LOGICAL_AND:
+                break;
+            case LOGICAL_XOR:
+                break;
+            case SUBTRACT:
+                break;
+        }
+
+
+    }
+
+
     @Override
     public void report(long l) {
         notifyProgressStringListeners( "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
@@ -336,3 +365,4 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyProgressStringListeners("Caching Complete.");
     }
 }
+
