@@ -126,7 +126,7 @@ public class AnimatableText extends Animatable{
     float rewindDuration=2;
     float evalTime;
     long timeOffset=0;
-    public void draw(Canvas c, Paint pt) {
+    public void draw(Canvas c, Paint pt, long currentTime) {
         if (!visible) return;
         //TODO : Perf Improvements.
 
@@ -134,7 +134,7 @@ public class AnimatableText extends Animatable{
         if (align == ALIGN_BOTTOM_LEFT_CORNER) pt.setTextAlign(Paint.Align.LEFT);
         else if (align == ALIGN_CENTER) pt.setTextAlign(Paint.Align.CENTER);
 
-        current = mixedProperties.update(System.currentTimeMillis());
+        current = mixedProperties.update(currentTime);
         fm = pt.getFontMetrics();
 
 
@@ -166,7 +166,7 @@ public class AnimatableText extends Animatable{
         }
 
         if (marquee&& textWidth>maxWidth) {
-            evalTime=((System.currentTimeMillis()-timeOffset)%((long)((marqueeDuration+rewindDuration+waitDuration)*1000)))/1000.0f;
+            evalTime=((currentTime-timeOffset)%((long)((marqueeDuration+rewindDuration+waitDuration)*1000)))/1000.0f;
             //Log2.log(2,this,evalTime,(marqueeDuration+rewindDuration+waitDuration)*1000,marqueeDuration+rewindDuration+waitDuration);
             if (evalTime<waitDuration){
                 marqueeProgress=0;

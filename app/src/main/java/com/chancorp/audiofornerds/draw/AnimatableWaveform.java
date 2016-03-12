@@ -51,8 +51,8 @@ public class AnimatableWaveform extends Animatable {
     float currentPosition;
     PropertySet current;
 
-    public void draw(Canvas c, Paint pt) {
-        current = mixedProperties.update(System.currentTimeMillis());
+    public void draw(Canvas c, Paint pt, long currentTime) {
+        current = mixedProperties.update(currentTime);
         notAvailableText.getMixedProperties().getBasis().setValue("X",current.getValue("X")+current.getValue("XSize")/2.0f).setValue("Y",current.getValue("Y")-current.getValue("YSize")/2.0f);
 
         int playedColor=getPlayedColor(current);
@@ -75,7 +75,7 @@ public class AnimatableWaveform extends Animatable {
             }
         }else{
 
-            notAvailableText.draw(c,pt);
+            notAvailableText.draw(c,pt,currentTime);
         }
     }
 /*

@@ -37,8 +37,8 @@ public class AnimatableShape extends Animatable{
         this.color=color;
     }
 
-    private PointsCompound getPointsCompound(){
-        PropertySet ps= mixedProperties.update(System.currentTimeMillis());
+    private PointsCompound getPointsCompound(long currentTime){
+        PropertySet ps= mixedProperties.update(currentTime);
 
         mat=new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
@@ -48,13 +48,13 @@ public class AnimatableShape extends Animatable{
         return path.transform(mat);
     }
 
-    public RectF getBounds(float padding){
-        return getPointsCompound().getBounds(padding);
+    public RectF getBounds(float padding,long currentTime){
+        return getPointsCompound(currentTime).getBounds(padding);
     }
 
     @Override
-    public void draw(Canvas c, Paint pt){
-        PropertySet ps= mixedProperties.update(System.currentTimeMillis());
+    public void draw(Canvas c, Paint pt, long currentTime){
+        PropertySet ps= mixedProperties.update(currentTime);
 
         mat=new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));

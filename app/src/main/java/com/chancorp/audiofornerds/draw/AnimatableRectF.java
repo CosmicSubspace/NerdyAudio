@@ -27,11 +27,8 @@ public class AnimatableRectF extends Animatable{
         current=mixedProperties.update(time);
         return new RectF(current.getValue("X-"),current.getValue("Y-"),current.getValue("X+"),current.getValue("Y+"));
     }
-    public RectF getRectF(){
-        return getRectF(System.currentTimeMillis());
-    }
     @Override
-    public void draw(Canvas c, Paint pt){
-
+    public void draw(Canvas c, Paint pt, long currentTime){
+        throw new UnsupportedOperationException();
     }
 }

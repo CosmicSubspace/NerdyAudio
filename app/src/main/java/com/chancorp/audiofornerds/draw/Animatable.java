@@ -16,5 +16,5 @@ public abstract class Animatable {
     public MixedProperties getMixedProperties(){
         return this.mixedProperties;
     }
-    public abstract void draw(Canvas c, Paint pt);
+    public abstract void draw(Canvas c, Paint pt, long currentTime);
 }

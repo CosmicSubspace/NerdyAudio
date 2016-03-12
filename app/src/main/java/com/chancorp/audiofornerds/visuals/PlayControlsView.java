@@ -464,7 +464,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    RectF bounds = artBoundsAnim.getRectF();
+                    RectF bounds = artBoundsAnim.getRectF(currentFrameTime);
                     albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(bounds.width()), Math.round(bounds.height()));
                     albumArtNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
                     albumArtNone.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
@@ -499,16 +499,18 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         }
     }
 
-
+    long currentFrameTime;
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d(LOG_TAG,"Draw Start: "+System.currentTimeMillis());
-        pt.setColor(menuColor);
-        canvas.drawRect(0, h - barHeight.update(System.currentTimeMillis()).getValue("Height"), w, h, pt);
 
-        Log.d(LOG_TAG, "Draw 1: " + System.currentTimeMillis());
-        waveform.draw(canvas, pt);
-        Log.d(LOG_TAG, "Draw 2: " + System.currentTimeMillis());
+        currentFrameTime=System.currentTimeMillis();
+
+        pt.setColor(menuColor);
+        canvas.drawRect(0, h - barHeight.update(currentFrameTime).getValue("Height"), w, h, pt);
+
+
+        waveform.draw(canvas, pt,currentFrameTime);
+
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
 
@@ -516,35 +518,35 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
             }
 
-            timestampAnim.draw(canvas, pt);
+            timestampAnim.draw(canvas, pt,currentFrameTime);
 
             buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
-        Log.d(LOG_TAG,"Draw 3: "+System.currentTimeMillis());
-        titleAnimatable.draw(canvas, pt);
 
-        artistAnimatable.draw(canvas, pt);
+        titleAnimatable.draw(canvas, pt,currentFrameTime);
 
-        filePath.draw(canvas, pt);
+        artistAnimatable.draw(canvas, pt,currentFrameTime);
+
+        filePath.draw(canvas, pt,currentFrameTime);
         if (albumArt != null) {
-            pt.setAlpha(Math.round(albumArtColor.update(System.currentTimeMillis()).getValue("alpha")));
-            canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(), pt);
+            pt.setAlpha(Math.round(albumArtColor.update(currentFrameTime).getValue("alpha")));
+            canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
             //Log.d(LOG_TAG, "trying to draw..");
             pt.setAlpha(255);
         }
 
-        Log.d(LOG_TAG,"Draw 4: "+System.currentTimeMillis());
+
         pt.setColor(Color.argb(50, 0, 0, 0));
 
         pt.setColor(buttonColor);
 
-        playBtn.draw(canvas, pt);
+        playBtn.draw(canvas, pt,currentFrameTime);
 
-        pauseBtn.draw(canvas, pt);
+        pauseBtn.draw(canvas, pt,currentFrameTime);
 
-        prevBtn.draw(canvas, pt);
-        nextBtn.draw(canvas, pt);
-        Log.d(LOG_TAG, "Draw 5: " + System.currentTimeMillis());
+        prevBtn.draw(canvas, pt,currentFrameTime);
+        nextBtn.draw(canvas, pt,currentFrameTime);
+
         invalidate();
 
     }
@@ -580,7 +582,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
             //Play Button Drag
             if (buttonFollower.getInfluence().getValue() > 0.99f) { //if in playing mode and button is in follow state
-                if (playBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+                if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                     dragMode = true;
                     buttonFollowerUser.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
                     buttonFollowerProgress.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
@@ -595,15 +597,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
 
             //Other buttons
-            if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (playBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (pauseBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (pauseBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (artBoundsAnim.getRectF().contains(ev.getX(), ev.getY())) {
+            } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
             }
 
@@ -633,10 +635,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
 
             //Button doing stuff.
-            if (prevBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
                 return true;
-            } else if (playBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
                     if (ap.isPaused()) {
                         ap.playAudio();
@@ -647,7 +649,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                     }
                 }
                 return true;
-            } else if (pauseBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (pauseBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
                     if (ap.isPlaying()) {
                         ap.pause();
@@ -655,10 +657,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                     }
                 }
                 return true;
-            } else if (nextBtn.getBounds(buttonPaddings * density).contains(ev.getX(), ev.getY())) {
+            } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
                 return true;
-            } else if (artBoundsAnim.getRectF().contains(ev.getX(), ev.getY())) {
+            } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 toggleExpand();
             }
 
