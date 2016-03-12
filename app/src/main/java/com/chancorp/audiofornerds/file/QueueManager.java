@@ -233,7 +233,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
-                    break;
+                    return;
                 }
             }
             //But the ones in the back should be calculated too.
@@ -244,7 +244,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
-                    break;
+                    return;
                 }
             }
         }
