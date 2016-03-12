@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.QueueManager;
@@ -34,7 +35,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     FloatingActionButton[] fabs=new FloatingActionButton[4];
     QueueManager qm;
 
-    Button refreshBtn;
+    TextView refreshBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         mRecyclerView.setAdapter(mAdapter);
 
 
-        refreshBtn = (Button) v.findViewById(R.id.tab_queue_refresh);
+        refreshBtn = (TextView) v.findViewById(R.id.queue_tab_refresh);
         refreshBtn.setOnClickListener(this);
 
         //TODO more options for fam: shuffle, order, etc
@@ -124,7 +125,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     @Override
     public void onClick(View view) {
         int id=view.getId();
-        if (id==R.id.tab_queue_refresh){
+        if (id==R.id.queue_tab_refresh){
             mAdapter.notifyDataSetChanged();
         }else if (id==R.id.queue_tab_fab_sub_shuffle){
             qm.shuffleQueue();

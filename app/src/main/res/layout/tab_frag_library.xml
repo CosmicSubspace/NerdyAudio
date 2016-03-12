@@ -50,12 +50,120 @@
 
     </RelativeLayout>
 
+    <!-- TODO Shadows are needed here, to adhere to the material design guidelines-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/library_tab_lower"
+        android:layout_below="@+id/library_tab_selection">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:id="@+id/library_tab_group"
+            android:background="@color/colorPrimaryLight"
+            android:layout_below="@+id/library_tab_selection"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Grouping."
+                android:textColor="@color/colorLightSecondaryText"
+                android:id="@+id/library_tab_current_grouping"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                android:layout_centerVertical="true"
+                style="@style/singleline_cutstart"
+                android:layout_toRightOf="@+id/library_tab_group_seperator"
+                android:layout_margin="8dp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:background="@color/colorPrimaryDark"
+                android:id="@+id/library_tab_group_seperator"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/library_tab_group_btn"
+                android:layout_margin="2dp" />
+
+            <RelativeLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/library_tab_group_btn">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:clickable="false"
+                    android:layout_alignParentTop="false"
+                    android:background="@drawable/ic_view_list_white_24dp"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:id="@+id/library_tab_sort"
+            android:background="@color/colorPrimaryLight"
+            android:layout_below="@+id/library_tab_selection"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By Name"
+                android:textColor="@color/colorLightSecondaryText"
+                android:id="@+id/library_tab_current_sort"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                android:layout_centerVertical="true"
+                style="@style/singleline_cutstart"
+                android:layout_toRightOf="@+id/library_tab_sort_seperator"
+                android:layout_margin="8dp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:background="@color/colorPrimaryDark"
+                android:id="@+id/library_tab_sort_seperator"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/library_tab_sort_btn"
+                android:layout_margin="2dp" />
+
+            <RelativeLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/library_tab_sort_btn">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:clickable="false"
+                    android:layout_alignParentTop="false"
+                    android:background="@drawable/ic_sort_white_24dp"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/library_tab_recyclerview"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/library_tab_selection" />
+        android:layout_below="@+id/library_tab_lower" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,6 +172,10 @@
         android:id="@+id/library_tab_scanning"
         android:textColor="#FF0000"
         android:textSize="36sp"
-        android:layout_below="@+id/library_tab_selection" />
+        android:layout_alignTop="@+id/library_tab_recyclerview"
+        android:layout_alignLeft="@+id/library_tab_recyclerview"
+        android:layout_alignRight="@+id/library_tab_recyclerview"
+        android:layout_alignBottom="@+id/library_tab_recyclerview"
+        android:gravity="center" />
 
 </RelativeLayout>
