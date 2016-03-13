@@ -619,6 +619,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             }
             return true;
         } else if (action == MotionEvent.ACTION_UP) {
+            performClick();
             //buttons get priority.
             if (dragMode) {
                 buttonFollowerUser.getInfluence().animate(0, 0.5f, EasingEquations.DEFAULT_EASE);
@@ -662,6 +663,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 return true;
             } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 toggleExpand();
+                return true;
             }
 
 

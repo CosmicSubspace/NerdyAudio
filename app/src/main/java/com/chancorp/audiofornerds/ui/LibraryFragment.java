@@ -8,13 +8,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chancorp.audiofornerds.R;
 import com.chancorp.audiofornerds.file.FileManager;
@@ -24,7 +28,7 @@ import com.ninthavenue.FileChooser;
 import java.io.File;
 
 
-public class LibraryFragment extends Fragment implements View.OnClickListener {
+public class LibraryFragment extends Fragment implements View.OnClickListener{
 
     public static final String LOG_TAG="CS_AFN";
 
@@ -32,11 +36,17 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     MusicListAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
-    TextView currentDir, scanning;
-    View dirBtn;
+    TextView currentDir,currentGrouping,currentSorting, scanning;
+    View dirBtn,groupingBtn,sortBtn;
+
+    PopupMenu groupingPopup, sortingPopup;
+
+    FileManager fm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        fm=FileManager.getInstance();
+
         View v = inflater.inflate(R.layout.tab_frag_library, container, false);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.library_tab_recyclerview);
@@ -50,29 +60,92 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MusicListAdapter(FileManager.getInstance().getMusics());
+        mAdapter = new MusicListAdapter(fm.getMusics());
         mRecyclerView.setAdapter(mAdapter);
 
 
         dirBtn = v.findViewById(R.id.tab_library_dir);
         dirBtn.setOnClickListener(this);
 
+        groupingBtn = v.findViewById(R.id.library_tab_group_btn);
+        groupingBtn.setOnClickListener(this);
+
+        sortBtn = v.findViewById(R.id.library_tab_sort_btn);
+        sortBtn.setOnClickListener(this);
+
         currentDir=(TextView)v.findViewById(R.id.library_tab_current_directory);
+        currentGrouping=(TextView)v.findViewById(R.id.library_tab_current_grouping);
+        currentSorting=(TextView)v.findViewById(R.id.library_tab_current_sort);
+
+
+        groupingPopup = new PopupMenu(getContext(), groupingBtn);
+        groupingPopup.getMenuInflater().inflate(R.menu.library_group, groupingPopup.getMenu());
+        groupingPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_lib_group_none:
+                        fm.setGrouping(FileManager.GROUPING_NONE);
+                        break;
+                    case R.id.menu_lib_group_album:
+                        fm.setGrouping(FileManager.GROUPING_ARTIST);
+                        break;
+                    case R.id.menu_lib_group_artist:
+                        fm.setGrouping(FileManager.GROUPING_ARTIST);
+                        break;
+                    case R.id.menu_lib_group_directory:
+                        fm.setGrouping(FileManager.GROUPING_DIRECTORY);
+                        break;
+                    case R.id.menu_lib_group_first_letter:
+                        fm.setGrouping(FileManager.GROUPING_TITLE_FIRST);
+                        break;
+
+                }
+                updateUI();
+                return true;
+            }
+        });
+
+        sortingPopup = new PopupMenu(getContext(), sortBtn);
+        sortingPopup.getMenuInflater().inflate(R.menu.library_sort, sortingPopup.getMenu());
+        sortingPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_lib_sort_none:
+                        fm.setGrouping(FileManager.SORTING_NONE);
+                        break;
+                    case R.id.menu_lib_sort_album:
+                        fm.setGrouping(FileManager.SORTING_ALBUM);
+                        break;
+                    case R.id.menu_lib_sort_name:
+                        fm.setGrouping(FileManager.SORTING_TITLE);
+                        break;
+                    case R.id.menu_lib_sort_artist:
+                        fm.setGrouping(FileManager.SORTING_ARTIST);
+                        break;
+                }
+                updateUI();
+                return true;
+            }
+        });
+
+
+
+
         scanning=(TextView)v.findViewById(R.id.library_tab_scanning);
 
         //TODO make file browser inside the tab, not on a popup thing.
 
-
-        if (FileManager.getInstance().isScanning()) scanUI();
+        if (fm.isScanning()) scanUI();
         else scanCompleteUI();
         updateUI();
         return v;
-
     }
 
     private void updateUI(){
-        mAdapter.newData(FileManager.getInstance().getMusics());
-        currentDir.setText(FileManager.getInstance().getCurrentDirectoryPath());
+        mAdapter.newData(fm.getMusics());
+        currentDir.setText(fm.getCurrentDirectoryPath());
     }
     private void scanUI(){
         scanning.setVisibility(View.VISIBLE);
@@ -88,25 +161,25 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         int id = view.getId();
         /*
         if (id == R.id.tab_library_refresh) {
-            FileManager.getInstance().discover(FileManager.getInstance().getCurrentDirectoryPath(), new CompletionListener() {
+            fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
                 @Override
                 public void onComplete(String s) {
                     LibraryFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mAdapter.newData(FileManager.getInstance().getMusics());
+                            mAdapter.newData(fm.getMusics());
 
                         }
                     });
                 }
             });
         }else*/ if (id==R.id.tab_library_dir){
-            new FileChooser(getActivity(),FileManager.getInstance().getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
+            new FileChooser(getActivity(),fm.getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
                 @Override public void fileSelected(final File file) {
                     Log.d(LOG_TAG,"File chosen:"+file.getAbsolutePath());
-                    FileManager.getInstance().setDirectory(file);
+                    fm.setDirectory(file);
                     scanUI();
-                    FileManager.getInstance().discover(FileManager.getInstance().getCurrentDirectoryPath(), new CompletionListener() {
+                    fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
                         @Override
                         public void onComplete(String s) {
                             LibraryFragment.this.getActivity().runOnUiThread(new Runnable() {
@@ -118,8 +191,13 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
                                 }
                             });
                         }
-                    },getContext());
+                    }, getContext());
                 }}).showDialog();
+        }else if (id==R.id.library_tab_group_btn){
+            groupingPopup.show();
+        }else if (id==R.id.library_tab_sort_btn){
+            sortingPopup.show();
         }
     }
+
 }

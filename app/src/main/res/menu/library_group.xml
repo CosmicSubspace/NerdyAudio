@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_lib_group_none"
+        android:title="None"/>
+
+    <item
+        android:id="@+id/menu_lib_group_directory"
+        android:title="Directory"/>
+
+    <item
+        android:id="@+id/menu_lib_group_first_letter"
+        android:title="First Letter"/>
+
+    <item
+        android:id="@+id/menu_lib_group_album"
+        android:title="Album"/>
+
+    <item
+        android:id="@+id/menu_lib_group_artist"
+        android:title="Artist"/>
+</menu>

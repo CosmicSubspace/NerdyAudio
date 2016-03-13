@@ -81,6 +81,5 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
     public void newData(ArrayList<MusicInformation> info){
         dataset=info;
         notifyDataSetChanged();
-
     }
 }

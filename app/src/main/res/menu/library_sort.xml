@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_lib_sort_none"
+        android:title="None"/>
+
+    <item
+        android:id="@+id/menu_lib_sort_name"
+        android:title="Name"/>
+
+    <item
+        android:id="@+id/menu_lib_sort_artist"
+        android:title="Artist"/>
+
+    <item
+        android:id="@+id/menu_lib_sort_album"
+        android:title="Album"/>
+</menu>
