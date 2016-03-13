@@ -18,7 +18,7 @@ import java.util.List;
 
 public class PlaylistSaveDialog {
 
-    public final static String LOG_TAG="CS_Pinger";
+    public final static String LOG_TAG="CS_AFN";
 
 
     EditText description, name;

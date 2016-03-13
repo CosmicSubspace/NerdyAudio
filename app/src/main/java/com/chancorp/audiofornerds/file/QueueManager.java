@@ -24,14 +24,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 
 public class QueueManager implements CompletionListener, SampleProgressListener, WaveformReturnListener {
     static final String LOG_TAG = "CS_AFN";
-
 
 
     AudioPlayer ap;
@@ -42,9 +45,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     ArrayList<MusicInformation> queue = new ArrayList<>();
 
-    ArrayList<ProgressStringListener> psl=new ArrayList<>();
-    ArrayList<NewSongListener> nsl=new ArrayList<>();
-    ArrayList<MusicInformationUpdateListener> miul=new ArrayList<>();
+    ArrayList<ProgressStringListener> psl = new ArrayList<>();
+    ArrayList<NewSongListener> nsl = new ArrayList<>();
+    ArrayList<MusicInformationUpdateListener> miul = new ArrayList<>();
 
     //int currentlyCachingIndex=-1;
 
@@ -68,34 +71,36 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         vb = VisualizationBuffer.getInstance();
     }
 
-    public void addProgressStringListener(ProgressStringListener psl){
+    public void addProgressStringListener(ProgressStringListener psl) {
         this.psl.add(psl);
     }
 
-    protected void notifyProgressStringListeners(String progress){
-        for (ProgressStringListener psl:this.psl){
+    protected void notifyProgressStringListeners(String progress) {
+        for (ProgressStringListener psl : this.psl) {
             psl.report(progress);
         }
     }
 
-    public void addNewSongListener(NewSongListener nsl){
+    public void addNewSongListener(NewSongListener nsl) {
         this.nsl.add(nsl);
     }
 
-    protected void notifyNewSongListeners(MusicInformation newSong){
-        for (NewSongListener nsl:this.nsl){
+    protected void notifyNewSongListeners(MusicInformation newSong) {
+        for (NewSongListener nsl : this.nsl) {
             nsl.newSong(newSong);
         }
     }
 
-    public void addMusicInformationUpdateListener(MusicInformationUpdateListener miul){
+    public void addMusicInformationUpdateListener(MusicInformationUpdateListener miul) {
         this.miul.add(miul);
     }
-    public void removeMusicInformationUpdateListener(MusicInformationUpdateListener miul){
+
+    public void removeMusicInformationUpdateListener(MusicInformationUpdateListener miul) {
         this.miul.remove(miul);
     }
-    private void notifyMusicInformationUpdateListeners(int index){
-        for (MusicInformationUpdateListener miul:this.miul){
+
+    private void notifyMusicInformationUpdateListeners(int index) {
+        for (MusicInformationUpdateListener miul : this.miul) {
             miul.musicInformationUpdated(index);
         }
     }
@@ -119,7 +124,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     public void getQueueFromFileList(ArrayList<String> list) {
         MusicInformation current;
         for (int i = 0; i < list.size(); i++) {
-            current=new MusicInformation(list.get(i),ma);
+            current = new MusicInformation(list.get(i), ma);
             addMusic(current);
         }
         //prepareWaveform();
@@ -143,9 +148,9 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void play() { //plays the CurrentlyPlaying.
-        if (queue.size()==0) return;
+        if (queue.size() == 0) return;
         Log.d(LOG_TAG, "Playing file.");
-        if (currentlyPlaying==null){ //first play
+        if (currentlyPlaying == null) { //first play
             setCurrentMusicIndex(0);
         }
 
@@ -161,18 +166,19 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         ap.playAudio();
         if (currentlyPlaying.updateReadyness(ma).isReady()) {
             Waveform.getInstance().loadFromFile(currentlyPlaying.getFilepath(), 1.0, ma);
-        }
-        else Waveform.getInstance().loadBlank();
+        } else Waveform.getInstance().loadBlank();
     }
-    public void playFile(MusicInformation mi){
+
+    public void playFile(MusicInformation mi) {
         for (int i = 0; i < queue.size(); i++) {
-            if(queue.get(i).equals(mi)){
+            if (queue.get(i).equals(mi)) {
                 playFile(i);
                 break;
             }
         }
     }
-    public void playFile(int index){
+
+    public void playFile(int index) {
         setCurrentMusicIndex(index);
         play();
     }
@@ -194,25 +200,27 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     private void previousFile() {
-        setCurrentMusicIndex(currentlyPlayingIndex()-1);
+        setCurrentMusicIndex(currentlyPlayingIndex() - 1);
     }
 
 
     private void setCurrentMusicIndex(int i) {
-        if (currentlyPlaying!=null) currentlyPlaying.setPlaying(false);
+        if (currentlyPlaying != null) currentlyPlaying.setPlaying(false);
         notifyMusicInformationUpdateListeners(currentlyPlayingIndex());
         if (i < 0) i = 0;
-        if (i>=queue.size()){
-            i=queue.size()-1;
+        if (i >= queue.size()) {
+            i = queue.size() - 1;
         }
-        currentlyPlaying=queue.get(i);
+        currentlyPlaying = queue.get(i);
     }
-    private int getIndex(MusicInformation mi){
-        int idx=this.queue.indexOf(mi);
-        if (idx<0) idx=0;
+
+    private int getIndex(MusicInformation mi) {
+        int idx = this.queue.indexOf(mi);
+        if (idx < 0) idx = 0;
         return idx;
     }
-    private int currentlyPlayingIndex(){
+
+    private int currentlyPlayingIndex() {
         return getIndex(currentlyPlaying);
     }
 
@@ -224,12 +232,12 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     private void prepareWaveform() {
-        if (currentlyCaching==null) {
+        if (currentlyCaching == null) {
             //Songs that are in front of the currently playing gets priority.
             for (int i = currentlyPlayingIndex(); i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
-                    currentlyCaching=queue.get(i);
+                    currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
@@ -240,7 +248,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             for (int i = 0; i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
                     Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
-                    currentlyCaching=queue.get(i);
+                    currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
                     Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
@@ -260,24 +268,26 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
         queue = newQueue;
     }
+
     public void reverseQueue() {
         ArrayList<MusicInformation> newQueue = new ArrayList<>(queue.size());
         for (int i = 0; i < queue.size(); i++) {
-            newQueue.add(queue.get(queue.size()-i-1));
+            newQueue.add(queue.get(queue.size() - i - 1));
         }
         queue = newQueue;
     }
+
     public void sortByTitle() {
-        Collections.sort(queue,new MusicInformation.TitleComparator());
+        Collections.sort(queue, new MusicInformation.TitleComparator());
     }
+
     public void sortByArtist() {
         Collections.sort(queue, new MusicInformation.ArtistComparator());
     }
 
 
-
-    public void move(int from, int to){
-        MusicInformation target=queue.get(from);
+    public void move(int from, int to) {
+        MusicInformation target = queue.get(from);
         queue.remove(from);
         queue.add(to, target);
         /*
@@ -291,68 +301,147 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyMusicInformationUpdateListeners(-1);
     }
 
-    public void remove(int index){
-        if (queue.get(index)==currentlyPlaying){
-            playFile(currentlyPlayingIndex()+1);
+    public void remove(int index) {
+        if (queue.get(index) == currentlyPlaying) {
+            playFile(currentlyPlayingIndex() + 1);
         }
-        if (queue.get(index)==currentlyCaching){
+        if (queue.get(index) == currentlyCaching) {
 
         }
         queue.remove(index);
         notifyMusicInformationUpdateListeners(-1);
     }
 
-    private int shiftIndex(int index, int from, int to){
-        if (index<from && index<to) {
+    private int shiftIndex(int index, int from, int to) {
+        if (index < from && index < to) {
             //do nothing
-        }else if (index>from && index>to) {
+        } else if (index > from && index > to) {
             //do nothing
-        }else if (index<from && index>to) {
+        } else if (index < from && index > to) {
             index++;
-        }else if (index>from && index<to) {
+        } else if (index > from && index < to) {
             index--;
-        }else if (index==from) {
-            index=to;
-        }else if (index<from && index==to) {
+        } else if (index == from) {
+            index = to;
+        } else if (index < from && index == to) {
             index++;
-        }else if (index>from && index==to) {
+        } else if (index > from && index == to) {
             index--;
         }
         return index;
     }
 
+    public static final int ADD = 6422235;
+    public static final int SUBTRACT = 6423916;
+    public static final int INTERSECT = 27523;
 
-    public static final int OVERWRITE=6423916;
-    public static final int APPEND=27523;
-    public static final int LOGICAL_AND=361236;
-    public static final int LOGICAL_XOR=6324648;
-    public static final int SUBTRACT=275845;
+    public void parsePlaylists(Playlist[] playlists, int mode, Context c) {
+        //TODO man this code is ugly as fuck
+        queue.clear();
+        if (mode == ADD) {
+            for (Playlist playlist : playlists) {
+                for (String music : playlist.files) {
+                    queue.add(new MusicInformation(music, c));
+                }
+            }
+        } else if (mode == SUBTRACT) {
+            for (String music : playlists[0].files) {
+                queue.add(new MusicInformation(music, c));
+            }
+            ArrayList<MusicInformation> toBeRemoved = new ArrayList<>();
+            for (int i = 1; i < playlists.length; i++) {
+                for (String music : playlists[i].files) {
+                    for (MusicInformation target : queue) {
+                        if (target.getFilepath().equals(music)) {
+                            toBeRemoved.add(target);
+                        }
+                    }
+                }
+            }
+            for (MusicInformation del : toBeRemoved) {
+                queue.remove(del);
+            }
+        } else if (mode == INTERSECT) {
+            Playlist base = playlists[0];
+            for (int i = 0; i < playlists.length; i++) {
+                if (playlists[i].files.length < base.files.length) {
+                    base = playlists[i];
+                }
+            }
+
+            for (String music : base.files) {
+                boolean valid=true;
+                for (Playlist playlist : playlists) {
+                    boolean match = false;
+                    for (int i = 0; i < playlist.files.length; i++) {
+                        if (playlist.files[i].equals(music)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (!match){
+                        valid=false;
+                    }
+                }
+                if (valid) queue.add(new MusicInformation(music, c));
+            }
+
+        }
+    }
+
+/*
+    public static final int APPEND=6422235;
+    public static final int LOGICAL_AND=6423916;
+    public static final int LOGICAL_OR=27523;
+    public static final int LOGICAL_XOR=361236;
+    public static final int SUBTRACT=6324648;
     public void parsePlaylist(Playlist pl, int mode, Context c){
 
         switch (mode){
-            case OVERWRITE:
+            case AND:
                 queue.clear();
                 for (int i = 0; i < pl.files.length; i++) {
                     addMusic(new MusicInformation(pl.files[i],c));
                 }
                 break;
-            case APPEND:
+            case OR:
                 break;
-            case LOGICAL_AND:
+            case XOR:
                 break;
-            case LOGICAL_XOR:
-                break;
-            case SUBTRACT:
+            case NOT:
                 break;
         }
 
 
     }
 
+    public void parsePlaylists(Playlist[] playlists, int mode, Context c){
+        if (mode==LOGICAL_AND||mode==LOGICAL_OR||mode==LOGICAL_XOR){
+
+            List<Set<String>> sets=new ArrayList<Set<String>>();
+            for (int i = 0; i < playlists.length; i++) {
+                sets.add(new HashSet<String>(Arrays.asList(playlists[i].files)));
+            }
+
+            Set<String> res=sets.get(0);
+            if (mode==LOGICAL_OR) {
+                for (Set<String> set : sets) {
+                    res.addAll(set);
+                }
+            }else if (mode==LOGICAL_AND) {
+                for (Set<String> set : sets) {
+                    res.retainAll(set);
+                }
+            }
+        }else{
+
+        }
+    }
+*/
 
     @Override
     public void report(long l) {
-        notifyProgressStringListeners( "Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
+        notifyProgressStringListeners("Caching: " + currentlyCaching.getTitle() + " (" + l + " Samples)");
     }
 
     @Override

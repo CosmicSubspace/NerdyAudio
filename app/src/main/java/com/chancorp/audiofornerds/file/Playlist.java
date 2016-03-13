@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,5 +47,16 @@ public class Playlist implements Serializable{
         is.close();
         fis.close();
         return readPS;
+    }
+    public static String[] listPlaylists(Context c, boolean addDummy){
+        String[] files=c.fileList();
+        List<String> res=new ArrayList<>();
+        if (addDummy) res.add("[Current Queue]");
+        for (String file:files){
+            if (file.startsWith("PL_")){
+                res.add(file.replace("PL_",""));
+            }
+        }
+        return res.toArray(new String[res.size()]);
     }
 }

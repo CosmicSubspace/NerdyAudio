@@ -138,12 +138,14 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         }else if (id==R.id.queue_tab_save){
             new PlaylistSaveDialog(getContext(),qm.getQueue()).init();
         }else if (id==R.id.queue_tab_load){
+            new PlaylistLoadDialog(getContext()).init();
+            /*
             try {
                 qm.parsePlaylist(Playlist.load(getContext(), "TEST"),QueueManager.OVERWRITE, getContext());
             }catch (Exception e) {
                 ErrorLogger.log(e);
                 Toast.makeText(getContext(), "Error while Loading!", Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }else if (id==R.id.queue_tab_fab_sub_shuffle){
             qm.shuffleQueue();
             mAdapter.notifyDataSetChanged();
