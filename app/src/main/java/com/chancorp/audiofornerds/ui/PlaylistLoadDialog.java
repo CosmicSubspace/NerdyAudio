@@ -85,7 +85,7 @@ public class PlaylistLoadDialog {
                             SparseBooleanArray checked = list.getCheckedItemPositions();
 
                             if (checked.get(0)){
-                                playlists.add(new Playlist("[Current Queue]",QueueManager.getInstance().getQueue()));
+                                playlists.add(new Playlist("[Current Queue]","",QueueManager.getInstance().getQueue()));
                             }
 
                             for (int j = 1; j < adpt.getCount(); j++) { //index 0 is always the main queue

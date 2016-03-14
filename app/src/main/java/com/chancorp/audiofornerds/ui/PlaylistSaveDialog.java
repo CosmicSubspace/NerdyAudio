@@ -66,7 +66,7 @@ public class PlaylistSaveDialog {
                         if (pirl!=null) pirl.onReturn(name.getText().toString(),description.getText().toString());
 
                         try {
-                            new Playlist(name.getText().toString(), queue).save(c);
+                            new Playlist(name.getText().toString(),description.getText().toString(), queue).save(c);
                         }catch (Exception e){
                             ErrorLogger.log(e);
                             Toast.makeText(c, "Save Failed!", Toast.LENGTH_SHORT).show();
