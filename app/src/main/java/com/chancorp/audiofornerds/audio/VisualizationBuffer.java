@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.chancorp.audiofornerds.exceptions.BufferNotPresentException;
 import com.chancorp.audiofornerds.helper.ErrorLogger;
+import com.chancorp.audiofornerds.helper.ShortArrayRecycler;
 import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
 
 import java.util.ArrayList;
@@ -52,12 +53,13 @@ public class VisualizationBuffer implements BufferFeedListener {
     @Override
     public synchronized void feed(short[] buff) {
         //TODO we're creating new short[] each time... GC disapproves.
-        short[] right = new short[buff.length/2];
+        short[] right = ShortArrayRecycler.getInstance().request(buff.length / 2);
+
         for (int i = 0; i < right.length; i++) {
             right[i] = buff[i *2+1];
         }
         bufferR.add(right);
-        short[] left = new short[buff.length/2];
+        short[] left = ShortArrayRecycler.getInstance().request(buff.length/2);
         for (int i = 0; i < left.length; i++) {
             left[i] = buff[i *2];
         }
@@ -143,8 +145,8 @@ public class VisualizationBuffer implements BufferFeedListener {
             firstBufferStartingFrame += bufferR.get(0).length;
             //lastFrameNumber-=bufferR.get(0).length;
             //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
-            bufferR.remove(0);
-            bufferL.remove(0);
+            ShortArrayRecycler.getInstance().recycle(bufferR.remove(0));
+            ShortArrayRecycler.getInstance().recycle(bufferL.remove(0));
 
             if (bufferR.size()<1) return;
             //deleteBefore(frameNumber); //If there is a delete, do it again recursively until there are no buffers to delete.
