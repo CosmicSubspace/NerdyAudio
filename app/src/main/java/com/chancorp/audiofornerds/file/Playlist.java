@@ -46,7 +46,7 @@ public class Playlist {
         playlistDescription = desc;
         files = queue;
     }
-
+/*
     private String getStringRepr() {
         StringBuilder sb = new StringBuilder();
         sb.append(playlistName);
@@ -57,7 +57,7 @@ public class Playlist {
             sb.append(files[i]);
         }
         return sb.toString();
-    }
+    }*/
 
     public void save(Context c) throws IOException {
         FileOutputStream fos = c.openFileOutput("PL_" + playlistName, Context.MODE_PRIVATE);
@@ -79,24 +79,24 @@ public class Playlist {
     public static Playlist load(Context c, String name) throws IOException, ClassCastException, ClassNotFoundException {
         FileInputStream fis = c.openFileInput("PL_" + name);
 
-        InputStreamReader isr = new InputStreamReader(fis);  //or whatever encoding
+        InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader r = new BufferedReader(isr);
 
         StringBuilder sb = new StringBuilder();
         String line = "";
+
+
+        String title=r.readLine();
+        String desc=r.readLine();
+
+        ArrayList<String> files=new ArrayList<>();
+
         while ((line = r.readLine()) != null) {
-            sb.append(line+"\n");
-        }
-        String res = sb.toString();
-        Log.d(LOG_TAG, res);
-        String[] resS = res.split("\\n");
-
-        String[] files = new String[resS.length - 2];
-        for (int i = 0; i < resS.length - 2; i++) {
-            files[i] = resS[i + 2];
+            files.add(line);
         }
 
-        return new Playlist(resS[0], resS[1], files);
+
+        return new Playlist(title, desc, files.toArray(new String[files.size()]));
 
         /*
         ObjectInputStream is = new ObjectInputStream(fis);

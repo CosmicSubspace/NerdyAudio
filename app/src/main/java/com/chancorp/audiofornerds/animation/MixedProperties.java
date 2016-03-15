@@ -54,7 +54,9 @@ public class MixedProperties {
     }
 
     public PropertySet update(long time){
-        //TODO perf Improvements
+        //TODO perf Improvements : This method causes a lot of memory allocations. (~80% of all app allocations)
+
+
         if (basis!=null) return basis;
 
         if (memoizedTime==time && memoized!=null){
