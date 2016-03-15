@@ -85,11 +85,10 @@ public class Playlist {
         StringBuilder sb = new StringBuilder();
         String line = "";
 
+        String title = r.readLine();
+        String desc = r.readLine();
 
-        String title=r.readLine();
-        String desc=r.readLine();
-
-        ArrayList<String> files=new ArrayList<>();
+        ArrayList<String> files = new ArrayList<>();
 
         while ((line = r.readLine()) != null) {
             files.add(line);
