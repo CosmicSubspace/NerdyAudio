@@ -285,6 +285,21 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         Collections.sort(queue, new MusicInformation.ArtistComparator());
     }
 
+    public void removeAll(){
+        queue.clear();
+    }
+    public void removeDuplicates(){
+        ArrayList<Integer> toBeRemoved=new ArrayList<>();
+        for (int i = 0; i < queue.size(); i++) {
+            int j=i+1;
+            while (j<queue.size()) {
+                if (queue.get(i).getFilepath().equals(queue.get(j).getFilepath())){
+                    queue.remove(j);
+                }else j++;
+            }
+        }
+
+    }
 
     public void move(int from, int to) {
         MusicInformation target = queue.get(from);

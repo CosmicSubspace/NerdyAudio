@@ -28,9 +28,14 @@ public class PlaylistLoadDialog {
 
     public final static String LOG_TAG="CS_AFN";
 
+    public static interface LoadedListener{
+        void loaded();
+    }
+
     ListView list;
     Spinner mode;
 
+    LoadedListener ll;
     Context c;
     String title;
 
@@ -41,6 +46,11 @@ public class PlaylistLoadDialog {
 
     public PlaylistLoadDialog setTitle(String s){
         this.title=s;
+        return this;
+    }
+
+    public PlaylistLoadDialog setLoadedListener(LoadedListener ll){
+        this.ll=ll;
         return this;
     }
 
@@ -66,6 +76,8 @@ public class PlaylistLoadDialog {
 
         final ArrayAdapter<String> adpt=new ArrayAdapter<>(c,android.R.layout.select_dialog_multichoice,Playlist.listPlaylists(c,true));
         list.setAdapter(adpt);
+
+        list.setItemChecked(0,true);
 
 
 
@@ -99,6 +111,8 @@ public class PlaylistLoadDialog {
                                     , playlistConstants[mode.getSelectedItemPosition()]
                                     , c
                             );
+
+                            if (ll!=null) ll.loaded();
                         }catch (Exception e){
                             ErrorLogger.log(e);
                             Toast.makeText(c, "Save Failed!", Toast.LENGTH_SHORT).show();

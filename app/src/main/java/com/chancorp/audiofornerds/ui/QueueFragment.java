@@ -37,7 +37,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     QueueAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     FloatingActionMenu fam, famPlaceholder;
-    FloatingActionButton[] fabs=new FloatingActionButton[4];
+    FloatingActionButton[] fabs=new FloatingActionButton[6];
     QueueManager qm;
 
     TextView refreshBtn, saveBtn,loadBtn;
@@ -117,10 +117,14 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         fabs[1]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_reverse);
         fabs[2]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_sort_artist);
         fabs[3]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_sort_name);
+        fabs[4]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_rm_dups);
+        fabs[5]=(FloatingActionButton)v.findViewById(R.id.queue_tab_fab_sub_rm_all);
         fabs[0].setOnClickListener(this);
         fabs[1].setOnClickListener(this);
         fabs[2].setOnClickListener(this);
         fabs[3].setOnClickListener(this);
+        fabs[4].setOnClickListener(this);
+        fabs[5].setOnClickListener(this);
 
         ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_sort_white_24dp);
 
@@ -138,7 +142,12 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         }else if (id==R.id.queue_tab_save){
             new PlaylistSaveDialog(getContext(),qm.getQueue()).init();
         }else if (id==R.id.queue_tab_load){
-            new PlaylistLoadDialog(getContext()).init();
+            new PlaylistLoadDialog(getContext()).setLoadedListener(new PlaylistLoadDialog.LoadedListener() {
+                @Override
+                public void loaded() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            }).init();
             /*
             try {
                 qm.parsePlaylist(Playlist.load(getContext(), "TEST"),QueueManager.OVERWRITE, getContext());
@@ -157,6 +166,12 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
             mAdapter.notifyDataSetChanged();
         }else if (id==R.id.queue_tab_fab_sub_reverse){
             qm.reverseQueue();
+            mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_fab_sub_rm_all){
+            qm.removeAll();
+            mAdapter.notifyDataSetChanged();
+        }else if (id==R.id.queue_tab_fab_sub_rm_dups){
+            qm.removeDuplicates();
             mAdapter.notifyDataSetChanged();
         }
 
