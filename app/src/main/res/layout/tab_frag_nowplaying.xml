@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.chancorp.audiofornerds.visuals.VisualizationView
+    <com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/visualization"

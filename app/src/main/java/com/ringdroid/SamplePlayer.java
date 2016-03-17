@@ -26,7 +26,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import com.chancorp.audiofornerds.interfaces.BufferFeedListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
 import com.ringdroid.soundfile.SoundFile;
 
 public class SamplePlayer {

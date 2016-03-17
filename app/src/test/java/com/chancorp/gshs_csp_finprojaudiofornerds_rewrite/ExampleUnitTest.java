@@ -1,4 +1,4 @@
-package com.chancorp.audiofornerds;
+package com.thirtyseventhpercentile.nerdyaudio;
 
 import org.junit.Test;
 
