@@ -21,7 +21,7 @@ import java.nio.IntBuffer;
 
 
 
-public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateListener{
+public class SpectrogramVisuals extends FftRenderer{
     Paint pt;
 
     Bitmap graph;
@@ -31,7 +31,6 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
 
     float contrast=2.0f;
 
-    SidebarSettings sbs;
     SpectrogramVisualSettings newSettings=null;
 
     private void syncChanges(){
@@ -61,8 +60,6 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
     public SpectrogramVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
-        sbs= SidebarSettings.getInstance();
-        sbs.addSettingsUpdateListener(this);
 
         //I have a feeling that this would cause some nasty shit in the future.
         updated(sbs.getSetting(BaseSetting.SPECTROGRAM));
@@ -80,10 +77,10 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
 
 
     @Override
-    public void draw(Canvas c, int w, int h) {
+    public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
 
-        if (vb != null && ap != null) {
+
             if (w!=canvasX||h!=canvasY) newGraph(w, h);
             long currentFrame = getCurrentFrame();
             try {
@@ -116,13 +113,9 @@ public class SpectrogramVisuals extends FftRenderer implements SettingsUpdateLis
                 Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
             }
 
-        }
+
     }
 
-    @Override
-    public void release() {
-        sbs.removeSettingsUpdateListener(this);
-    }
 
     private int magnitudeToColor(double mag){
         int inten=(int)(mag*this.contrast);

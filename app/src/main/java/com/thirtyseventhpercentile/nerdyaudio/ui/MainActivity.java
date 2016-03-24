@@ -30,7 +30,7 @@ import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
-import com.thirtyseventhpercentile.nerdyaudio.sql.DBManager;
+
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
@@ -188,40 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sideContainer=(ScrollView)findViewById(R.id.drawer_scroll);
         sideContainer.addView(sbs.getView(getLayoutInflater(),sideContainer,null));
 
-
-
-
-
-        randomToast();
-
-
-
-
     }
 
-    public void randomToast(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DBManager dbmanager = new DBManager(MainActivity.this);
-                    Random rand=new Random();
-                    ArrayList<String> messages=dbmanager.getMessages();
-                    final String msg=messages.get(rand.nextInt(messages.size()));
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                } catch (IOException e) {
-                    ErrorLogger.log(e);
-                }
-            }
-        }).start();
-
-    }
 
 
     @Override
@@ -240,8 +208,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             //qm.prepareWaveform();
 
-        }else if (id==R.id.db_2){
-            randomToast();
         }else if (id==R.id.db_3){
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
         }else if (id==R.id.db_4){

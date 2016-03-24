@@ -16,7 +16,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.VUMeterSettings;
 
 
-public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListener{
+public class VUMeterVisuals extends BaseRenderer{
     Paint pt;
     int range = 2048; //Should be Synchronized.
     float[] lAvgHistory,rAvgHistory,lPeakHistory,rPeakHistory;
@@ -29,16 +29,12 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
     //These temporary values are for concurrency. Changing member variables while being drawn can lead to crashes.
     VUMeterSettings newSetting=null;
 
-    SidebarSettings sbs;
-
 
     public VUMeterVisuals(float density) {
 
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         initArrays();
-        sbs=SidebarSettings.getInstance();
-        sbs.addSettingsUpdateListener(this);
 
         updated(sbs.getSetting(BaseSetting.VU));
 
@@ -79,9 +75,9 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
 
 
     @Override
-    public void draw(Canvas c, int w, int h) {
+    public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
-        if (vb != null && ap != null) {
+
 
             long currentFrame = getCurrentFrame();
             try {
@@ -151,7 +147,7 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
             } catch (BufferNotPresentException e) {
                 Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
             }
-        }
+
     }
 
 
@@ -161,7 +157,5 @@ public class VUMeterVisuals extends BaseRenderer implements SettingsUpdateListen
             newSetting=(VUMeterSettings)setting;
         }
     }
-    public void release(){
-        sbs.removeSettingsUpdateListener(this);
-    }
+
 }

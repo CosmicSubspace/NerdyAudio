@@ -27,12 +27,14 @@ public abstract class FftRenderer extends BaseRenderer {
         this.fftSize = samples;
         fft = new FFT(samples);
     }
-
-    public float getMagnitude(float frequency){
-
+    public float freqToBin(float frequency){
         int sr=ap.getSampleRate();
         float frqPerBin=sr/(float)this.fftSize;
-        float bin=(float)(frequency/frqPerBin);
+        return (float)(frequency/frqPerBin);
+    }
+    public float getMagnitude(float frequency){
+
+        float bin=freqToBin(frequency);
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));
 

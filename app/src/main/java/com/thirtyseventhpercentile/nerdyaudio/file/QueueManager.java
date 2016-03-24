@@ -253,6 +253,10 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
+    public MusicInformation getCurrentlyPlaying(){
+        return currentlyPlaying;
+    }
+
     public void shuffleQueue() {
         ArrayList<MusicInformation> newQueue = new ArrayList<>(queue.size());
         Random rand = new Random();

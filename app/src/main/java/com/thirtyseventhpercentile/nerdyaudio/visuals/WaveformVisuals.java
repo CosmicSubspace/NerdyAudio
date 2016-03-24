@@ -15,7 +15,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.WaveformVisualSettings;
 
-public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListener{
+public class WaveformVisuals extends BaseRenderer{
     int range = 2048;
     int drawEvery = 1;
     boolean downmix=false;
@@ -23,7 +23,6 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
     WaveformVisualSettings newSettings=null;
 
-    SidebarSettings sbs;
 
     Paint pt;
 
@@ -32,8 +31,6 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
     public WaveformVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
-        sbs=SidebarSettings.getInstance();
-        sbs.addSettingsUpdateListener(this);
 
         updated(sbs.getSetting(BaseSetting.WAVEFORM));
     }
@@ -55,9 +52,9 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
     }
 
     @Override
-    public void draw(Canvas c, int w, int h) {
+    public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
-        if (vb != null && ap != null) {
+
 
             long currentFrame = getCurrentFrame();
             try {
@@ -109,7 +106,7 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
             } catch (BufferNotPresentException e) {
                 Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
             }
-        }
+
     }
 
 
@@ -120,8 +117,5 @@ public class WaveformVisuals extends BaseRenderer implements SettingsUpdateListe
 
         }
     }
-    @Override
-    public void release(){
-        sbs.removeSettingsUpdateListener(this);
-    }
+
 }

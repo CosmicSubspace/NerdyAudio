@@ -15,6 +15,8 @@ public abstract class BaseSetting {
     public static final int SPECTROGRAM =685321;
     public static final int NONE=1243634;
     public static final int SPECTRUM=12529368;
+    public static final int CIRCLE=152968;
+    public static final int ALBUM_ART=12395;
 
     SidebarSettings sbs;
     Context ctxt;

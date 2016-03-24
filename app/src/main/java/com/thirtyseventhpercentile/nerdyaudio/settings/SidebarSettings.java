@@ -49,6 +49,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     WaveformVisualSettings waveformVisualSettings;
     SpectrumVisualSettings spectrumVisualSettings;
     SpectrogramVisualSettings spectrogramVisualSettings;
+    CircleVisualSettings circleVisualSettings;
+    AlbumArtSettings albumArtSettings;
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
@@ -71,6 +73,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         waveformVisualSettings = new WaveformVisualSettings(this,c);
         spectrumVisualSettings=new SpectrumVisualSettings(this,c);
         spectrogramVisualSettings =new SpectrogramVisualSettings(this,c);
+        circleVisualSettings=new CircleVisualSettings(this,c);
+        albumArtSettings=new AlbumArtSettings(this,c);
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,6 +130,16 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 visual_setting_container.removeAllViews();
                 visual_setting_container.addView(spectrogramVisualSettings.getSettingsView(li, visual_setting_container, null));
                 break;
+            case 4:
+                visualizationSettings.setActiveVisualization(VisualizationSettings.CIRCLE);
+                visual_setting_container.removeAllViews();
+                visual_setting_container.addView(circleVisualSettings.getSettingsView(li, visual_setting_container, null));
+                break;
+            case 5:
+                visualizationSettings.setActiveVisualization(VisualizationSettings.ALBUM_ART);
+                visual_setting_container.removeAllViews();
+                visual_setting_container.addView(albumArtSettings.getSettingsView(li, visual_setting_container, null));
+                break;
 
         }
         visualizationSettings.save();
@@ -149,7 +163,10 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 return spectrogramVisualSettings;
             case BaseSetting.VISUALIZATION:
                 return visualizationSettings;
-
+            case BaseSetting.CIRCLE:
+                return circleVisualSettings;
+            case BaseSetting.ALBUM_ART:
+                return albumArtSettings;
         }
         return null;
     }

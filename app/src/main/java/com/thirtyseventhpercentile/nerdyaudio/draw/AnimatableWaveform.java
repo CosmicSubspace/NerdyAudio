@@ -17,7 +17,7 @@ public class AnimatableWaveform extends Animatable {
     Waveform wf;
     AudioPlayer ap;
     AnimatableText notAvailableText;
-    float barSpacing=0.5f;
+    float barSpacing=0.0f;
 
     /**
      * Required Properties:

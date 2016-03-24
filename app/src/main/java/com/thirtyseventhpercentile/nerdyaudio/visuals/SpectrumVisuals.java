@@ -17,30 +17,20 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrumVisualSettings;
 
 
-public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListener{
+public class SpectrumVisuals extends FftRenderer{
     Paint pt;
 
     int bars=100;
     float spacing = 0.0f;
     float startFreq=20, endFreq=1000;
     double startLog=Math.log(20), endLog=Math.log(1000);
-    boolean logScale=false;
     float barHeightMultiplier=1.0f;
 
     SpectrumVisualSettings newSettings=null;
 
-
-    AudioPlayer ap;
-
-    SidebarSettings sbs;
-
     public SpectrumVisuals(float density) {
         super(density);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        ap=AudioPlayer.getInstance();
-        sbs= SidebarSettings.getInstance();
-        sbs.addSettingsUpdateListener(this);
 
         //I have a feeling that this would cause some nasty shit in the future.
         updated(sbs.getSetting(BaseSetting.SPECTRUM));
@@ -65,9 +55,9 @@ public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListen
     }
 
     @Override
-    public void draw(Canvas c, int w, int h) {
+    public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
-        if (vb != null && ap != null) {
+
             long currentFrame = getCurrentFrame();
             try {
                 updateFFT(currentFrame);
@@ -94,15 +84,12 @@ public class SpectrumVisuals extends FftRenderer implements SettingsUpdateListen
                 Log.d(LOG_TAG, "Buffer not present! Requested around " + getCurrentFrame());
             }
 
-        }
+
     }
 
 
 
-    @Override
-    public void release() {
-        sbs.removeSettingsUpdateListener(this);
-    }
+
 
     @Override
     public void updated(BaseSetting setting) {

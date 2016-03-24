@@ -17,6 +17,8 @@ import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.VisualizationSettings;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VUMeterVisuals;
@@ -24,8 +26,8 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.WaveformVisuals;
 
 
-public class NowPlayingFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener,SettingsUpdateListener{
-    public static final String LOG_TAG="CS_AFN";
+public class NowPlayingFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, SettingsUpdateListener {
+    public static final String LOG_TAG = "CS_AFN";
 
     VisualizationView vv;
 
@@ -34,16 +36,16 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        sbs=SidebarSettings.getInstance();
+        sbs = SidebarSettings.getInstance();
         sbs.addSettingsUpdateListener(this);
 
-        View v=inflater.inflate(R.layout.tab_frag_nowplaying, container, false);
+        View v = inflater.inflate(R.layout.tab_frag_nowplaying, container, false);
 
 
-        vv=(VisualizationView)v.findViewById(R.id.visualization);
+        vv = (VisualizationView) v.findViewById(R.id.visualization);
         if (vv == null) Log.e(LOG_TAG, "VisualizationView is null!");
         else if (vv.getRenderThread() == null) Log.e(LOG_TAG, "Renderer is null!");
-        else{
+        else {
             vv.getRenderThread().setMaxFPS(60);
         }
 
@@ -66,36 +68,44 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        Log.i(LOG_TAG,"Adapter > Nothing selected.");
+        Log.i(LOG_TAG, "Adapter > Nothing selected.");
     }
 
     @Override
     public void updated(BaseSetting setting) {
-        if(setting.getType()==BaseSetting.VISUALIZATION){
-            VisualizationSettings visSet=(VisualizationSettings)setting;
-            if (visSet.getActiveVisualization()==VisualizationSettings.VU) {
-                VUMeterVisuals vis=new VUMeterVisuals(getResources().getDisplayMetrics().density);
+        if (setting.getType() == BaseSetting.VISUALIZATION) {
+            VisualizationSettings visSet = (VisualizationSettings) setting;
+            if (visSet.getActiveVisualization() == VisualizationSettings.VU) {
+                VUMeterVisuals vis = new VUMeterVisuals(getResources().getDisplayMetrics().density);
 
                 vv.getRenderThread().setRenderer(vis);
-            }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTRUM){
-                SpectrumVisuals vis=new SpectrumVisuals(getResources().getDisplayMetrics().density);
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.SPECTRUM) {
+                SpectrumVisuals vis = new SpectrumVisuals(getResources().getDisplayMetrics().density);
 
                 vv.getRenderThread().setRenderer(vis);
-            }else if (visSet.getActiveVisualization()==VisualizationSettings.WAVEFORM){
-                WaveformVisuals vis=new WaveformVisuals(getResources().getDisplayMetrics().density);
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.WAVEFORM) {
+                WaveformVisuals vis = new WaveformVisuals(getResources().getDisplayMetrics().density);
                 vv.getRenderThread().setRenderer(vis);
-            }else if (visSet.getActiveVisualization()==VisualizationSettings.SPECTROGRAM){
-                SpectrogramVisuals vis=new SpectrogramVisuals(getResources().getDisplayMetrics().density);
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.SPECTROGRAM) {
+                SpectrogramVisuals vis = new SpectrogramVisuals(getResources().getDisplayMetrics().density);
 
                 vv.getRenderThread().setRenderer(vis);
-            }else{
-                Log.w(LOG_TAG,"WHAT? (NowPlayingFragment)");
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.CIRCLE) {
+                CircleVisuals vis = new CircleVisuals(getResources().getDisplayMetrics().density);
+
+                vv.getRenderThread().setRenderer(vis);
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.ALBUM_ART) {
+                AlbumArtVisuals vis = new AlbumArtVisuals(getResources().getDisplayMetrics().density);
+
+                vv.getRenderThread().setRenderer(vis);
+            } else {
+                Log.w(LOG_TAG, "WHAT? (NowPlayingFragment)");
             }
         }
     }
 
     @Override
-    public void onDetach(){
+    public void onDetach() {
         super.onDetach();
         sbs.removeSettingsUpdateListener(this);
     }

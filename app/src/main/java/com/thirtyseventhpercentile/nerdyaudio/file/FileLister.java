@@ -5,15 +5,19 @@
 package com.thirtyseventhpercentile.nerdyaudio.file;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FileLister extends Thread{
+    private final static String LOG_TAG="CS_AFN";
     String path;
     ArrayList<MusicInformation> musics=new ArrayList<>();
     FileListReturnListener flrl;
@@ -44,7 +48,14 @@ public class FileLister extends Thread{
                 if (psl!=null) psl.report("Scanned Directory:" + f.getAbsolutePath());
             }
             else {
-                if (checkFileValidity(f.getAbsolutePath())) musics.add(new MusicInformation(f.getAbsolutePath(),c));
+                try {
+                    if (checkFileValidity(f.getAbsolutePath()))
+                        musics.add(new MusicInformation(f.getCanonicalPath(), c));
+                }catch(IOException e){
+                    Log.e(LOG_TAG, "Error while parsing canonical path.");
+                    ErrorLogger.log(e);
+
+                }
             }
         }
     }

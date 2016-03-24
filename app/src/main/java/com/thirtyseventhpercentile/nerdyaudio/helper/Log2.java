@@ -12,7 +12,8 @@ public class Log2 {
     public static void log(int level,Object callingClass,Object... arguments){
         StringBuilder log=new StringBuilder();
         log.append("[From ");
-        log.append(callingClass.getClass().getSimpleName());
+        if (callingClass!=null) log.append(callingClass.getClass().getSimpleName());
+        else log.append("?");
         log.append("]");
         for (Object arg:arguments){
             log.append(" | ");

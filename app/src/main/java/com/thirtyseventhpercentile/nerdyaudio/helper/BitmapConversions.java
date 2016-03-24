@@ -15,7 +15,7 @@ public class BitmapConversions {
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
+        if (height > reqHeight && width > reqWidth) { //when either height or width is bigger, abort.
 
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;

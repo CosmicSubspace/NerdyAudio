@@ -3,5 +3,4 @@
     <item android:id="@+id/db_4" android:title="Load Single Song"/>
     <item android:id="@+id/db_5" android:title="Load all files into queue"/>
     <item android:id="@+id/db_3" android:title="Get Queue from PlaylistBackup"/>
-    <item android:id="@+id/db_2" android:title="Toast!"/>
 </menu>
