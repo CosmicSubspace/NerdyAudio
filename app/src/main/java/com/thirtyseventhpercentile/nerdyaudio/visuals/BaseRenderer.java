@@ -40,11 +40,13 @@ public abstract class BaseRenderer implements SettingsUpdateListener{
         if (this.w!=w || this.h!=h){
             this.w=w;
             this.h=h;
+            dimensionsChanged(w,h);
         }
         if (vb != null && ap != null) {
             drawVisuals(c,w,h);
         }
     }
+    abstract public void dimensionsChanged(int w, int h);
     abstract public void drawVisuals(Canvas c, int w, int h);
     public void release(){
         sbs.removeSettingsUpdateListener(this);

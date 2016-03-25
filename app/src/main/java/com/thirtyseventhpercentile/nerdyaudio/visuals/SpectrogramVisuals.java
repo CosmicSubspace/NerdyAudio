@@ -158,6 +158,11 @@ public class SpectrogramVisuals extends FftRenderer{
             newSettings=(SpectrogramVisualSettings)setting;
         }
     }
+
+    @Override
+    public void dimensionsChanged(int w, int h) {
+
+    }
 }
 
 

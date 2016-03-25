@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
@@ -17,11 +18,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class FileChooser {
+    private static final String LOG_TAG="CS_AFN";
     private static final String PARENT_DIR = "..(Up)";
 
     private final Activity activity;
@@ -91,6 +97,11 @@ public class FileChooser {
      * Sort, filter and display the files for the given path.
      */
     private void refresh(File path) {
+        try {
+            Log.i(LOG_TAG, "Opening directory: " + path.getCanonicalPath());
+        }catch(Exception e){
+            ErrorLogger.log(e);
+        }
         this.currentPath = path;
         if (path.exists()) {
             File[] dirs = path.listFiles(new FileFilter() {

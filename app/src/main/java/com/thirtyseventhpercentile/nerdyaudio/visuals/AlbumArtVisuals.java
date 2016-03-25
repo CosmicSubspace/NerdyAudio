@@ -9,6 +9,7 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
+import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSongListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.AlbumArtSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
@@ -29,9 +30,16 @@ public class AlbumArtVisuals extends BaseRenderer implements NewSongListener {
         newSong(QueueManager.getInstance().getCurrentlyPlaying());
     }
 
+    RectF bounds=new RectF();
+
+    public void recalculateBounds(){
+        if (art!=null) bounds=SimpleMaths.fit(new RectF(0,0,art.getWidth(),art.getHeight()),new RectF(0,0,w,h));
+    }
+
     private void syncChanges() {
         if (newSettings != null) {
-            //pass
+            newSong(QueueManager.getInstance().getCurrentlyPlaying());
+            newSettings=null;
         }
     }
 
@@ -43,15 +51,22 @@ public class AlbumArtVisuals extends BaseRenderer implements NewSongListener {
     }
 
     @Override
+    public void dimensionsChanged(int w, int h) {
+        recalculateBounds();
+    }
+
+
+    @Override
     public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
-        if (art!=null) c.drawBitmap(art,(w-art.getWidth())/2.0f,(h-art.getHeight())/2.0f,pt);
+        if (art!=null) c.drawBitmap(art,null,bounds,pt);
     }
 
     @Override
     public void newSong(MusicInformation mi) {
         if (mi!=null && mi.hasArt()) {
             art = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), w, h);
+            recalculateBounds();
         }
     }
 }

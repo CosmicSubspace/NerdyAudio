@@ -82,6 +82,11 @@ public class CircleVisuals extends FftRenderer {
     }
 
     @Override
+    public void dimensionsChanged(int w, int h) {
+
+    }
+
+    @Override
     public void drawVisuals(Canvas c, int w, int h) {
         syncChanges();
         long currentFrame = getCurrentFrame();
@@ -93,7 +98,6 @@ public class CircleVisuals extends FftRenderer {
         }catch (BufferNotPresentException e) {
             Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
         }
-
     }
     double baseR=100,addR,x,y;
     private Path getPath(){
@@ -110,7 +114,8 @@ public class CircleVisuals extends FftRenderer {
         Matrix translationMatrix=new Matrix();
         translationMatrix.preTranslate(w/2,h/2);
         return builder.build().transform(translationMatrix).toPath();
-
     }
+
+
 
 }

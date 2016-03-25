@@ -99,4 +99,9 @@ public class SpectrumVisuals extends FftRenderer{
             newSettings=(SpectrumVisualSettings)setting;
         }
     }
+
+    @Override
+    public void dimensionsChanged(int w, int h) {
+
+    }
 }

@@ -158,4 +158,9 @@ public class VUMeterVisuals extends BaseRenderer{
         }
     }
 
+    @Override
+    public void dimensionsChanged(int w, int h) {
+
+    }
+
 }

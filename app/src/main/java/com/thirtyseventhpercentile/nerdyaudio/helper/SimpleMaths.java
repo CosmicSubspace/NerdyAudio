@@ -21,5 +21,17 @@ public class SimpleMaths {
     public static float linearMapUnconstrained(float value, float fromStart, float fromEnd, float toStart, float toEnd){
         return (value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+fromStart;
     }
-
+    public static RectF fit(RectF original, RectF bounds){
+        float ratio=original.width()/original.height();
+        float boundRatio=bounds.width()/bounds.height();
+        if (boundRatio>ratio){ //then fit to height
+            float height=bounds.height();
+            float width=bounds.height()*ratio;
+            return new RectF(bounds.centerX()-width/2,bounds.centerY()-height/2,bounds.centerX()+width/2,bounds.centerY()+height/2);
+        }else{
+            float height=bounds.width()/ratio;
+            float width=bounds.width();
+            return new RectF(bounds.centerX()-width/2,bounds.centerY()-height/2,bounds.centerX()+width/2,bounds.centerY()+height/2);
+        }
+    }
 }
