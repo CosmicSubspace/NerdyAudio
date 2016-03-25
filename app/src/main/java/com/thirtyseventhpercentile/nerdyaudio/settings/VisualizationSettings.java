@@ -39,8 +39,7 @@ public class VisualizationSettings extends BaseSetting implements Serializable {
         sbs.notifyUI(this);
     }
 
-    int type;
-    public static final String[] visualizations=new String[]{"VU Meter","Waveform","Spectrum","Spectrogram","Circle","Album Art"};
+    public static final String[] visualizations=new String[]{"Loudness Graph","Waveform","Spectrum","Spectrogram","Circle","Album Art","Ball Physics"};
     int activeVisualization =0;
 
     public int getActiveVisualization(){

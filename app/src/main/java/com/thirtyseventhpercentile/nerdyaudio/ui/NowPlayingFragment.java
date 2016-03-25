@@ -18,6 +18,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.VisualizationSettings;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.BallsVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
@@ -96,7 +97,9 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 vv.getRenderThread().setRenderer(vis);
             } else if (visSet.getActiveVisualization() == VisualizationSettings.ALBUM_ART) {
                 AlbumArtVisuals vis = new AlbumArtVisuals(getResources().getDisplayMetrics().density);
-
+                vv.getRenderThread().setRenderer(vis);
+            } else if (visSet.getActiveVisualization() == VisualizationSettings.BALLS) {
+                BallsVisuals vis = new BallsVisuals(getResources().getDisplayMetrics().density);
                 vv.getRenderThread().setRenderer(vis);
             } else {
                 Log.w(LOG_TAG, "WHAT? (NowPlayingFragment)");

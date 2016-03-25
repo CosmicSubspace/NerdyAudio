@@ -51,6 +51,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     SpectrogramVisualSettings spectrogramVisualSettings;
     CircleVisualSettings circleVisualSettings;
     AlbumArtSettings albumArtSettings;
+    BallsVisualSettings ballsVisualSettings;
 
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
@@ -75,6 +76,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         spectrogramVisualSettings =new SpectrogramVisualSettings(this,c);
         circleVisualSettings=new CircleVisualSettings(this,c);
         albumArtSettings=new AlbumArtSettings(this,c);
+        ballsVisualSettings=new BallsVisualSettings(this,c);
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,6 +142,11 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 visual_setting_container.removeAllViews();
                 visual_setting_container.addView(albumArtSettings.getSettingsView(li, visual_setting_container, null));
                 break;
+            case 6:
+                visualizationSettings.setActiveVisualization(VisualizationSettings.BALLS);
+                visual_setting_container.removeAllViews();
+                visual_setting_container.addView(ballsVisualSettings.getSettingsView(li, visual_setting_container, null));
+                break;
 
         }
         visualizationSettings.save();
@@ -167,6 +174,8 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
                 return circleVisualSettings;
             case BaseSetting.ALBUM_ART:
                 return albumArtSettings;
+            case BaseSetting.BALLS:
+                return ballsVisualSettings;
         }
         return null;
     }
