@@ -32,15 +32,18 @@ public abstract class FftRenderer extends BaseRenderer {
         float frqPerBin=sr/(float)this.fftSize;
         return (float)(frequency/frqPerBin);
     }
-    public float getMagnitude(float frequency){
+    public float getMagnitudeBin(int bin){
+        return  (float)Math.sqrt(x[bin] * x[bin] + y[bin] * y[bin]);
+    }
+    public float getMagnitudeFreq(float frequency){
 
         float bin=freqToBin(frequency);
         int ceilBin=(int)Math.round(Math.ceil(bin));
         int floorBin=(int)Math.round(Math.floor(bin));
 
         //Linear Interpolation.
-        float ceilFactor=(bin-floorBin)*((float) Math.sqrt(x[ceilBin] * x[ceilBin] + y[ceilBin] * y[ceilBin]));
-        float floorFactor=(ceilBin-bin)*((float) Math.sqrt(x[floorBin] * x[floorBin] + y[floorBin] * y[floorBin]));
+        float ceilFactor=(bin-floorBin)*(getMagnitudeBin(ceilBin));
+        float floorFactor=(ceilBin-bin)*(getMagnitudeBin(floorBin));
         return ceilFactor+floorFactor;
     }
     public void setLogScale(boolean logScale){
@@ -62,7 +65,32 @@ public abstract class FftRenderer extends BaseRenderer {
     }
 
     public float getMagnitudeRatio(float ratio){
-        return getMagnitude(ratioToFrequency(ratio));
+        return getMagnitudeFreq(ratioToFrequency(ratio));
+    }
+
+    //temp variables..
+    float startBin,endBin,res,numSummed,binAddStart,binAddEnd, addLength;
+    int addStartBin, addEndBin;
+    public float getMagnitudeRange(float startFreq, float endFreq, boolean normalize){
+        startBin=freqToBin(startFreq);
+        endBin=freqToBin(endFreq);
+        res=0;
+        numSummed=0;
+        addStartBin=Math.round(startBin);
+        addEndBin=Math.round(endBin);
+
+        for (int i = addStartBin; i <=addEndBin; i++) {
+            binAddStart=i-0.5f;
+            binAddEnd=i+0.5f;
+            if (binAddEnd>endBin) binAddEnd=endBin;
+            if (binAddStart<startBin) binAddStart=startBin;
+            addLength=binAddEnd-binAddStart;
+            numSummed+=addLength;
+            res+= getMagnitudeBin(i)*addLength;
+        }
+
+        if (normalize) return res/numSummed;
+        else return res;
     }
 
     public void updateFFT(long currentFrame) throws BufferNotPresentException {

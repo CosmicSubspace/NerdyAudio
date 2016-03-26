@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
+import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
+import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
@@ -22,7 +24,6 @@ public class SpectrumVisuals extends FftRenderer{
 
     int bars=100;
     float spacing = 0.0f;
-    float startFreq=20, endFreq=1000;
     double startLog=Math.log(20), endLog=Math.log(1000);
     float barHeightMultiplier=1.0f;
 
@@ -43,10 +44,14 @@ public class SpectrumVisuals extends FftRenderer{
 
             bars=newSettings.getBars();
             spacing=newSettings.getSpacing();
-            startFreq=newSettings.getStartFreq();
-            startLog=Math.log(startFreq);
-            endFreq=newSettings.getEndFreq();
-            endLog=Math.log(endFreq);
+
+            try {
+                setFrequencyRange(newSettings.getStartFreq(),newSettings.getEndFreq());
+            } catch (InvalidParameterException e) {
+                ErrorLogger.log(e);
+            }
+
+
             barHeightMultiplier=newSettings.getBarHeight();
             setLogScale(newSettings.getLogScale());
 

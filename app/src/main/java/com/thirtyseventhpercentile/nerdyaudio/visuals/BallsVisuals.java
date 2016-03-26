@@ -2,19 +2,15 @@ package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.Log;
 
-import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BallsVisualSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.settings.CircleVisualSettings;
 
 import java.util.ArrayList;
 
@@ -68,8 +64,8 @@ public class BallsVisuals extends FftRenderer {
     private void initializeSimulation() {
         Log.i(LOG_TAG,"Sim Init...");
         balls.clear();
-        for (int i = 0; i < 10; i++) {
-            balls.add(new Ball(i * 100, 100, 0, 0,ColorFiddler.rampColor(Color.RED,Color.BLUE,i/10.0f)));
+        for (int i = 0; i < 4; i++) {
+            balls.add(new Ball(i * 100, 100, 0, 0,ColorFiddler.rampColor(Color.RED,Color.BLUE,i/5.0f)));
         }
     }
 
@@ -80,15 +76,23 @@ public class BallsVisuals extends FftRenderer {
         try {
             updateFFT(currentFrame);
 
-            for (int i = 0; i < balls.size(); i++) {
-                balls.get(i).r= 0.5f*balls.get(i).r+0.5f*SimpleMaths.linearMap(getMagnitude(50+i*100),0,50,40,120); //TODO change to getMagnitudeRange
-            }
+            //Bass
+            balls.get(0).r= 0.5f*balls.get(0).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 150);
+            //Low
+            balls.get(1).r= 0.5f*balls.get(1).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(150, 450, true), 0, 150, 50, 150);
+            //Mid
+            balls.get(2).r= 0.5f*balls.get(2).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(450, 1000, true), 0, 100, 50, 150);
+            //High
+            balls.get(3).r= 0.5f*balls.get(3).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(1000, 10000, true), 0, 50, 50, 150);
+
 
             Log.i(LOG_TAG, "Sim Drawing...");
-            for (int i = 0; i < 10; i++) {
+
+            for (int i = 0; i < 10; i++) { //Sim Iterations
                 for (Ball ball : balls) {
                     ball.update(balls, 10);
                     ball.collision(balls);
+                    ball.wallIn(0,0,w,h);
                 }
             }
 
@@ -97,6 +101,10 @@ public class BallsVisuals extends FftRenderer {
                 ball.attract(w/2, h/2, 1);
                 ball.damp(0.98f);
             }
+/*
+            for (int i = 0; i < 30; i++) {
+                c.drawRect(30+i*10,0,40+i*10,getMagnitudeRange(50+i*20,70+i*20,true),pt);
+            }*/
 
         } catch (BufferNotPresentException e) {
             Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
@@ -139,8 +147,8 @@ public class BallsVisuals extends FftRenderer {
                     float dxn = dx / mag;
                     float dyn = dy / mag;
 
-                    vx += dxn * -intersect(ball) / 20;
-                    vy += dyn * -intersect(ball) / 20;
+                    vx += dxn * -intersect(ball) / 30;
+                    vy += dyn * -intersect(ball) / 30;
                 }
             }
         }
@@ -168,6 +176,22 @@ public class BallsVisuals extends FftRenderer {
         public void damp(float power) {
             vx *= power;
             vy *= power;
+        }
+        public void wallIn(float minX,float minY,float maxX,float maxY){
+            if (x-r<minX){
+                vx=-vx;
+                x=-x+2*r; //(x-r)=-(x-r)
+            }else if (x+r>maxX){
+                vx=-vx;
+                x=maxX*2-x-2*r;//(x-r)=2maxX-(x-r)
+            }
+            if (y-r<minY){
+                vy=-vy;
+                y=-y+2*r;
+            }else if (y+r>maxY){
+                vy=-vy;
+                y=maxY*2-y-2*r;
+            }
         }
     }
 

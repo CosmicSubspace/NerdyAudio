@@ -13,7 +13,6 @@ import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterExcepti
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.CircleVisualSettings;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrogramVisualSettings;
 
 /**
  * Created by Chan on 3/24/2016.
@@ -104,7 +103,7 @@ public class CircleVisuals extends FftRenderer {
         PointsCompound.Builder builder=new PointsCompound.Builder();
 
         //We smooth the values a little.
-        baseR=baseR*0.4+ SimpleMaths.linearMap(getMagnitude(100),0,100,100,200)*0.6;
+        baseR=baseR*0.4+ SimpleMaths.linearMapClamped(getMagnitudeRange(50,150,true), 0, 300, 100, 250)*0.6;
         for (int i = 0; i < bars; i++) {
             addR=getMagnitudeRatio(i/(float)bars);
             x=(baseR+addR)*Math.cos(i/(double)bars*2*Math.PI);

@@ -12,13 +12,13 @@ public class SimpleMaths {
         else if (value>max) return max;
         else return value;
     }
-    public static float linearMap(float value, float fromStart, float fromEnd, float toStart, float toEnd){
+    public static float linearMapClamped(float value, float fromStart, float fromEnd, float toStart, float toEnd){
         Log2.log(2,null,value,fromStart,fromEnd,toStart,toEnd);
         value=constrain(value,fromStart,fromEnd);
         Log2.log(2,null,(value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+toStart);
         return (value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+toStart;
     }
-    public static float linearMapUnconstrained(float value, float fromStart, float fromEnd, float toStart, float toEnd){
+    public static float linearMapUnclamped(float value, float fromStart, float fromEnd, float toStart, float toEnd){
         return (value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+fromStart;
     }
     public static RectF fit(RectF original, RectF bounds){
