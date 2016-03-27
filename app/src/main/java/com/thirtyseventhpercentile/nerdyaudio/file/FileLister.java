@@ -7,6 +7,7 @@ package com.thirtyseventhpercentile.nerdyaudio.file;
 import android.content.Context;
 import android.util.Log;
 
+import com.ringdroid.soundfile.SoundFile;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
@@ -23,9 +24,6 @@ public class FileLister extends Thread{
     FileListReturnListener flrl;
     ProgressStringListener psl;
     Context c;
-    public static String[] getSupportedExtensions() {
-        return new String[] {"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg"};
-    }
     public FileLister(String path, ProgressStringListener psl , FileListReturnListener flrl, Context c){
         this.path=path;
         this.flrl=flrl;
@@ -64,7 +62,7 @@ public class FileLister extends Thread{
         if (components.length < 2) {
             return false;
         }
-        if (!Arrays.asList(getSupportedExtensions()).contains(components[components.length - 1])) {
+        if (!Arrays.asList(SoundFile.getSupportedExtensions()).contains(components[components.length - 1])) {
             return false;
         }
         return true;

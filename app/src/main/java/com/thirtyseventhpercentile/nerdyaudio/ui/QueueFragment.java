@@ -176,7 +176,19 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
             mAdapter.notifyDataSetChanged();
         }else{
             //TODO this sometimes causes [java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling]
-            mAdapter.notifyItemChanged(index);
+            for (int i = 0; i < 5; i++) {
+                try {
+                    mAdapter.notifyItemChanged(index);
+                    break;
+                }catch (IllegalStateException e){ //lol I fixed it
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+
         }
     }
 

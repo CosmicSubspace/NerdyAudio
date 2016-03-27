@@ -88,7 +88,7 @@ public class SoundFile {
     }
 
     public static String[] getSupportedExtensions() {
-        return new String[]{"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg"};
+        return new String[]{"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg", "mp4", "3gp"}; //TODO more formats.
     }
 
     public static boolean isFilenameSupported(String filename) {
