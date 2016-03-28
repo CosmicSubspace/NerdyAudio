@@ -14,29 +14,26 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 
 import java.util.ArrayList;
 
-/**
- * Created by Chan on 3/24/2016.
- */
+
 public class BallsVisuals extends FftRenderer {
     Paint pt;
 
     BallsVisualSettings newSettings = null;
     ArrayList<Ball> balls = new ArrayList<>();
 
+    int iterations=10;
+    float sensitivity=100, bounciness=30;
+
+
     private void syncChanges() {
         if (newSettings != null) {
             setFFTSize(newSettings.getFftSize());
             Log.i(LOG_TAG, "Spectrum: size changing" + fftSize);
-
-            try {
-                setFrequencyRange(newSettings.getStartFreq(), newSettings.getEndFreq());
-            } catch (InvalidParameterException e) {
-                Log.w(LOG_TAG, "SpectrogramVisuals>syncChanges() wut?");
-            }
-            setLogScale(newSettings.getLogScale());
+            setIterations(newSettings.getIter());
+            setSensitivity(newSettings.getSensitivity());
+            setBounciness(newSettings.getBounciness());
 
             newSettings = null;
-            initializeSimulation();
         }
     }
 
@@ -46,7 +43,18 @@ public class BallsVisuals extends FftRenderer {
 
         //I have a feeling that this would cause some nasty shit in the future.
         updated(sbs.getSetting(BaseSetting.BALLS));
+        initializeSimulation();
+    }
 
+    public void setIterations(int n){
+        this.iterations=n;
+    }
+    public void setSensitivity(float sensitivity){
+        this.sensitivity=sensitivity;
+        Log.i(LOG_TAG,"Setting Sensitivity...");
+    }
+    public void setBounciness(float bounciness){
+        this.bounciness=bounciness;
     }
 
     @Override
@@ -75,22 +83,20 @@ public class BallsVisuals extends FftRenderer {
         long currentFrame = getCurrentFrame();
         try {
             updateFFT(currentFrame);
-
+            Log.i(LOG_TAG, "Sensitivity: "+sensitivity);
             //Bass
-            balls.get(0).r= 0.5f*balls.get(0).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 150);
+            balls.get(0).r= 0.5f*balls.get(0).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 50+sensitivity*3);
             //Low
-            balls.get(1).r= 0.5f*balls.get(1).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(150, 450, true), 0, 150, 50, 150);
+            balls.get(1).r= 0.5f*balls.get(1).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(150, 450, true), 0, 150, 50, 50+sensitivity*3);
             //Mid
-            balls.get(2).r= 0.5f*balls.get(2).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(450, 1000, true), 0, 100, 50, 150);
+            balls.get(2).r= 0.5f*balls.get(2).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(450, 1000, true), 0, 100, 50, 50+sensitivity*3);
             //High
-            balls.get(3).r= 0.5f*balls.get(3).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(1000, 10000, true), 0, 50, 50, 150);
+            balls.get(3).r= 0.5f*balls.get(3).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(1000, 10000, true), 0, 50, 50, 50+sensitivity*3);
 
 
-            Log.i(LOG_TAG, "Sim Drawing...");
-
-            for (int i = 0; i < 10; i++) { //Sim Iterations
+            for (int i = 0; i < iterations; i++) { //Sim Iterations
                 for (Ball ball : balls) {
-                    ball.update(balls, 10);
+                    ball.update(balls, iterations);
                     ball.collision(balls);
                     ball.wallIn(0,0,w,h);
                 }
@@ -101,10 +107,6 @@ public class BallsVisuals extends FftRenderer {
                 ball.attract(w/2, h/2, 1);
                 ball.damp(0.98f);
             }
-/*
-            for (int i = 0; i < 30; i++) {
-                c.drawRect(30+i*10,0,40+i*10,getMagnitudeRange(50+i*20,70+i*20,true),pt);
-            }*/
 
         } catch (BufferNotPresentException e) {
             Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
@@ -114,7 +116,7 @@ public class BallsVisuals extends FftRenderer {
     }
 
 
-    static class Ball {
+    class Ball {
         float x, y;
         float vx, vy;
         float r;
@@ -147,8 +149,8 @@ public class BallsVisuals extends FftRenderer {
                     float dxn = dx / mag;
                     float dyn = dy / mag;
 
-                    vx += dxn * -intersect(ball) / 30;
-                    vy += dyn * -intersect(ball) / 30;
+                    vx += dxn * -intersect(ball) *bounciness/100.0f;
+                    vy += dyn * -intersect(ball) *bounciness/100.0f;
                 }
             }
         }

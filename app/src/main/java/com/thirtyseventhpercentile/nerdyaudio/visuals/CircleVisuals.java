@@ -23,14 +23,22 @@ public class CircleVisuals extends FftRenderer {
     CircleVisualSettings newSettings=null;
 
     int bars=100;
-    float maxRad;
+    float sensitivity=1,bassSensitivity=1;
 
-    public float getMaxRad() {
-        return maxRad;
+    public float getSensitivity() {
+        return sensitivity;
     }
 
-    public void setMaxRad(float maxRad) {
-        this.maxRad = maxRad;
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
+    public float getBassSensitivity() {
+        return bassSensitivity;
+    }
+
+    public void setBassSensitivity(float bassSensitivity) {
+        this.bassSensitivity = bassSensitivity;
     }
 
     public int getBars() {
@@ -57,7 +65,8 @@ public class CircleVisuals extends FftRenderer {
             }
             setLogScale(newSettings.getLogScale());
 
-            setMaxRad(newSettings.getBarHeight());
+            setSensitivity(newSettings.getSensitivity());
+            setBassSensitivity(newSettings.getBassSensitivity());
             setBars(newSettings.getBars());
 
             newSettings=null;
@@ -98,14 +107,14 @@ public class CircleVisuals extends FftRenderer {
             Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
         }
     }
-    double baseR=100,addR,x,y;
+    double baseR=0,addR,x,y;
     private Path getPath(){
         PointsCompound.Builder builder=new PointsCompound.Builder();
 
         //We smooth the values a little.
-        baseR=baseR*0.4+ SimpleMaths.linearMapClamped(getMagnitudeRange(50,150,true), 0, 300, 100, 250)*0.6;
+        baseR=baseR*0.5+ SimpleMaths.linearMapClamped(getMagnitudeRange(50,150,true)*bassSensitivity, 0, 300, 100, 250)*0.5;
         for (int i = 0; i < bars; i++) {
-            addR=getMagnitudeRatio(i/(float)bars);
+            addR=getMagnitudeRatio(i/(float)bars)*sensitivity;
             x=(baseR+addR)*Math.cos(i/(double)bars*2*Math.PI);
             y=(baseR+addR)*Math.sin(i/(double)bars*2*Math.PI);
             builder.addPoint((float)x,(float)y);

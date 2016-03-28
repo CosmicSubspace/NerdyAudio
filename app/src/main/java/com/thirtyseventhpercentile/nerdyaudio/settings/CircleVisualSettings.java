@@ -32,7 +32,7 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
     int bars = 100;
     float startFreq = 20, endFreq = 1000;
     boolean logScale=false;
-    float barHeight=1.0f;
+    float sensitivity=1.0f,bassSensitivity=1.0f;
 
     public int getFftSize() {
         return fftSize;
@@ -54,16 +54,42 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
 
     }
 
-    public float getBarHeight() {
-        return barHeight;
+    public float getSensitivity() {
+        return sensitivity;
     }
 
-    public void setBarHeight(float height) {
-        this.barHeight = height;
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
 
-        if (barHeightTV!=null && barHeightSeekbar!=null) {
-            barHeightTV.setText(Float.toString(barHeight));
-            barHeightSeekbar.setProgress(Math.round(barHeight * 200));
+        if (sensitivityTV!=null && sensitivitySeekbar!=null) {
+            sensitivityTV.setText(Float.toString(sensitivity));
+            sensitivitySeekbar.setProgress(Math.round(sensitivity * 1000));
+        }
+    }
+
+    public float getBassSensitivity() {
+        return bassSensitivity;
+    }
+
+    public void setBassSensitivity(float bassSensitivity) {
+        this.bassSensitivity = bassSensitivity;
+
+        if (bassSensitivityTV!=null && bassSensitivitySeekbar!=null) {
+            bassSensitivityTV.setText(Float.toString(bassSensitivity));
+            bassSensitivitySeekbar.setProgress(Math.round(bassSensitivity * 1000));
+        }
+    }
+
+    public int getBars() {
+        return bars;
+    }
+
+    public void setBars(int bars) {
+        this.bars = bars;
+
+        if (barsSeekbar!=null && barsTV!=null) {
+            barsTV.setText(Integer.toString(bars));
+            barsSeekbar.setProgress(bars);
         }
     }
 
@@ -79,18 +105,6 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
         }
     }
 
-    public int getBars() {
-        return bars;
-    }
-
-    public void setBars(int bars) {
-        this.bars = bars;
-
-        if (barsTV!=null) {
-            barsTV.setText(Integer.toString(bars));
-            barsSeekbar.setProgress(bars);
-        }
-    }
 
     public float getStartFreq() {
         return startFreq;
@@ -138,8 +152,8 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
     Spinner fftSizeSpinner;
 
-    SeekBar barsSeekbar, spacingSeekbar, startFrqSeekbar, endFrqSeekbar, barHeightSeekbar;
-    TextView barsTV, spacingTV, startFrqTV, endFrqTV, barHeightTV;
+    SeekBar sensitivitySeekbar, bassSensitivitySeekbar, startFrqSeekbar, endFrqSeekbar, barsSeekbar;
+    TextView sensitivityTV, bassSensitivityTV, startFrqTV, endFrqTV, barsTV;
     Switch logScaleSwitch;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,9 +173,13 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
             }
         });
 
-        barsSeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_bars_seekbar);
-        barsTV = (TextView) v.findViewById(R.id.vis_circle_setting_bars_value);
-        barsSeekbar.setOnSeekBarChangeListener(this);
+        sensitivitySeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_sensitivity_seekbar);
+        sensitivityTV = (TextView) v.findViewById(R.id.vis_circle_setting_sensitivity_value);
+        sensitivitySeekbar.setOnSeekBarChangeListener(this);
+
+        bassSensitivitySeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_bass_sensitivity_seekbar);
+        bassSensitivityTV = (TextView) v.findViewById(R.id.vis_circle_setting_bass_sensitivity_value);
+        bassSensitivitySeekbar.setOnSeekBarChangeListener(this);
 
 
         startFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_frq_start_seekbar);
@@ -172,9 +190,9 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
         endFrqTV = (TextView) v.findViewById(R.id.vis_circle_setting_frq_end_value);
         endFrqSeekbar.setOnSeekBarChangeListener(this);
 
-        barHeightSeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_height_seekbar);
-        barHeightTV = (TextView) v.findViewById(R.id.vis_circle_setting_height_value);
-        barHeightSeekbar.setOnSeekBarChangeListener(this);
+        barsSeekbar = (SeekBar) v.findViewById(R.id.vis_circle_setting_bars_seekbar);
+        barsTV = (TextView) v.findViewById(R.id.vis_circle_setting_bars_value);
+        barsSeekbar.setOnSeekBarChangeListener(this);
 
         logScaleSwitch=(Switch) v.findViewById(R.id.vis_circle_setting_log_switch);
         logScaleSwitch.setOnCheckedChangeListener(this);
@@ -197,7 +215,8 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
         editor.putInt("bars", bars);
         editor.putFloat("startFreq", startFreq);
         editor.putFloat("endFreq", endFreq);
-        editor.putFloat("barHeight", barHeight);
+        editor.putFloat("sensitivity", sensitivity);
+        editor.putFloat("bassSensitivity", bassSensitivity);
         editor.putBoolean("logScale", logScale);
         editor.apply();
     }
@@ -210,7 +229,8 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
         setBars(pref.getInt("bars", bars));
         setStartFreq(pref.getFloat("startFreq", startFreq));
         setEndFreq(pref.getFloat("endFreq", endFreq));
-        setBarHeight(pref.getFloat("barHeight", barHeight)); //TODO there's a bug where some of the settings do not load properly when app is restarted.
+        setSensitivity(pref.getFloat("sensitivity", sensitivity)); //TODO there's a bug where some of the settings do not load properly when app is restarted.
+        setBassSensitivity(pref.getFloat("bassSensitivity", bassSensitivity));
         setLogScale(pref.getBoolean("logScale", logScale));
         //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
         sbs.notifyUI(this);
@@ -238,9 +258,11 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
             setStartFreq(progress*10); //0~10000
         }else if (seekBar.getId() == R.id.vis_circle_setting_frq_end_seekbar) {
             setEndFreq(progress * 10); //0~10000
-        }else if (seekBar.getId() == R.id.vis_circle_setting_height_seekbar) {
-            setBarHeight(progress / 200.f); //0~5
-        } else {
+        }else if (seekBar.getId() == R.id.vis_circle_setting_sensitivity_seekbar) {
+            setSensitivity(progress / 1000.f); //0~5
+        } else if (seekBar.getId() == R.id.vis_circle_setting_bass_sensitivity_seekbar) {
+            setBassSensitivity(progress / 1000.f); //0~5
+        }else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
         if (fromUser) {

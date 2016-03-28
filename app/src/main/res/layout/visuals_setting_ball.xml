@@ -3,33 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/vis_vu_setting_container">
-    <!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FFT balls"
-            android:id="@+id/vis_balls_setting_title"
-            style="@style/setting_title"/>
-            -->
-    <!--
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/vis_waveform_setting_stereo"
-            android:layout_below="@+id/vis_waveform_setting_title">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Downmix"
-                android:id="@+id/vis_waveform_setting_stereo_title"
-                style="@style/vis_setting_text" />
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/vis_waveform_setting_stereo_switch" />
-        </LinearLayout>
-        -->
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -50,35 +23,14 @@
             android:layout_alignParentLeft="true" />
     </RelativeLayout>
 
-    <include layout="@layout/subdivider"/>
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/vis_balls_setting_log">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log Scale"
-            android:id="@+id/vis_balls_setting_log_title"
-            style="@style/setting_text"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentLeft="true" />
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vis_balls_setting_log_switch"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
 
     <include layout="@layout/subdivider"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Number of bars"
-        android:id="@+id/vis_balls_setting_bars_title"
+        android:text="Bounciness"
+        android:id="@+id/vis_balls_setting_bounciness_title"
 
         style="@style/setting_text"/>
 
@@ -86,14 +38,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_balls_setting_bars">
+        android:id="@+id/vis_balls_setting_bounciness">
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_balls_setting_bars_seekbar"
-            android:layout_toLeftOf="@+id/vis_balls_setting_bars_value"
-            android:max="300"
+            android:id="@+id/vis_balls_setting_bounciness_seekbar"
+            android:layout_toLeftOf="@+id/vis_balls_setting_bounciness_value"
+            android:max="1000"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
 
@@ -101,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
-            android:id="@+id/vis_balls_setting_bars_value"
+            android:id="@+id/vis_balls_setting_bounciness_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>
@@ -111,8 +63,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Frequency Start"
-        android:id="@+id/vis_balls_setting_frq_start_title"
+        android:text="Sensitivity"
+        android:id="@+id/vis_balls_setting_sensitivity_title"
 
         style="@style/setting_text"/>
 
@@ -120,13 +72,13 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_balls_setting_frq_start">
+        android:id="@+id/vis_balls_setting_sensitivity">
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_balls_setting_frq_start_seekbar"
-            android:layout_toLeftOf="@+id/vis_balls_setting_frq_start_value"
+            android:id="@+id/vis_balls_setting_sensitivity_seekbar"
+            android:layout_toLeftOf="@+id/vis_balls_setting_sensitivity_value"
             android:max="1000"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
@@ -135,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
-            android:id="@+id/vis_balls_setting_frq_start_value"
+            android:id="@+id/vis_balls_setting_sensitivity_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>
@@ -145,8 +97,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Frequency End"
-        android:id="@+id/vis_balls_setting_frq_end_title"
+        android:text="Simulation Iteration"
+        android:id="@+id/vis_balls_setting_itert_title"
 
         style="@style/setting_text"/>
 
@@ -154,14 +106,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_balls_setting_frq_end">
+        android:id="@+id/vis_balls_setting_iter">
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_balls_setting_frq_end_seekbar"
-            android:layout_toLeftOf="@+id/vis_balls_setting_frq_end_value"
-            android:max="1000"
+            android:id="@+id/vis_balls_setting_iter_seekbar"
+            android:layout_toLeftOf="@+id/vis_balls_setting_iter_value"
+            android:max="100"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
 
@@ -169,41 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
-            android:id="@+id/vis_balls_setting_frq_end_value"
-            android:layout_alignParentRight="true"
-            style="@style/setting_text"/>
-    </RelativeLayout>
-
-    <include layout="@layout/subdivider"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bar Height"
-        android:id="@+id/vis_balls_setting_height_title"
-
-        style="@style/setting_text"/>
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/vis_balls_setting_height">
-
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vis_balls_setting_height_seekbar"
-            android:layout_toLeftOf="@+id/vis_balls_setting_height_value"
-            android:max="1000"
-            style="@style/setting_text"
-            android:layout_alignParentLeft="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00"
-            android:id="@+id/vis_balls_setting_height_value"
+            android:id="@+id/vis_balls_setting_iter_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>

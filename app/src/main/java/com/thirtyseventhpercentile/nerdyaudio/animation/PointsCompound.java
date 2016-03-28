@@ -19,7 +19,7 @@ public class PointsCompound {
     int[] cutsArray;
 
     private PointsCompound(ArrayList<Float> pts, ArrayList<Integer> cuts) {
-        Log2.log(2,this,pts,cuts);
+        //Log2.log(2,this,pts,cuts);
         pointsArray = new float[pts.size()];
         for (int i = 0; i < pts.size(); i++) {
             pointsArray[i] = pts.get(i);

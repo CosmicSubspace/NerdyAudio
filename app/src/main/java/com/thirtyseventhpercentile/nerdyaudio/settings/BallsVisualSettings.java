@@ -23,15 +23,15 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 
 
 public class BallsVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
-        SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
+        SeekBar.OnSeekBarChangeListener{
     private static final String LOG_TAG = "CS_AFN";
     private static final String PREF_IDENTIFIER = "com.thirtyseventhpercentile.audiofornerds.settings.BallsVisualSettings";
 
 
     int fftSize = 2048;
-    float startFreq = 20, endFreq = 1000;
-    boolean logScale=false;
-    float barHeight=1.0f;
+    int iter=10;
+    float bounciness=30;
+    float sensitivity=100;
 
     public int getFftSize() {
         return fftSize;
@@ -53,68 +53,40 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
 
     }
 
-    public float getBarHeight() {
-        return barHeight;
+    public int getIter() {
+        return iter;
     }
 
-    public void setBarHeight(float height) {
-        this.barHeight = height;
-
-        if (barHeightTV!=null && barHeightSeekbar!=null) {
-            barHeightTV.setText(Float.toString(barHeight));
-            barHeightSeekbar.setProgress(Math.round(barHeight * 200));
+    public void setIter(int iter) {
+        this.iter=iter;
+        if (iterationsSeekbar!=null && iterationsTV!=null) {
+            iterationsTV.setText(Integer.toString(this.iter));
+            iterationsSeekbar.setProgress(this.iter);
         }
     }
 
-    public boolean getLogScale() {
-        return logScale;
+    public float getBounciness() {
+        return bounciness;
     }
 
-    public void setLogScale(boolean logScale) {
-        this.logScale = logScale;
-
-        if (logScaleSwitch!=null) {
-            logScaleSwitch.setChecked(logScale);
+    public void setBounciness(float bounciness) {
+        this.bounciness=bounciness;
+        if (bouncinessSeekbar!=null && bouncinessTV!=null) {
+            bouncinessTV.setText(Float.toString(this.bounciness));
+            bouncinessSeekbar.setProgress((int)(this.bounciness*10));
         }
     }
 
-
-    public float getStartFreq() {
-        return startFreq;
+    public float getSensitivity() {
+        return sensitivity;
     }
 
-    public void setStartFreq(float startFreq) {
-        //if end and start order is reversed(or is very close), weird shit would happen. So we do this
-        if (this.endFreq<startFreq+100){
-            //don't do anything
-        }else{
-            this.startFreq = startFreq;
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity=sensitivity;
+        if (sensitivitySeekbar!=null && sensitivityTV!=null) {
+            sensitivityTV.setText(Float.toString(this.sensitivity));
+            sensitivitySeekbar.setProgress((int)(this.sensitivity*10));
         }
-        if (startFrqTV!=null && startFrqSeekbar!=null) {
-            startFrqTV.setText(Float.toString(this.startFreq));
-            startFrqSeekbar.setProgress((int) (this.startFreq / 10));
-        }
-
-    }
-
-
-    public float getEndFreq() {
-        return endFreq;
-    }
-
-    public void setEndFreq(float endFreq) {
-
-        //if end and start order is reversed(or is very close), weird shit would happen. So we do this
-        if (endFreq<this.startFreq+100){
-            //don't do anything
-        }else{
-            this.endFreq = endFreq;
-        }
-        if (endFrqTV!=null && endFrqSeekbar!=null) {
-            endFrqTV.setText(Float.toString(this.endFreq));
-            endFrqSeekbar.setProgress((int) (this.endFreq / 10));
-        }
-
     }
 
 
@@ -125,9 +97,8 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
     Spinner fftSizeSpinner;
 
-    SeekBar barsSeekbar, spacingSeekbar, startFrqSeekbar, endFrqSeekbar, barHeightSeekbar;
-    TextView barsTV, spacingTV, startFrqTV, endFrqTV, barHeightTV;
-    Switch logScaleSwitch;
+    SeekBar bouncinessSeekbar, sensitivitySeekbar, iterationsSeekbar;
+    TextView  bouncinessTV, sensitivityTV, iterationsTV;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.visuals_setting_ball, container, false);
@@ -146,25 +117,17 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
             }
         });
 
-        barsSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_bars_seekbar);
-        barsTV = (TextView) v.findViewById(R.id.vis_balls_setting_bars_value);
-        barsSeekbar.setOnSeekBarChangeListener(this);
+        bouncinessSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_bounciness_seekbar);
+        bouncinessTV = (TextView) v.findViewById(R.id.vis_balls_setting_bounciness_value);
+        bouncinessSeekbar.setOnSeekBarChangeListener(this);
 
+        sensitivitySeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_sensitivity_seekbar);
+        sensitivityTV = (TextView) v.findViewById(R.id.vis_balls_setting_sensitivity_value);
+        sensitivitySeekbar.setOnSeekBarChangeListener(this);
 
-        startFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_frq_start_seekbar);
-        startFrqTV = (TextView) v.findViewById(R.id.vis_balls_setting_frq_start_value);
-        startFrqSeekbar.setOnSeekBarChangeListener(this);
-
-        endFrqSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_frq_end_seekbar);
-        endFrqTV = (TextView) v.findViewById(R.id.vis_balls_setting_frq_end_value);
-        endFrqSeekbar.setOnSeekBarChangeListener(this);
-
-        barHeightSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_height_seekbar);
-        barHeightTV = (TextView) v.findViewById(R.id.vis_balls_setting_height_value);
-        barHeightSeekbar.setOnSeekBarChangeListener(this);
-
-        logScaleSwitch=(Switch) v.findViewById(R.id.vis_balls_setting_log_switch);
-        logScaleSwitch.setOnCheckedChangeListener(this);
+        iterationsSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_iter_seekbar);
+        iterationsTV = (TextView) v.findViewById(R.id.vis_balls_setting_iter_value);
+        iterationsSeekbar.setOnSeekBarChangeListener(this);
 
         load();
         return v;
@@ -178,26 +141,25 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
 
     @Override
     protected void save() {
-        //Log2.log(2,this,"Saving:",fftSize,bars,spacing,startFreq,endFreq);
+
         SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
-        editor.putInt("fftSize",fftSize);
-        editor.putFloat("startFreq", startFreq);
-        editor.putFloat("endFreq", endFreq);
-        editor.putFloat("barHeight", barHeight);
-        editor.putBoolean("logScale", logScale);
+        editor.putInt("fftSize", fftSize);
+        editor.putInt("iter",iter);
+        editor.putFloat("bounciness", bounciness);
+        editor.putFloat("sensitivity",sensitivity);
+
         editor.apply();
     }
 
     @Override
     protected void load() {
         SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
-        //Log2.log(2, this, "initial", fftSize, bars, spacing, startFreq, endFreq);
+
         setFftSize(pref.getInt("fftSize", fftSize));
-        setStartFreq(pref.getFloat("startFreq", startFreq));
-        setEndFreq(pref.getFloat("endFreq", endFreq));
-        setBarHeight(pref.getFloat("barHeight", barHeight)); //TODO there's a bug where some of the settings do not load properly when app is restarted.
-        setLogScale(pref.getBoolean("logScale", logScale));
-        //Log2.log(2, this, "end", fftSize, bars, spacing, startFreq, endFreq);
+        setIter(pref.getInt("iter", iter));
+        setBounciness(pref.getFloat("bounciness", bounciness));
+        setSensitivity(pref.getFloat("sensitivity", sensitivity));
+
         sbs.notifyUI(this);
     }
 
@@ -217,12 +179,13 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar.getId() == R.id.vis_balls_setting_frq_start_seekbar) {
-            setStartFreq(progress*10); //0~10000
-        }else if (seekBar.getId() == R.id.vis_balls_setting_frq_end_seekbar) {
-            setEndFreq(progress * 10); //0~10000
-        }else if (seekBar.getId() == R.id.vis_balls_setting_height_seekbar) {
-            setBarHeight(progress / 200.f); //0~5
+        if (seekBar.getId() == R.id.vis_balls_setting_iter_seekbar) {
+            setIter(progress);
+        }else if (seekBar.getId() == R.id.vis_balls_setting_sensitivity_seekbar) {
+            setSensitivity(progress/ 10.f);
+            Log.i(LOG_TAG,"!!!");
+        }else if (seekBar.getId() == R.id.vis_balls_setting_bounciness_seekbar) {
+            setBounciness(progress / 10.f);
         } else {
             Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
         }
@@ -242,12 +205,4 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
 
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView.getId()==R.id.vis_balls_setting_log_switch) {
-            setLogScale(buttonView.isChecked());
-        }
-        save();
-        sbs.notifyUI(this);
-    }
 }

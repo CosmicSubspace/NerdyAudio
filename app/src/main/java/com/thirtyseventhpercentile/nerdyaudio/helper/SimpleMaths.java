@@ -13,9 +13,9 @@ public class SimpleMaths {
         else return value;
     }
     public static float linearMapClamped(float value, float fromStart, float fromEnd, float toStart, float toEnd){
-        Log2.log(2,null,value,fromStart,fromEnd,toStart,toEnd);
+        //Log2.log(2,null,value,fromStart,fromEnd,toStart,toEnd);
         value=constrain(value,fromStart,fromEnd);
-        Log2.log(2,null,(value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+toStart);
+        //Log2.log(2,null,(value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+toStart);
         return (value-fromStart)/(fromEnd-fromStart)*(toEnd-toStart)+toStart;
     }
     public static float linearMapUnclamped(float value, float fromStart, float fromEnd, float toStart, float toEnd){

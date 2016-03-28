@@ -179,8 +179,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bar Height"
-        android:id="@+id/vis_circle_setting_height_title"
+        android:text="Sensitivity"
+        android:id="@+id/vis_circle_setting_sensitivity_title"
 
         style="@style/setting_text"/>
 
@@ -188,13 +188,13 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/vis_circle_setting_height">
+        android:id="@+id/vis_circle_setting_sensitivity">
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vis_circle_setting_height_seekbar"
-            android:layout_toLeftOf="@+id/vis_circle_setting_height_value"
+            android:id="@+id/vis_circle_setting_sensitivity_seekbar"
+            android:layout_toLeftOf="@+id/vis_circle_setting_sensitivity_value"
             android:max="1000"
             style="@style/setting_text"
             android:layout_alignParentLeft="true" />
@@ -203,7 +203,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
-            android:id="@+id/vis_circle_setting_height_value"
+            android:id="@+id/vis_circle_setting_sensitivity_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+    <include layout="@layout/subdivider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bass Sensitivity"
+        android:id="@+id/vis_circle_setting_bass_sensitivity_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_circle_setting_bass_sensitivity">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_circle_setting_bass_sensitivity_seekbar"
+            android:layout_toLeftOf="@+id/vis_circle_setting_bass_sensitivity_value"
+            android:max="1000"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_circle_setting_bass_sensitivity_value"
             android:layout_alignParentRight="true"
             style="@style/setting_text"/>
     </RelativeLayout>
