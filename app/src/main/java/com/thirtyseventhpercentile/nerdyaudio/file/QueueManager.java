@@ -278,6 +278,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     public void sortByTitle() {
         Collections.sort(queue, new MusicInformation.TitleComparator());
+
     }
 
     public void sortByArtist() {

@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+@Deprecated
 public class MixedProperties {
     public static final String LOG_TAG="CS_AFN";
 

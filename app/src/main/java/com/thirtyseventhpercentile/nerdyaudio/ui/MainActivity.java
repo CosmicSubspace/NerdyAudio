@@ -27,12 +27,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
+import com.thirtyseventhpercentile.nerdyaudio.animation.TestMixable;
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
-import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
@@ -41,9 +43,6 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 
 
 //TODO : Numerical Setting Input
@@ -273,6 +272,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
         }else if (id==R.id.db_4){
             qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3",this));
+        }else if (id==R.id.db_1){
+            MixNode<TestMixable> mn=new MixNode<TestMixable>("T");
+            MixNode<TestMixable> mn1=new MixNode<TestMixable>("T1",new TestMixable(0));
+            MixNode<TestMixable> mn2=new MixNode<TestMixable>("T2",new TestMixable(10));
+            mn.addNode(mn1);
+            mn.addNode(mn2);
+
+            for (int i = 0; i < 100; i++) {
+                mn1.getInfluence().set(i/100.0f);
+                mn2.getInfluence().set(1.0f-i/100.0f);
+                Log2.log(2,this,mn.getValue(0).value);
+            }
         }
         return true;
     }

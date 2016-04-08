@@ -6,7 +6,26 @@ package com.thirtyseventhpercentile.nerdyaudio.animation;
 
 import java.util.HashMap;
 
-public class PropertySet {
+public class PropertySet implements Mixable{
+
+    @Override
+    public Mixer getMixer() {
+        return new PropertySetMixer();
+    }
+
+    public static class PropertySetMixer implements Mixer<PropertySet>{
+
+        @Override
+        public void addMix(PropertySet thing,float influence) {
+        }
+
+        @Override
+        public PropertySet mix() {
+            return null;
+        }
+    }
+
+
 
     private HashMap<String,Float> properties=new HashMap<String,Float>();
 

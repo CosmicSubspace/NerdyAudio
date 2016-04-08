@@ -463,6 +463,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    //TODO this soometimes cause weird race condition glithches.
                     RectF bounds = artBoundsAnim.getRectF(currentFrameTime);
                     albumArt = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), Math.round(bounds.width()), Math.round(bounds.height()));
                     albumArtNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
