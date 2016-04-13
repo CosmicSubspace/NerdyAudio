@@ -9,13 +9,17 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
+import com.thirtyseventhpercentile.nerdyaudio.animation.Mixer;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 public class AnimatableShape extends Animatable{
 
     PointsCompound path;
+    MixNode<PointsCompound> shape;
 
     Matrix mat;
 
@@ -29,6 +33,14 @@ public class AnimatableShape extends Animatable{
     rotation
     alpha
      */
+
+    public AnimatableShape(MixNode<PointsCompound> animatedShape, int color, MixedProperties basisSet){
+        super(basisSet);
+
+        this.shape=animatedShape;
+        this.color=color;
+
+    }
 
     public AnimatableShape(PointsCompound path, int color, MixedProperties basisSet){
         super(basisSet);
@@ -45,7 +57,12 @@ public class AnimatableShape extends Animatable{
         mat.preRotate(ps.getValue("Rotation"));
         mat.preScale(ps.getValue("Scale"), ps.getValue("Scale"));
 
-        return path.transform(mat);
+        if (path!=null) return path.transform(mat);
+        else if (shape!=null) return shape.getValue(currentTime).transform(mat);
+        else {
+            Log2.log(4,this,"Path and Shape are all null! wtf?");
+            return null;
+        }
     }
 
     public RectF getBounds(float padding,long currentTime){
@@ -56,15 +73,10 @@ public class AnimatableShape extends Animatable{
     public void draw(Canvas c, Paint pt, long currentTime){
         PropertySet ps= mixedProperties.update(currentTime);
 
-        mat=new Matrix();
-        mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
-        mat.preRotate(ps.getValue("Rotation"));
-        mat.preScale(ps.getValue("Scale"), ps.getValue("Scale"));
-
         pt.setColor(color);
         pt.setAlpha(Math.round(255 * ps.getValue("Alpha")));
         //Log2.log(2,this,path);
-        c.drawPath(path.transform(mat).toPath(),pt);
+        c.drawPath(getPointsCompound(currentTime).toPath(),pt);
         pt.setAlpha(255);
     }
 

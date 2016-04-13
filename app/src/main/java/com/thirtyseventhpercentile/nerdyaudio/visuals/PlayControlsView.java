@@ -17,11 +17,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
+import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableRectF;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableShape;
 import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
-import com.thirtyseventhpercentile.nerdyaudio.animation.PrimitivePaths;
+import com.thirtyseventhpercentile.nerdyaudio.draw.PrimitivePaths;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
@@ -64,6 +66,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     float density;
 
     AnimatableShape playBtn;
+    MixNode<PointsCompound> playBtnShape;
+    MixNode<PointsCompound> playBtnShapeNormal;
+    MixNode<PointsCompound> playBtnShapeDiamond;
     MixedProperties buttonFollower;
     MixedProperties buttonFollowerProgress;
     MixedProperties buttonFollowerUser;
@@ -92,6 +97,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     MixedProperties albumArtNone;
 
     AnimatableShape pauseBtn;
+    MixNode<PointsCompound> pausePointsMixed;
+    MixNode<PointsCompound> pausePointsSquare;
+    MixNode<PointsCompound> pausePointsNormal;
     MixedProperties pauseRest;
     MixedProperties pauseRestCenter;
     MixedProperties pauseRestSide;
@@ -116,6 +124,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     AnimatableWaveform waveform;
     MixedProperties waveformExpanded;
     MixedProperties waveformNotExpanded;
+    MixedProperties waveformCenterActive;
+    MixedProperties waveformCenterInactive;
 
     MixedProperties barHeight;
     MixedProperties expandedBarHeightMP;
@@ -197,10 +207,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
         buttonFollower = new MixedProperties("Follower");
-        buttonFollowerUser = new MixedProperties("User", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 180).setValue("Alpha", 1.0f));
-        buttonFollowerProgress = new MixedProperties("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 180).setValue("Alpha", 1.0f));
+        buttonFollowerUser = new MixedProperties("User", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        buttonFollowerProgress = new MixedProperties("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         buttonFollowerUser.getInfluence().set(0.0f);
-        buttonFollowerYExpanded = new MixedProperties("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40) * density));
+        buttonFollowerYExpanded = new MixedProperties("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density));
         buttonFollowerYExpanded.getInfluence().set(0.0f);
         buttonFollowerYNotExpanded = new MixedProperties("YNotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight) * density));
         buttonFollower.addProperty(buttonFollowerProgress);
@@ -210,34 +220,49 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         buttonFollower.getInfluence().set(0);
 
         playBtnRestPosition = new MixedProperties("Rest");
-        playBtnRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 30).setValue("Alpha", 1.0f));
-        playBtnRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 30).setValue("Alpha", 1.0f));
+        playBtnRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
+        playBtnRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
         playBtnRestCenter.getInfluence().set(0.0f);
         playBtnRestPosition.addProperty(playBtnRestSide);
         playBtnRestPosition.addProperty(playBtnRestCenter);
 
+        playBtnShape=new MixNode<PointsCompound>("Play Btn Shape");
+        playBtnShapeNormal=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.play(buttonsSize / 2.0f * density));
+        playBtnShapeDiamond=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.playDiamond(buttonsSize / 2.0f * density));
+        playBtnShapeDiamond.getInfluence().set(0.0f);
+        playBtnShape.addNode(playBtnShapeNormal);
+        playBtnShape.addNode(playBtnShapeDiamond);
 
-        playBtn = new AnimatableShape(PrimitivePaths.triangle(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("Mix"));
+        playBtn = new AnimatableShape(playBtnShape, buttonColor, new MixedProperties("Mix"));
         playBtn.getMixedProperties().addProperty(buttonFollower);
         playBtn.getMixedProperties().addProperty(playBtnRestPosition);
 
 
         pauseRest = new MixedProperties("Rest");
-        pauseRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0));
-        pauseRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0));
+        pauseRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
+        pauseRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
         pauseRestCenter.getInfluence().set(0.0f);
         pauseRest.addProperty(pauseRestSide);
         pauseRest.addProperty(pauseRestCenter);
 
-        pauseBtn = new AnimatableShape(PrimitivePaths.pause(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("Mix"));
 
-        pauseVisible = new MixedProperties("PauseVisible", new PropertySet().setValue("Alpha", 1.0f));
+        pausePointsMixed=new MixNode<PointsCompound>("Pause Shape");
+        pausePointsNormal=new MixNode<PointsCompound>("Pause Normal",PrimitivePaths.pause(buttonsSize / 2.0f * density));
+        pausePointsSquare=new MixNode<PointsCompound>("Pause Square",PrimitivePaths.pauseSquare(buttonsSize / 2.0f * density));
+        pausePointsNormal.getInfluence().set(0.0f);
+        pausePointsMixed.addNode(pausePointsSquare);
+        pausePointsMixed.addNode(pausePointsNormal);
+
+        pauseBtn = new AnimatableShape(pausePointsMixed, buttonColor, new MixedProperties("Mix"));
+
+        pauseVisible = new MixedProperties("PauseVisible", new PropertySet().setValue("Alpha", 1.0f).setValue("Scale", 1).setValue("Rotation", 0));
         pauseVisible.getInfluence().set(0);
-        pauseInvisible = new MixedProperties("PauseInvisible", new PropertySet().setValue("Alpha", 0.0f));
+        pauseInvisible = new MixedProperties("PauseInvisible", new PropertySet().setValue("Alpha", 0.0f).setValue("Scale", 0).setValue("Rotation", 180));
 
         pauseBtn.getMixedProperties().addProperty(pauseInvisible);
         pauseBtn.getMixedProperties().addProperty(pauseVisible);
         pauseBtn.getMixedProperties().addProperty(pauseRest);
+
 
 
         nextBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("FinalMix"));
@@ -246,6 +271,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         nextCenter.getInfluence().set(0.0f);
         nextBtn.getMixedProperties().addProperty(nextSide);
         nextBtn.getMixedProperties().addProperty(nextCenter);
+
+
 
 
         prevBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("FinalMix"));
@@ -308,7 +335,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         timestampRest = new MixedProperties("Rest", new PropertySet().setValue("X", w - 30 * density));
         timestampFollow = new MixedProperties("Follow", new PropertySet().setValue("X", 0));
         timestampNotExpanded = new MixedProperties("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight + 30) * density));
-        timestampExpanded = new MixedProperties("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40 + 30) * density));
+        timestampExpanded = new MixedProperties("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40 + 45) * density));
         timestampExpanded.getInfluence().set(0.0f);
         timestampFollow.getInfluence().set(0.0f);
         timestampAnim.getMixedProperties().addProperty(timestampRest);
@@ -324,6 +351,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         waveformNotExpanded = new MixedProperties("NotExpanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - normalBarHeight * density)
                         .setValue("XSize", w).setValue("YSize", 50 * density)
+                        .setValue("YBalance",1.0f)
                         .setValue("Played-R", ColorFiddler.rF(playedColor))
                         .setValue("Played-G", ColorFiddler.gF(playedColor))
                         .setValue("Played-B", ColorFiddler.bF(playedColor))
@@ -331,10 +359,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         .setValue("Remaining-R", ColorFiddler.rF(remainingColor))
                         .setValue("Remaining-G", ColorFiddler.gF(remainingColor))
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColor))
-                        .setValue("Remaining-A", ColorFiddler.aF(remainingColor)));
+                        .setValue("Remaining-A", ColorFiddler.aF(remainingColor))
+                        .setValue("CenterBarHeight",2*density));
         waveformExpanded = new MixedProperties("Expanded",
-                new PropertySet().setValue("X", 0).setValue("Y", h - (expandedBarHeight - albumArtSize - 40) * density)
+                new PropertySet().setValue("X", 0).setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density)
                         .setValue("XSize", w).setValue("YSize", 40 * density)
+                        .setValue("YBalance",0.5f)
                         .setValue("Played-R", ColorFiddler.rF(playedColorEX))
                         .setValue("Played-G", ColorFiddler.gF(playedColorEX))
                         .setValue("Played-B", ColorFiddler.bF(playedColorEX))
@@ -342,10 +372,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         .setValue("Remaining-R", ColorFiddler.rF(remainingColorEX))
                         .setValue("Remaining-G", ColorFiddler.gF(remainingColorEX))
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColorEX))
-                        .setValue("Remaining-A", ColorFiddler.aF(remainingColorEX)));
+                        .setValue("Remaining-A", ColorFiddler.aF(remainingColorEX))
+                        .setValue("CenterBarHeight",2*density));
+        waveformCenterActive=new MixedProperties("Waveform Center Active",new PropertySet().setValue("CenterBarWidth",1.0f));
+        waveformCenterInactive=new MixedProperties("Waveform Center Inactive",new PropertySet().setValue("CenterBarWidth",0.0f));
+        waveformCenterActive.getInfluence().set(0.0f);
         waveformExpanded.getInfluence().set(0.0f);
         waveform.getMixedProperties().addProperty(waveformExpanded);
         waveform.getMixedProperties().addProperty(waveformNotExpanded);
+        waveform.getMixedProperties().addProperty(waveformCenterInactive);
+        waveform.getMixedProperties().addProperty(waveformCenterActive);
 
 
     }
@@ -509,6 +545,19 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         canvas.drawRect(0, h - barHeight.update(currentFrameTime).getValue("Height"), w, h, pt);
 
 
+        titleAnimatable.draw(canvas, pt,currentFrameTime);
+
+        artistAnimatable.draw(canvas, pt,currentFrameTime);
+
+        filePath.draw(canvas, pt,currentFrameTime);
+        if (albumArt != null) {
+            pt.setAlpha(Math.round(albumArtColor.update(currentFrameTime).getValue("alpha")));
+            canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
+            //Log.d(LOG_TAG, "trying to draw..");
+            pt.setAlpha(255);
+        }
+
+
         waveform.draw(canvas, pt,currentFrameTime);
 
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
@@ -523,17 +572,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
 
-        titleAnimatable.draw(canvas, pt,currentFrameTime);
 
-        artistAnimatable.draw(canvas, pt,currentFrameTime);
-
-        filePath.draw(canvas, pt,currentFrameTime);
-        if (albumArt != null) {
-            pt.setAlpha(Math.round(albumArtColor.update(currentFrameTime).getValue("alpha")));
-            canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
-            //Log.d(LOG_TAG, "trying to draw..");
-            pt.setAlpha(255);
-        }
 
 
         pt.setColor(Color.argb(50, 0, 0, 0));
@@ -554,20 +593,38 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
     private void animatePlay() {
 
+        playBtnShapeDiamond.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
         playBtnRestPosition.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         //We et influence to 1000 so it will override both Basis and Centered.
 
         pauseVisible.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         pauseInvisible.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+
+        pausePointsSquare.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pausePointsNormal.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
+        waveformCenterActive.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        waveformCenterInactive.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
     }
 
     private void animateStop() {
+        playBtnShapeDiamond.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        playBtnShapeNormal.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
         playBtnRestPosition.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
         pauseVisible.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
         pauseInvisible.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+
+        pausePointsSquare.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pausePointsNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
+        waveformCenterActive.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        waveformCenterInactive.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
     }
 
     float iniX, iniY;

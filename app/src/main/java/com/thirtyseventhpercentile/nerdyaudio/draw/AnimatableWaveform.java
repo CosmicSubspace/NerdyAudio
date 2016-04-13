@@ -18,6 +18,7 @@ public class AnimatableWaveform extends Animatable {
     AudioPlayer ap;
     AnimatableText notAvailableText;
     float barSpacing=0.0f;
+    int centerBarColor=Color.WHITE;
 
     /**
      * Required Properties:
@@ -25,6 +26,7 @@ public class AnimatableWaveform extends Animatable {
      * Y  - The Bottom corner
      * XSize
      * YSize
+     * YBalance - 1.0 means the bars will be entirely above the Y value. 0.5 is centered at Y. 0.0 you can figure it out by yourself.
      * <p/>
      * Played-R
      * Played-G
@@ -35,6 +37,9 @@ public class AnimatableWaveform extends Animatable {
      * Remaining-G
      * Remaining-B
      * Remaining-A
+     * <p/>
+     * CenterBarHeight - Height of the Center bar. Center bar is not affected by YBalance.
+     * CenterBarWidth - How expanded the center bar is. 0 is not visible, 1 is fully extended.
      */
 
 
@@ -56,11 +61,19 @@ public class AnimatableWaveform extends Animatable {
         int playedColor=getPlayedColor(current);
         int remainingColor=getRemainingColor(current);
 
+
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
             currentPosition=(float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames());
             float spacing = current.getValue("XSize") / (wf.getDivisions() * (1.0f + barSpacing) - barSpacing) * (barSpacing + 1.0f);
             float width = current.getValue("XSize") / (wf.getDivisions() * (1.0f + barSpacing) - barSpacing);
             float progressPerBar = 1 / (float) wf.getDivisions();
+            float balance=current.getValue("YBalance");
+            float currentHeight;
+
+            float currentBarHeight=current.getValue("CenterBarHeight");
+
+            float maxHeight=current.getValue("YSize")-currentBarHeight;
+
             for (int i = 0; i < wf.getDivisions(); i++) {
 
 
@@ -68,9 +81,19 @@ public class AnimatableWaveform extends Animatable {
                 else if ((i + 1) * progressPerBar < currentPosition) pt.setColor(playedColor);
                 else pt.setColor(ColorFiddler.rampColor( playedColor, remainingColor,(currentPosition - i * progressPerBar) / progressPerBar));
 
+                currentHeight=wf.getRatio(i)*maxHeight+currentBarHeight;
+
                 //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
-                c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- wf.getRatio(i)*current.getValue("YSize"), current.getValue("X")+i * spacing + width, current.getValue("Y"), pt);
+                c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- (balance)*currentHeight,
+                        current.getValue("X")+i * spacing + width, current.getValue("Y")+(1-balance)*currentHeight, pt);
             }
+
+            pt.setColor(centerBarColor);
+            c.drawRect(current.getValue("X"),
+                    current.getValue("Y")+currentBarHeight/2.0f,
+                    current.getValue("X")+current.getValue("XSize")*currentPosition*current.getValue("CenterBarWidth"),
+                    current.getValue("Y")-currentBarHeight/2.0f,pt);
+
         }else{
 
             notAvailableText.draw(c,pt,currentTime);

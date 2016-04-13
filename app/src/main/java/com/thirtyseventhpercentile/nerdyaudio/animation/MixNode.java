@@ -52,8 +52,8 @@ public class MixNode<T extends Mixable> {
     }*/
 
     public T getValue(long time){
+        //TODO flatten tree before mixing.
         if (basis!=null) return basis;
-
 
         else{
             Mixer<T> mixer=null;
@@ -62,17 +62,18 @@ public class MixNode<T extends Mixable> {
                 valTemp= node.getValue(time);
                 if (mixer==null) {
                     mixer=(Mixer<T>) valTemp.getMixer();
+                    //Log2.log(2,this,"Getting Mixer...");
                 }
                 try {
-                    mixer.addMix(valTemp,node.getInfluence().getValue());
-                    //Log2.log(2,this,valTemp,node.getInfluence().getValue());
+                    mixer.addMix(valTemp,node.getInfluence().getValue(time));
+                    Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
                 }catch(UnMixableException e){
                     ErrorLogger.log(e);
                 }catch(NullPointerException e){
                     Log2.log(4,this,"NPE",this.name);
                 }
             }
-            //Log2.log(2,this,"Returning",mixer,mixer.mix());
+            Log2.log(2,this,"Returning",mixer,mixer.mix());
             return mixer.mix();
         }
 

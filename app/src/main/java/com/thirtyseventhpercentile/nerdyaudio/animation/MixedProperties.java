@@ -9,6 +9,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Mixes many ProperySets together
+ *
+ * @deprecated use the MixNode class instead, as it provides better performance and is more generic.
+ */
 @Deprecated
 public class MixedProperties {
     public static final String LOG_TAG="CS_AFN";

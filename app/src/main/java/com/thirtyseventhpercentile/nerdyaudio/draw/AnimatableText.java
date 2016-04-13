@@ -89,9 +89,6 @@ public class AnimatableText extends Animatable{
     float textSize, fadeSize, maxWidth;
 
 
-
-
-
     //Temporary variables
     Paint.FontMetrics fm;
     float textHeight, textWidth;

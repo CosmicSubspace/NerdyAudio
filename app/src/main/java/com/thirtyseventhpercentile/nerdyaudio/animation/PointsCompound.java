@@ -11,9 +11,75 @@ import android.graphics.RectF;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
-public class PointsCompound {
+public class PointsCompound implements Mixable {
+
+    @Override
+    public Mixer getMixer() {
+        return new PointsCompoundMixer();
+    }
+
+    static class PointsCompoundMixer implements Mixer<PointsCompound> {
+        float[] points;
+        int[] cuts;
+        float influenceSum = 0;
+
+        boolean initialized = false;
+
+        @Override
+        public void addMix(PointsCompound thing, float influence) throws UnMixableException {
+            if (!initialized) {
+                points = new float[thing.pointsArray.length];
+
+                cuts = new int[thing.cutsArray.length];
+                for (int i = 0; i < cuts.length; i++) { //TODO replace with more efficient copy.
+                   cuts[i]= thing.cutsArray[i];
+                }
+
+                initialized = true;
+            }
+
+            if (points.length != thing.pointsArray.length) throw new UnMixableException("");
+            for (int i = 0; i < cuts.length; i++) {
+                if (cuts[i] != thing.cutsArray[i]) throw new UnMixableException("");
+            }
+
+            for (int i = 0; i < thing.pointsArray.length; i++) {
+                points[i] += thing.pointsArray[i] * influence;
+            }
+
+            influenceSum += influence;
+
+        }
+
+        @Override
+        public PointsCompound mix() {
+            if (points.length == 0) {
+                Log2.log(4, this, "No Points! returning NULL.");
+                return null;
+            }
+            if (influenceSum < 0.00001f) {
+                Log2.log(4, this, "Influence too small! returning NULL.");
+                return null;
+            }
+            for (int i = 0; i < points.length; i++) {
+                points[i] /= influenceSum;
+            }
+            return new PointsCompound(points, cuts);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < points.length; i++) {
+                sb.append("," + points[i]);
+            }
+            sb.append("\n influence sum: " + influenceSum);
+            return sb.toString();
+        }
+    }
 
     float[] pointsArray;
     int[] cutsArray;
@@ -24,7 +90,7 @@ public class PointsCompound {
         for (int i = 0; i < pts.size(); i++) {
             pointsArray[i] = pts.get(i);
         }
-        cutsArray=new int[cuts.size()];
+        cutsArray = new int[cuts.size()];
         for (int i = 0; i < cuts.size(); i++) {
             cutsArray[i] = cuts.get(i);
         }
@@ -32,13 +98,13 @@ public class PointsCompound {
 
     private PointsCompound(float[] pts, int[] cuts) {
         pointsArray = pts;
-        cutsArray=cuts;
+        cutsArray = cuts;
     }
 
     public PointsCompound transform(Matrix mat) throws IllegalStateException {
         float[] res = new float[pointsArray.length];
         mat.mapPoints(res, pointsArray);
-        return new PointsCompound(res,cutsArray);
+        return new PointsCompound(res, cutsArray);
     }
 
     public Path toPath() {
@@ -47,7 +113,7 @@ public class PointsCompound {
         for (int i = 0; i < pointsArray.length / 2; i++) {
             skip = false;
 
-            if (cutsArray!=null) {
+            if (cutsArray != null) {
                 //Log2.log(2,this,cutsArray);
                 for (int cut : this.cutsArray) {
                     //Log2.log(2,this,cut);
@@ -84,7 +150,14 @@ public class PointsCompound {
         return new RectF(minX - padding, minY - padding, maxX + padding, maxY + padding);
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < pointsArray.length; i++) {
+            sb.append("," + pointsArray[i]);
+        }
+        return sb.toString();
+    }
 
     public static class Builder {
         ArrayList<Float> points = new ArrayList<>();
