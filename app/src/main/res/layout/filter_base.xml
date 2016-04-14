@@ -13,13 +13,41 @@
         android:layout_height="wrap_content"
         android:id="@+id/filter_layout">
 
-        <Button
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:id="@+id/filter_close"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_buttons"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_close_black_36dp"/>
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/filter_move_down"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="false"
+                android:background="@drawable/ic_keyboard_arrow_down_black_36dp"
+                android:layout_toLeftOf="@+id/filter_move_up" />
+
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/filter_move_up"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="false"
+                android:background="@drawable/ic_keyboard_arrow_up_black_36dp"
+                android:layout_toLeftOf="@+id/filter_close" />
+
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/filter_close"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_close_black_36dp"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/filter_title"
@@ -28,7 +56,8 @@
             android:text="Base Filter"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            style="@style/filter_title"/>
+            style="@style/filter_title"
+            android:layout_toLeftOf="@+id/filter_buttons" />
 
         <FrameLayout
             android:layout_width="match_parent"

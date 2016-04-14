@@ -19,16 +19,21 @@ public class AutoGainFilter extends BaseFilter {
         super(fm);
         wf=Waveform.getInstance();
     }
+
     private float getGain(){
         Log.d(LOG_TAG,"Peak:"+wf.getPeak());
         return 32767.0f/wf.getPeak();
     }
+
     @Override
     public void filter(float[] data) {
-        float gain=getGain();
-        for (int i = 0; i < data.length; i++) {
-            data[i]=data[i]*gain;
+        if (wf.isReady()) {
+            float gain = getGain();
+            for (int i = 0; i < data.length; i++) {
+                data[i] = data[i] * gain;
+            }
         }
+        //If not, don't do anything...
     }
 
     @Override

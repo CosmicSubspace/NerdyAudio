@@ -25,7 +25,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import java.util.ArrayList;
 
 
-public class FiltersFragment extends Fragment implements View.OnClickListener{
+public class FiltersFragment extends Fragment implements View.OnClickListener, FilterManager.FilterListChangeListener{
     private static final String LOG_TAG="CS_AFN";
     LinearLayout lv;
     FloatingActionMenu fam;
@@ -34,6 +34,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fm=FilterManager.getInstance();
+        fm.addFilterListChangeListener(this);
         View v=inflater.inflate(R.layout.tab_frag_filters, container, false);
         lv=(LinearLayout)v.findViewById(R.id.filters_tab_filters);
         fam =(FloatingActionMenu)v.findViewById(R.id.filters_tab_fab);
@@ -46,14 +47,24 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
         fabs[1]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_2);
         fabs[1].setOnClickListener(this);
 
-        ArrayList<BaseFilter> filters=fm.getFilters();
-        for (int i=0;i<filters.size();i++){
-            lv.addView(filters.get(i).getView(getLayoutInflater(null),lv));
-        }
+        //I don't think there will be too many filters in here, so we'll just use a
+        updateUI();
+
         return v;
     }
 
     public void updateUI(){
+        lv.removeAllViews();
+        ArrayList<BaseFilter> filters=fm.getFilters();
+        for (int i=0;i<filters.size();i++){
+            lv.addView(filters.get(i).getView(getLayoutInflater(null),lv));
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fm.removeFilterListChangeListener(this);
     }
 
     @Override
@@ -75,5 +86,10 @@ public class FiltersFragment extends Fragment implements View.OnClickListener{
             lv.addView(vvvvv);
             //fam.close(true);
         }
+    }
+
+    @Override
+    public void filterListChanged() {
+        updateUI();
     }
 }

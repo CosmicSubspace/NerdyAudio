@@ -48,6 +48,13 @@ import java.io.File;
 //TODO : Numerical Setting Input
 //TODO : Prettier Queue Elements
 //TODO : Better Library Browser
+//TODO : Colorize Visuals
+//TODO : Better UI Colors
+//TODO : Shuffle & Repeat
+//TODO : Waveform color always accent?
+//TODO : PlayControls drag to resize.
+//TODO : Playcontrols button bottom spacing.
+//TODO : Ball Visuals more settings
 
 /**
  * Other Libraries:

@@ -20,6 +20,8 @@ public class AnimatableWaveform extends Animatable {
     float barSpacing=0.0f;
     int centerBarColor=Color.WHITE;
 
+
+
     /**
      * Required Properties:
      * X  - The Left corner

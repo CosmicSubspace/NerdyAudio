@@ -17,7 +17,7 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 abstract public class BaseFilter implements View.OnClickListener{
     FilterManager fm;
     View mainView;
-    Button closeBtn;
+    Button closeBtn, upBtn, downBtn;
     TextView title;
     FrameLayout content;
     public BaseFilter(FilterManager fm){
@@ -31,23 +31,40 @@ abstract public class BaseFilter implements View.OnClickListener{
         closeBtn=(Button) mainView.findViewById(R.id.filter_close);
         closeBtn.setOnClickListener(this);
 
+        upBtn=(Button) mainView.findViewById(R.id.filter_move_up);
+        upBtn.setOnClickListener(this);
+
+        downBtn=(Button) mainView.findViewById(R.id.filter_move_down);
+        downBtn.setOnClickListener(this);
+
         title=(TextView) mainView.findViewById(R.id.filter_title);
         title.setText(getName());
 
         content=(FrameLayout) mainView.findViewById(R.id.filter_content);
-        content.addView(getContentView(inflater,content));
+        View innerContent=getContentView(inflater,content);
+        if (innerContent!=null) content.addView(innerContent);
 
         return mainView;
     }
     public abstract View getContentView(LayoutInflater inflater, ViewGroup container);
     public void deleteSelf(){
         fm.deleteFilter(this);
-        ((LinearLayout)mainView.getParent()).removeView(mainView);
+    }
+    public void moveUp(){
+
+        fm.moveUp(this);
+    }
+    public void moveDown(){
+        fm.moveDown(this);
     }
     @Override
     public void onClick(View v){
         if (v.getId()==R.id.filter_close){
             deleteSelf();
+        }else if (v.getId()==R.id.filter_move_up){
+            moveUp();
+        }else if (v.getId()==R.id.filter_move_down){
+            moveDown();
         }
     }
 }

@@ -29,7 +29,7 @@ class PlayThread extends Thread{
                 public void feed(short[] buff) {
                     if (stop) return;
                     short[] filtered=fm.filterAll(buff);
-                    if (ap.bfl!=null) ap.bfl.feed(filtered);
+                    //if (ap.bfl!=null) ap.bfl.feed(filtered);
 
                     while (ap.isPaused()){
                         try {

@@ -41,15 +41,16 @@ public class MixNode<T extends Mixable> {
     public T getBasis(){
         return this.basis;
     }
-/*
+
+
     private List<T> getBasisNodes(float influenceMultiplier){
         List<T> res=null;
         for(MixNode<T> m: child){
             if (res!=null) res.addAll(m.getBasisNodes(influenceMultiplier));
             else res=m.getBasisNodes(influenceMultiplier);
         }
-        return
-    }*/
+        return null;
+    }
 
     public T getValue(long time){
         //TODO flatten tree before mixing.
@@ -66,14 +67,14 @@ public class MixNode<T extends Mixable> {
                 }
                 try {
                     mixer.addMix(valTemp,node.getInfluence().getValue(time));
-                    Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
+                    //Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
                 }catch(UnMixableException e){
                     ErrorLogger.log(e);
                 }catch(NullPointerException e){
                     Log2.log(4,this,"NPE",this.name);
                 }
             }
-            Log2.log(2,this,"Returning",mixer,mixer.mix());
+            //Log2.log(2,this,"Returning",mixer,mixer.mix());
             return mixer.mix();
         }
 
