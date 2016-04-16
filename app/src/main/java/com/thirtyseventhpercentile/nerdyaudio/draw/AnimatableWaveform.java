@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
+import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
@@ -45,11 +45,11 @@ public class AnimatableWaveform extends Animatable {
      */
 
 
-    public AnimatableWaveform(Waveform wf, AudioPlayer ap, MixedProperties basis, float density) {
+    public AnimatableWaveform(Waveform wf, AudioPlayer ap, MixNode<PropertySet> basis, float density) {
         super(basis);
         this.wf = wf;
         this.ap = ap;
-        this.notAvailableText = new AnimatableText(new MixedProperties("Final", new PropertySet().setValue("X", 0).setValue("Y", 0)), Color.BLACK, "Waveorm not yet prepared...", 16 * density);
+        this.notAvailableText = new AnimatableText(new MixNode<PropertySet>("Final", new PropertySet().setValue("X", 0).setValue("Y", 0)), Color.BLACK, "Waveorm not yet prepared...", 16 * density);
         this.notAvailableText.setAlign(AnimatableText.ALIGN_CENTER);
     }
 
@@ -57,8 +57,8 @@ public class AnimatableWaveform extends Animatable {
     PropertySet current;
 
     public void draw(Canvas c, Paint pt, long currentTime) {
-        current = mixedProperties.update(currentTime);
-        notAvailableText.getMixedProperties().getBasis().setValue("X",current.getValue("X")+current.getValue("XSize")/2.0f).setValue("Y",current.getValue("Y")-current.getValue("YSize")/2.0f);
+        current = mixedProperties.getValue(currentTime);
+        notAvailableText.getMixNode().getBasis().setValue("X",current.getValue("X")+current.getValue("XSize")/2.0f).setValue("Y",current.getValue("Y")-current.getValue("YSize")/2.0f);
 
         int playedColor=getPlayedColor(current);
         int remainingColor=getRemainingColor(current);

@@ -16,6 +16,8 @@ public class MixNode<T extends Mixable> {
     private String name;
     private AnimatableValue influence;
 
+    private float tempInfluence; //This assumes only one mixing operation takes place at once.
+
     public MixNode(String name, T basis){
         this.name=name;
         this.basis=basis;
@@ -43,19 +45,49 @@ public class MixNode<T extends Mixable> {
     }
 
 
-    private List<T> getBasisNodes(float influenceMultiplier){
-        List<T> res=null;
-        for(MixNode<T> m: child){
-            if (res!=null) res.addAll(m.getBasisNodes(influenceMultiplier));
-            else res=m.getBasisNodes(influenceMultiplier);
+    private void getBasisNodes(List<MixNode<T>> list, float influenceMultiplier, long time){
+        if (basis!=null){
+            tempInfluence=influenceMultiplier*this.getInfluence().getValue(time);
+            list.add(this);
+            return;
         }
-        return null;
+        for(MixNode<T> m: child){
+            m.getBasisNodes(list,influenceMultiplier*this.getInfluence().getValue(time),time);
+        }
     }
 
+    List<MixNode<T>> basisNodes=new ArrayList<>();
     public T getValue(long time){
-        //TODO flatten tree before mixing.
+
         if (basis!=null) return basis;
 
+
+        basisNodes.clear();
+        getBasisNodes(basisNodes,1.0f,time);
+
+        Mixer<T> mixer=null;
+
+        T valTemp;
+
+        for(MixNode<T> node:basisNodes){
+
+            if (mixer==null) {
+                mixer=(Mixer<T>) node.getBasis().getMixer(); //All nodes in this loop are guarenteed to be a basis node.
+            }
+
+            try {
+                mixer.addMix(node.getBasis(), node.tempInfluence);
+                //Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
+            }catch(UnMixableException e){
+                ErrorLogger.log(e);
+            }catch(NullPointerException e){
+                Log2.log(4,this,"NPE",this.name);
+            }
+        }
+        //Log2.log(2,this,"Returning",mixer,mixer.mix());
+        return mixer.mix();
+
+        /*
         else{
             Mixer<T> mixer=null;
             T valTemp;
@@ -77,7 +109,7 @@ public class MixNode<T extends Mixable> {
             //Log2.log(2,this,"Returning",mixer,mixer.mix());
             return mixer.mix();
         }
-
+        */
 
 
     }

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 
@@ -19,12 +20,12 @@ public class AnimatableRectF extends Animatable{
      * X-
      *
      */
-    public AnimatableRectF(MixedProperties properties){
+    public AnimatableRectF(MixNode<PropertySet> properties){
         super(properties);
     }
     PropertySet current;
     public RectF getRectF(long time){
-        current=mixedProperties.update(time);
+        current=mixedProperties.getValue(time);
         return new RectF(current.getValue("X-"),current.getValue("Y-"),current.getValue("X+"),current.getValue("Y+"));
     }
     @Override

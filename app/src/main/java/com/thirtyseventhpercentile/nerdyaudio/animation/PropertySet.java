@@ -4,9 +4,12 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.animation;
 
+import android.util.Log;
+
 import java.util.HashMap;
 
 public class PropertySet implements Mixable{
+    private static final String LOG_TAG="CS_AFN";
 
     @Override
     public Mixer getMixer() {
@@ -14,14 +17,28 @@ public class PropertySet implements Mixable{
     }
 
     public static class PropertySetMixer implements Mixer<PropertySet>{
+        PropertySet res=new PropertySet();
+        HashMap<String,Float> influences=new HashMap<>();
 
         @Override
         public void addMix(PropertySet thing,float influence) {
+
+            for (Object k : thing.getIter()) {
+                String key = (String) k;
+                if (influences.get(key) == null) influences.put(key, 0.0f);
+                influences.put(key, influences.get(key) + influence);
+                res.setValue(key, res.getValue(key, 0) + thing.getValue(key) * influence);
+            }
         }
 
         @Override
         public PropertySet mix() {
-            return null;
+            for (Object k:res.getIter()){
+                String key=(String)k;
+                if (influences.get(key)<0.0001f) Log.w(LOG_TAG,"Influence sum of "+key+" is near zero. Expect Animation errors.");
+                res.setValue(key, res.getValue(key)/influences.get(key));
+            }
+            return res;
         }
     }
 

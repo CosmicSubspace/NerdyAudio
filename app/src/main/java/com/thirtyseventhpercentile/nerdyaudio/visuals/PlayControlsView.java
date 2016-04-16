@@ -18,7 +18,6 @@ import android.view.View;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
-import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableRectF;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableShape;
@@ -33,6 +32,7 @@ import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSongListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
@@ -42,8 +42,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     Paint pt;
     //RectF artBounds;
     AnimatableRectF artBoundsAnim;
-    MixedProperties artBoundsNormal;
-    MixedProperties artBoundsExpanded;
+    MixNode<PropertySet> artBoundsNormal;
+    MixNode<PropertySet> artBoundsExpanded;
 
     int menuColor, buttonColor, textPrimary, textSecondary;
     int timestampColor = Color.WHITE, timestampBackgroundColor = Color.BLACK;
@@ -69,73 +69,74 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     MixNode<PointsCompound> playBtnShape;
     MixNode<PointsCompound> playBtnShapeNormal;
     MixNode<PointsCompound> playBtnShapeDiamond;
-    MixedProperties buttonFollower;
-    MixedProperties buttonFollowerProgress;
-    MixedProperties buttonFollowerUser;
-    MixedProperties buttonFollowerYExpanded;
-    MixedProperties buttonFollowerYNotExpanded;
+    MixNode<PropertySet> buttonFollower;
+    MixNode<PropertySet> buttonFollowerProgress;
+    MixNode<PropertySet> buttonFollowerUser;
+    MixNode<PropertySet> buttonFollowerYExpanded;
+    MixNode<PropertySet> buttonFollowerYNotExpanded;
 
-    MixedProperties playBtnRestPosition;
-    MixedProperties playBtnRestCenter;
-    MixedProperties playBtnRestSide;
+    MixNode<PropertySet> playBtnRestPosition;
+    MixNode<PropertySet> playBtnRestCenter;
+    MixNode<PropertySet> playBtnRestSide;
 
     AnimatableText titleAnimatable;
-    MixedProperties titleNoArt;
-    MixedProperties titleNormal;
-    MixedProperties titleExpanded;
-    MixedProperties titleNotExpanded;
+    MixNode<PropertySet> titleNoArt;
+    MixNode<PropertySet> titleNormal;
+    MixNode<PropertySet> titleExpanded;
+    MixNode<PropertySet> titleNotExpanded;
 
     AnimatableText artistAnimatable;
-    MixedProperties artistNoArt;
-    MixedProperties artistNormal;
-    MixedProperties artistExpanded;
-    MixedProperties artistNotExpanded;
+    MixNode<PropertySet> artistNoArt;
+    MixNode<PropertySet> artistNormal;
+    MixNode<PropertySet> artistExpanded;
+    MixNode<PropertySet> artistNotExpanded;
 
 
-    MixedProperties albumArtColor;
-    MixedProperties albumArtNormal;
-    MixedProperties albumArtNone;
+    MixNode<PropertySet> albumArtColor;
+    MixNode<PropertySet> albumArtNormal;
+    MixNode<PropertySet> albumArtNone;
 
     AnimatableShape pauseBtn;
     MixNode<PointsCompound> pausePointsMixed;
     MixNode<PointsCompound> pausePointsSquare;
     MixNode<PointsCompound> pausePointsNormal;
-    MixedProperties pauseRest;
-    MixedProperties pauseRestCenter;
-    MixedProperties pauseRestSide;
-    MixedProperties pauseVisible;
-    MixedProperties pauseInvisible;
+    MixNode<PropertySet> pauseRest;
+    MixNode<PropertySet> pauseRestCenter;
+    MixNode<PropertySet> pauseRestSide;
+    MixNode<PropertySet> pauseVisible;
+    MixNode<PropertySet> pauseInvisible;
 
 
     AnimatableShape nextBtn;
-    MixedProperties nextSide;
-    MixedProperties nextCenter;
+    MixNode<PropertySet> nextSide;
+    MixNode<PropertySet> nextCenter;
+
 
     AnimatableShape prevBtn;
-    MixedProperties prevSide;
-    MixedProperties prevCenter;
+    MixNode<PropertySet> prevSide;
+    MixNode<PropertySet> prevCenter;
 
     AnimatableText timestampAnim;
-    MixedProperties timestampRest;
-    MixedProperties timestampFollow;
-    MixedProperties timestampExpanded;
-    MixedProperties timestampNotExpanded;
+    MixNode<PropertySet> timestampRest;
+    MixNode<PropertySet> timestampFollow;
+    MixNode<PropertySet> timestampExpanded;
+    MixNode<PropertySet> timestampNotExpanded;
 
     AnimatableWaveform waveform;
-    MixedProperties waveformExpanded;
-    MixedProperties waveformNotExpanded;
-    MixedProperties waveformCenterActive;
-    MixedProperties waveformCenterInactive;
+    MixNode<PropertySet> waveformExpanded;
+    MixNode<PropertySet> waveformNotExpanded;
+    MixNode<PropertySet> waveformCenterActive;
+    MixNode<PropertySet> waveformCenterInactive;
 
-    MixedProperties barHeight;
-    MixedProperties expandedBarHeightMP;
-    MixedProperties normalBarHeightMP;
+    MixNode<PropertySet> barHeight;
+    MixNode<PropertySet> expandedBarHeightMP;
+    MixNode<PropertySet> normalBarHeightMP;
 
     AnimatableText filePath;
-    MixedProperties filePathActive;
-    MixedProperties filePathActiveArt;
-    MixedProperties filePathActiveNoArt;
-    MixedProperties filePathInactive;
+    MixNode<PropertySet> filePathActive;
+    MixNode<PropertySet> filePathActiveArt;
+    MixNode<PropertySet> filePathActiveNoArt;
+    MixNode<PropertySet> filePathInactive;
 
 
     //TODO Performance. Srsly.
@@ -175,12 +176,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     }
 
     protected void prepareLayout() {
-        barHeight = new MixedProperties("BarHeight");
-        expandedBarHeightMP = new MixedProperties("Expanded", new PropertySet().setValue("Height", expandedBarHeight * density));
+        barHeight = new MixNode<PropertySet>("BarHeight");
+        expandedBarHeightMP = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Height", expandedBarHeight * density));
         expandedBarHeightMP.getInfluence().set(0.0f);
-        normalBarHeightMP = new MixedProperties("Expanded", new PropertySet().setValue("Height", normalBarHeight * density));
-        barHeight.addProperty(expandedBarHeightMP);
-        barHeight.addProperty(normalBarHeightMP);
+        normalBarHeightMP = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Height", normalBarHeight * density));
+        barHeight.addNode(expandedBarHeightMP);
+        barHeight.addNode(normalBarHeightMP);
 
         float buttonsAreaW = w - albumArtSize * density;
         float buttonsAreaIni = albumArtSize * density;
@@ -192,39 +193,39 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         //nextBtnBounds = new RectF(buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f) - halfButtonPx, h - 16 * density - halfButtonPx,
         //        buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f) + halfButtonPx, h - 16 * density + halfButtonPx);
         //artBounds = new RectF(albumArtMargin * density, h-(-albumArtMargin + (normalBarHeight)) * density, (albumArtSize - albumArtMargin) * density, h-(-albumArtSize + albumArtMargin + normalBarHeight) * density);
-        artBoundsAnim = new AnimatableRectF(new MixedProperties("Final"));
-        artBoundsNormal = new MixedProperties("Normal", new PropertySet().setValue("X-", albumArtMargin * density)
+        artBoundsAnim = new AnimatableRectF(new MixNode<PropertySet>("Final"));
+        artBoundsNormal = new MixNode<PropertySet>("Normal", new PropertySet().setValue("X-", albumArtMargin * density)
                 .setValue("Y-", h - (-albumArtMargin + (normalBarHeight)) * density)
                 .setValue("X+", (albumArtSize - albumArtMargin) * density)
                 .setValue("Y+", h - (-albumArtSize + albumArtMargin + normalBarHeight) * density));
-        artBoundsExpanded = new MixedProperties("Expanded", new PropertySet().setValue("X-", albumArtMargin * density)
+        artBoundsExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("X-", albumArtMargin * density)
                 .setValue("Y-", h - (-albumArtMargin + (expandedBarHeight)) * density)
                 .setValue("X+", (albumArtSize - albumArtMargin) * density)
                 .setValue("Y+", h - (-albumArtSize + albumArtMargin + expandedBarHeight) * density));
         artBoundsExpanded.getInfluence().set(0.0f);
-        artBoundsAnim.getMixedProperties().addProperty(artBoundsNormal);
-        artBoundsAnim.getMixedProperties().addProperty(artBoundsExpanded);
+        artBoundsAnim.getMixNode().addNode(artBoundsNormal);
+        artBoundsAnim.getMixNode().addNode(artBoundsExpanded);
 
 
-        buttonFollower = new MixedProperties("Follower");
-        buttonFollowerUser = new MixedProperties("User", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
-        buttonFollowerProgress = new MixedProperties("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        buttonFollower = new MixNode<PropertySet>("Follower");
+        buttonFollowerUser = new MixNode<PropertySet>("User", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        buttonFollowerProgress = new MixNode<PropertySet>("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         buttonFollowerUser.getInfluence().set(0.0f);
-        buttonFollowerYExpanded = new MixedProperties("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density));
+        buttonFollowerYExpanded = new MixNode<PropertySet>("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density));
         buttonFollowerYExpanded.getInfluence().set(0.0f);
-        buttonFollowerYNotExpanded = new MixedProperties("YNotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight) * density));
-        buttonFollower.addProperty(buttonFollowerProgress);
-        buttonFollower.addProperty(buttonFollowerUser);
-        buttonFollower.addProperty(buttonFollowerYExpanded);
-        buttonFollower.addProperty(buttonFollowerYNotExpanded);
+        buttonFollowerYNotExpanded = new MixNode<PropertySet>("YNotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight) * density));
+        buttonFollower.addNode(buttonFollowerProgress);
+        buttonFollower.addNode(buttonFollowerUser);
+        buttonFollower.addNode(buttonFollowerYExpanded);
+        buttonFollower.addNode(buttonFollowerYNotExpanded);
         buttonFollower.getInfluence().set(0);
 
-        playBtnRestPosition = new MixedProperties("Rest");
-        playBtnRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
-        playBtnRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
+        playBtnRestPosition = new MixNode<PropertySet>("Rest");
+        playBtnRestSide = new MixNode<PropertySet>("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
+        playBtnRestCenter = new MixNode<PropertySet>("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", -90).setValue("Alpha", 1.0f));
         playBtnRestCenter.getInfluence().set(0.0f);
-        playBtnRestPosition.addProperty(playBtnRestSide);
-        playBtnRestPosition.addProperty(playBtnRestCenter);
+        playBtnRestPosition.addNode(playBtnRestSide);
+        playBtnRestPosition.addNode(playBtnRestCenter);
 
         playBtnShape=new MixNode<PointsCompound>("Play Btn Shape");
         playBtnShapeNormal=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.play(buttonsSize / 2.0f * density));
@@ -233,17 +234,17 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         playBtnShape.addNode(playBtnShapeNormal);
         playBtnShape.addNode(playBtnShapeDiamond);
 
-        playBtn = new AnimatableShape(playBtnShape, buttonColor, new MixedProperties("Mix"));
-        playBtn.getMixedProperties().addProperty(buttonFollower);
-        playBtn.getMixedProperties().addProperty(playBtnRestPosition);
+        playBtn = new AnimatableShape(playBtnShape, buttonColor, new MixNode<PropertySet>("Mix"));
+        playBtn.getMixNode().addNode(buttonFollower);
+        playBtn.getMixNode().addNode(playBtnRestPosition);
 
 
-        pauseRest = new MixedProperties("Rest");
-        pauseRestSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
-        pauseRestCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
+        pauseRest = new MixNode<PropertySet>("Rest");
+        pauseRestSide = new MixNode<PropertySet>("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
+        pauseRestCenter = new MixNode<PropertySet>("Center", new PropertySet().setValue("X", w * (3.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density));
         pauseRestCenter.getInfluence().set(0.0f);
-        pauseRest.addProperty(pauseRestSide);
-        pauseRest.addProperty(pauseRestCenter);
+        pauseRest.addNode(pauseRestSide);
+        pauseRest.addNode(pauseRestCenter);
 
 
         pausePointsMixed=new MixNode<PointsCompound>("Pause Shape");
@@ -253,102 +254,102 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         pausePointsMixed.addNode(pausePointsSquare);
         pausePointsMixed.addNode(pausePointsNormal);
 
-        pauseBtn = new AnimatableShape(pausePointsMixed, buttonColor, new MixedProperties("Mix"));
+        pauseBtn = new AnimatableShape(pausePointsMixed, buttonColor, new MixNode<PropertySet>("Mix"));
 
-        pauseVisible = new MixedProperties("PauseVisible", new PropertySet().setValue("Alpha", 1.0f).setValue("Scale", 1).setValue("Rotation", 0));
+        pauseVisible = new MixNode<PropertySet>("PauseVisible", new PropertySet().setValue("Alpha", 1.0f).setValue("Scale", 1).setValue("Rotation", 0));
         pauseVisible.getInfluence().set(0);
-        pauseInvisible = new MixedProperties("PauseInvisible", new PropertySet().setValue("Alpha", 0.0f).setValue("Scale", 0).setValue("Rotation", 180));
+        pauseInvisible = new MixNode<PropertySet>("PauseInvisible", new PropertySet().setValue("Alpha", 0.0f).setValue("Scale", 0).setValue("Rotation", 180));
 
-        pauseBtn.getMixedProperties().addProperty(pauseInvisible);
-        pauseBtn.getMixedProperties().addProperty(pauseVisible);
-        pauseBtn.getMixedProperties().addProperty(pauseRest);
+        pauseBtn.getMixNode().addNode(pauseInvisible);
+        pauseBtn.getMixNode().addNode(pauseVisible);
+        pauseBtn.getMixNode().addNode(pauseRest);
 
 
 
-        nextBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("FinalMix"));
-        nextSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
-        nextCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        nextBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixNode<PropertySet>("FinalMix"));
+        nextSide = new MixNode<PropertySet>("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        nextCenter = new MixNode<PropertySet>("Center", new PropertySet().setValue("X", w * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         nextCenter.getInfluence().set(0.0f);
-        nextBtn.getMixedProperties().addProperty(nextSide);
-        nextBtn.getMixedProperties().addProperty(nextCenter);
+        nextBtn.getMixNode().addNode(nextSide);
+        nextBtn.getMixNode().addNode(nextCenter);
 
 
 
 
-        prevBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixedProperties("FinalMix"));
-        prevSide = new MixedProperties("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 180).setValue("Alpha", 1.0f));
-        prevCenter = new MixedProperties("Center", new PropertySet().setValue("X", w * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 180).setValue("Alpha", 1.0f));
+        prevBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixNode<PropertySet>("FinalMix"));
+        prevSide = new MixNode<PropertySet>("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 180).setValue("Alpha", 1.0f));
+        prevCenter = new MixNode<PropertySet>("Center", new PropertySet().setValue("X", w * (1.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 180).setValue("Alpha", 1.0f));
         prevCenter.getInfluence().set(0.0f);
-        prevBtn.getMixedProperties().addProperty(prevSide);
-        prevBtn.getMixedProperties().addProperty(prevCenter);
+        prevBtn.getMixNode().addNode(prevSide);
+        prevBtn.getMixNode().addNode(prevCenter);
 
 
-        titleAnimatable = new AnimatableText(new MixedProperties("Mix"), textPrimary, "", 24 * density);
-        titleNoArt = new MixedProperties("NoArt", new PropertySet().setValue("X", albumArtMargin * density));
+        titleAnimatable = new AnimatableText(new MixNode<PropertySet>("Mix"), textPrimary, "", 24 * density);
+        titleNoArt = new MixNode<PropertySet>("NoArt", new PropertySet().setValue("X", albumArtMargin * density));
         titleNoArt.getInfluence().set(0);
-        titleNormal = new MixedProperties("Normal", new PropertySet().setValue("X", albumArtSize * density));
-        titleExpanded = new MixedProperties("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - 6) * density));
+        titleNormal = new MixNode<PropertySet>("Normal", new PropertySet().setValue("X", albumArtSize * density));
+        titleExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - 6) * density));
         titleExpanded.getInfluence().set(0.0f);
-        titleNotExpanded = new MixedProperties("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight - 6) * density));
-        titleAnimatable.getMixedProperties().addProperty(titleNoArt);
-        titleAnimatable.getMixedProperties().addProperty(titleNormal);
-        titleAnimatable.getMixedProperties().addProperty(titleExpanded);
-        titleAnimatable.getMixedProperties().addProperty(titleNotExpanded);
+        titleNotExpanded = new MixNode<PropertySet>("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight - 6) * density));
+        titleAnimatable.getMixNode().addNode(titleNoArt);
+        titleAnimatable.getMixNode().addNode(titleNormal);
+        titleAnimatable.getMixNode().addNode(titleExpanded);
+        titleAnimatable.getMixNode().addNode(titleNotExpanded);
         titleAnimatable.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
 
 
-        artistNormal = new MixedProperties("Normal", new PropertySet().setValue("X", albumArtSize * density));
-        artistAnimatable = new AnimatableText(new MixedProperties("FinalMix"), textSecondary, "", 16 * density);
-        artistNoArt = new MixedProperties("NoArt", new PropertySet().setValue("X", albumArtMargin * density));
+        artistNormal = new MixNode<PropertySet>("Normal", new PropertySet().setValue("X", albumArtSize * density));
+        artistAnimatable = new AnimatableText(new MixNode<PropertySet>("FinalMix"), textSecondary, "", 16 * density);
+        artistNoArt = new MixNode<PropertySet>("NoArt", new PropertySet().setValue("X", albumArtMargin * density));
         artistNoArt.getInfluence().set(0);
-        artistExpanded = new MixedProperties("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - 36) * density));
+        artistExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - 36) * density));
         artistExpanded.getInfluence().set(0.0f);
-        artistNotExpanded = new MixedProperties("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight - 36) * density));
+        artistNotExpanded = new MixNode<PropertySet>("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight - 36) * density));
 
-        artistAnimatable.getMixedProperties().addProperty(artistNoArt);
-        artistAnimatable.getMixedProperties().addProperty(artistNormal);
-        artistAnimatable.getMixedProperties().addProperty(artistExpanded);
-        artistAnimatable.getMixedProperties().addProperty(artistNotExpanded);
+        artistAnimatable.getMixNode().addNode(artistNoArt);
+        artistAnimatable.getMixNode().addNode(artistNormal);
+        artistAnimatable.getMixNode().addNode(artistExpanded);
+        artistAnimatable.getMixNode().addNode(artistNotExpanded);
 
-        filePath = new AnimatableText(new MixedProperties("Mix"), textSecondary, "", 12 * density);
+        filePath = new AnimatableText(new MixNode<PropertySet>("Mix"), textSecondary, "", 12 * density);
         filePath.enableMarquee(w - (albumArtSize + albumArtMargin) * density, 16 * density);
-        filePathActive = new MixedProperties("Active");
-        filePathActiveArt = new MixedProperties("Art", new PropertySet().setValue("X", albumArtSize * density).setValue("Y", h - (expandedBarHeight - 60) * density));
-        filePathActiveNoArt = new MixedProperties("NoArt", new PropertySet().setValue("X", albumArtMargin * density).setValue("Y", h - (expandedBarHeight - 60) * density));
+        filePathActive = new MixNode<PropertySet>("Active");
+        filePathActiveArt = new MixNode<PropertySet>("Art", new PropertySet().setValue("X", albumArtSize * density).setValue("Y", h - (expandedBarHeight - 60) * density));
+        filePathActiveNoArt = new MixNode<PropertySet>("NoArt", new PropertySet().setValue("X", albumArtMargin * density).setValue("Y", h - (expandedBarHeight - 60) * density));
         filePathActiveNoArt.getInfluence().set(0.0f);
-        filePathActive.addProperty(filePathActiveArt);
-        filePathActive.addProperty(filePathActiveNoArt);
-        filePathInactive = new MixedProperties("Inactive", new PropertySet().setValue("X", w).setValue("Y", h - (expandedBarHeight - 60) * density));
+        filePathActive.addNode(filePathActiveArt);
+        filePathActive.addNode(filePathActiveNoArt);
+        filePathInactive = new MixNode<PropertySet>("Inactive", new PropertySet().setValue("X", w).setValue("Y", h - (expandedBarHeight - 60) * density));
         filePathActive.getInfluence().set(0.0f);
-        filePath.getMixedProperties().addProperty(filePathActive);
-        filePath.getMixedProperties().addProperty(filePathInactive);
+        filePath.getMixNode().addNode(filePathActive);
+        filePath.getMixNode().addNode(filePathInactive);
 
-        albumArtColor = new MixedProperties("AlbumArtMix");
-        albumArtNormal = new MixedProperties("Normal", new PropertySet().setValue("alpha", 255));
-        albumArtNone = new MixedProperties("NoArt", new PropertySet().setValue("alpha", 0));
+        albumArtColor = new MixNode<PropertySet>("AlbumArtMix");
+        albumArtNormal = new MixNode<PropertySet>("Normal", new PropertySet().setValue("alpha", 255));
+        albumArtNone = new MixNode<PropertySet>("NoArt", new PropertySet().setValue("alpha", 0));
         albumArtNone.getInfluence().set(0);
-        albumArtColor.addProperty(albumArtNone);
-        albumArtColor.addProperty(albumArtNormal);
+        albumArtColor.addNode(albumArtNone);
+        albumArtColor.addNode(albumArtNormal);
 
 
-        timestampAnim = new AnimatableText(new MixedProperties("FinalMixed"), textPrimary, "", timestampSize * density);
-        timestampRest = new MixedProperties("Rest", new PropertySet().setValue("X", w - 30 * density));
-        timestampFollow = new MixedProperties("Follow", new PropertySet().setValue("X", 0));
-        timestampNotExpanded = new MixedProperties("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight + 30) * density));
-        timestampExpanded = new MixedProperties("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40 + 45) * density));
+        timestampAnim = new AnimatableText(new MixNode<PropertySet>("FinalMixed"), textPrimary, "", timestampSize * density);
+        timestampRest = new MixNode<PropertySet>("Rest", new PropertySet().setValue("X", w - 30 * density));
+        timestampFollow = new MixNode<PropertySet>("Follow", new PropertySet().setValue("X", 0));
+        timestampNotExpanded = new MixNode<PropertySet>("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight + 30) * density));
+        timestampExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40 + 45) * density));
         timestampExpanded.getInfluence().set(0.0f);
         timestampFollow.getInfluence().set(0.0f);
-        timestampAnim.getMixedProperties().addProperty(timestampRest);
-        timestampAnim.getMixedProperties().addProperty(timestampFollow);
-        timestampAnim.getMixedProperties().addProperty(timestampNotExpanded);
-        timestampAnim.getMixedProperties().addProperty(timestampExpanded);
+        timestampAnim.getMixNode().addNode(timestampRest);
+        timestampAnim.getMixNode().addNode(timestampFollow);
+        timestampAnim.getMixNode().addNode(timestampNotExpanded);
+        timestampAnim.getMixNode().addNode(timestampExpanded);
         timestampAnim.setBgColor(timestampBackgroundColor);
         timestampAnim.drawBackground(true);
         timestampAnim.setAlign(AnimatableText.ALIGN_CENTER);
         //playBtn=new AnimatableShape(PrimitivePaths.triangle(50),50,50,1,0);
 
-        waveform = new AnimatableWaveform(wf, ap, new MixedProperties("Final"), density);
-        waveformNotExpanded = new MixedProperties("NotExpanded",
+        waveform = new AnimatableWaveform(wf, ap, new MixNode<PropertySet>("Final"), density);
+        waveformNotExpanded = new MixNode<PropertySet>("NotExpanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - normalBarHeight * density)
                         .setValue("XSize", w).setValue("YSize", 50 * density)
                         .setValue("YBalance",1.0f)
@@ -361,7 +362,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColor))
                         .setValue("Remaining-A", ColorFiddler.aF(remainingColor))
                         .setValue("CenterBarHeight",2*density));
-        waveformExpanded = new MixedProperties("Expanded",
+        waveformExpanded = new MixNode<PropertySet>("Expanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density)
                         .setValue("XSize", w).setValue("YSize", 40 * density)
                         .setValue("YBalance",0.5f)
@@ -374,14 +375,14 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColorEX))
                         .setValue("Remaining-A", ColorFiddler.aF(remainingColorEX))
                         .setValue("CenterBarHeight",2*density));
-        waveformCenterActive=new MixedProperties("Waveform Center Active",new PropertySet().setValue("CenterBarWidth",1.0f));
-        waveformCenterInactive=new MixedProperties("Waveform Center Inactive",new PropertySet().setValue("CenterBarWidth",0.0f));
+        waveformCenterActive=new MixNode<PropertySet>("Waveform Center Active",new PropertySet().setValue("CenterBarWidth",1.0f));
+        waveformCenterInactive=new MixNode<PropertySet>("Waveform Center Inactive",new PropertySet().setValue("CenterBarWidth",0.0f));
         waveformCenterActive.getInfluence().set(0.0f);
         waveformExpanded.getInfluence().set(0.0f);
-        waveform.getMixedProperties().addProperty(waveformExpanded);
-        waveform.getMixedProperties().addProperty(waveformNotExpanded);
-        waveform.getMixedProperties().addProperty(waveformCenterInactive);
-        waveform.getMixedProperties().addProperty(waveformCenterActive);
+        waveform.getMixNode().addNode(waveformExpanded);
+        waveform.getMixNode().addNode(waveformNotExpanded);
+        waveform.getMixNode().addNode(waveformCenterInactive);
+        waveform.getMixNode().addNode(waveformCenterActive);
 
 
     }
@@ -539,10 +540,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     @Override
     protected void onDraw(Canvas canvas) {
 
+        //Log2.log(2,this,buttonFollower.getInfluence().getValue(),playBtnRestPosition.getInfluence().getValue());
+
         currentFrameTime=System.currentTimeMillis();
 
         pt.setColor(menuColor);
-        canvas.drawRect(0, h - barHeight.update(currentFrameTime).getValue("Height"), w, h, pt);
+        canvas.drawRect(0, h - barHeight.getValue(currentFrameTime).getValue("Height"), w, h, pt);
 
 
         titleAnimatable.draw(canvas, pt,currentFrameTime);
@@ -551,7 +554,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         filePath.draw(canvas, pt,currentFrameTime);
         if (albumArt != null) {
-            pt.setAlpha(Math.round(albumArtColor.update(currentFrameTime).getValue("alpha")));
+            pt.setAlpha(Math.round(albumArtColor.getValue(currentFrameTime).getValue("alpha")));
             canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
             //Log.d(LOG_TAG, "trying to draw..");
             pt.setAlpha(255);
@@ -598,7 +601,6 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         playBtnRestPosition.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-        //We et influence to 1000 so it will override both Basis and Centered.
 
         pauseVisible.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         pauseInvisible.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
@@ -625,6 +627,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
         waveformCenterActive.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
         waveformCenterInactive.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+    }
+
+    private void animateNext(){
+
+    }
+    private void animatePrev(){
+
     }
 
     float iniX, iniY;
@@ -695,6 +704,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
             //Button doing stuff.
             if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
+                animatePrev();
                 return true;
             } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 if (ap != null) {
@@ -717,9 +727,11 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 return true;
             } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
+                animateNext();
                 return true;
             } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 toggleExpand();
+
                 return true;
             }
 

@@ -34,7 +34,7 @@ public class AnimatableShape extends Animatable{
     alpha
      */
 
-    public AnimatableShape(MixNode<PointsCompound> animatedShape, int color, MixedProperties basisSet){
+    public AnimatableShape(MixNode<PointsCompound> animatedShape, int color, MixNode<PropertySet> basisSet){
         super(basisSet);
 
         this.shape=animatedShape;
@@ -42,7 +42,7 @@ public class AnimatableShape extends Animatable{
 
     }
 
-    public AnimatableShape(PointsCompound path, int color, MixedProperties basisSet){
+    public AnimatableShape(PointsCompound path, int color, MixNode<PropertySet> basisSet){
         super(basisSet);
 
         this.path =path;
@@ -50,7 +50,7 @@ public class AnimatableShape extends Animatable{
     }
 
     private PointsCompound getPointsCompound(long currentTime){
-        PropertySet ps= mixedProperties.update(currentTime);
+        PropertySet ps= mixedProperties.getValue(currentTime);
 
         mat=new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
@@ -71,7 +71,7 @@ public class AnimatableShape extends Animatable{
 
     @Override
     public void draw(Canvas c, Paint pt, long currentTime){
-        PropertySet ps= mixedProperties.update(currentTime);
+        PropertySet ps= mixedProperties.getValue(currentTime);
 
         pt.setColor(color);
         pt.setAlpha(Math.round(255 * ps.getValue("Alpha")));

@@ -44,7 +44,9 @@ public class FilterManager {
     }
     protected FilterManager(){
         filters=new ArrayList<>();
+        filters.add(new StaticFilter(this,StaticFilter.INPUT));
         filters.add(new StaticFilter(this,StaticFilter.VISUALS));
+        filters.add(new StaticFilter(this,StaticFilter.OUTPUT));
     }
     public void addFilter(BaseFilter filter){
         filters.add(filter);

@@ -6,8 +6,10 @@ import android.view.ViewGroup;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 //Used to display Input, Output, and Visuals filter blocks.
+//Input and Output filters don't actually do anything.
 public class StaticFilter extends BaseFilter{
 
     public static final int INPUT=513;
@@ -21,6 +23,9 @@ public class StaticFilter extends BaseFilter{
         super(fm);
         this.type=type;
         if (type==VISUALS) vb=VisualizationBuffer.getInstance();
+        if (type!=VISUALS && type!=INPUT && type !=OUTPUT){
+            throw new RuntimeException("lol");
+        }
     }
 
     @Override
@@ -33,13 +38,21 @@ public class StaticFilter extends BaseFilter{
     @Override
     public String getName() {
         if (type==VISUALS) return "Visualization Feed";
+        if (type==OUTPUT) return "Audio Out";
+        if (type==INPUT) return "Audio In";
         else return "wut";
     }
 
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
-        ViewGroup v=(ViewGroup)super.getView(inflater, container);
-        v.removeView(v.findViewById(R.id.filter_close));
+        View v=super.getView(inflater, container);
+        Log2.log(2,this,v.findViewById(R.id.filter_close));
+        Log2.log(2,this,v);
+        v.findViewById(R.id.filter_close).setVisibility(View.GONE);
+        if (type!=VISUALS){
+            v.findViewById(R.id.filter_move_down).setVisibility(View.GONE);
+            v.findViewById(R.id.filter_move_up).setVisibility(View.GONE);
+        }
         return v;
     }
 
