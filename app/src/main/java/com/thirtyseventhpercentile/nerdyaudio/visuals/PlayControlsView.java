@@ -138,6 +138,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     MixNode<PropertySet> filePathActiveNoArt;
     MixNode<PropertySet> filePathInactive;
 
+    static PlayControlsView inst;
+    public static PlayControlsView getInstance(){
+        return inst;
+    }
 
     //TODO Performance. Srsly.
 
@@ -168,6 +172,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
 
         prepareLayout();
+
+        inst=this;
     }
 
     public void setWaveform(Waveform w) {

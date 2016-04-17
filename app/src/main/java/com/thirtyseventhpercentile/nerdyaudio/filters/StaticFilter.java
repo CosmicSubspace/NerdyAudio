@@ -1,5 +1,8 @@
 package com.thirtyseventhpercentile.nerdyaudio.filters;
 
+import android.graphics.Color;
+import android.provider.Settings;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +31,16 @@ public class StaticFilter extends BaseFilter{
         }
     }
 
+    private float[] copy(float[] dat){
+        float[] res=new float[dat.length];
+        System.arraycopy(dat,0,res,0,dat.length);
+        return res;
+    }
+
     @Override
     public void filter(float[] data) {
         if (type==VISUALS){
-            vb.feed(FilterManager.floatToShort(data)); //TODO performance...
+            vb.feed(copy(data));
         }
     }
 
@@ -49,10 +58,14 @@ public class StaticFilter extends BaseFilter{
         Log2.log(2,this,v.findViewById(R.id.filter_close));
         Log2.log(2,this,v);
         v.findViewById(R.id.filter_close).setVisibility(View.GONE);
+        //v.setBackgroundColor(Color.rgb(180,180,180));
+        ((CardView) v.findViewById(R.id.filter_card)).setCardBackgroundColor(Color.rgb(180,180,180));
+
         if (type!=VISUALS){
             v.findViewById(R.id.filter_move_down).setVisibility(View.GONE);
             v.findViewById(R.id.filter_move_up).setVisibility(View.GONE);
         }
+
         return v;
     }
 

@@ -21,6 +21,7 @@ import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicInformationUpdateL
 import com.emtronics.dragsortrecycler.DragSortRecycler;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 
 public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
@@ -121,6 +122,12 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
 
         ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_sort_white_24dp);
 
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(false);
+            }
+        });
 
 
         return v;

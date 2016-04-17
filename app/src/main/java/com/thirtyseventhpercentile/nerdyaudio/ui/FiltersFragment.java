@@ -21,6 +21,7 @@ import com.thirtyseventhpercentile.nerdyaudio.filters.VolumeFilter;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ClansFABHelper;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 import java.util.ArrayList;
 
@@ -47,8 +48,17 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
         fabs[1]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_2);
         fabs[1].setOnClickListener(this);
 
-        //I don't think there will be too many filters in here, so we'll just use a
+        //I don't think there will be too many filters in here, so we'll just use a linearlayout with scrollbar
+        //instead of a listview.
         updateUI();
+
+
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(false);
+            }
+        });
 
         return v;
     }

@@ -20,6 +20,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.VisualizationSettings;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.BallsVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VUMeterVisuals;
@@ -51,6 +52,15 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
         }
 
         updated(sbs.getSetting(BaseSetting.VISUALIZATION));
+
+
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(true);
+            }
+        });
+
         return v;
 
 

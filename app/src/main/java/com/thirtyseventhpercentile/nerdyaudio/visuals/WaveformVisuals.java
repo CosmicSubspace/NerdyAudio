@@ -61,8 +61,8 @@ public class WaveformVisuals extends BaseRenderer{
 
                 pt.setColor(Color.BLACK);
 
-                short[] pcmL = getLSamples(currentFrame - range+1, currentFrame);
-                short[] pcmR = getRSamples(currentFrame - range+1, currentFrame);
+                float[] pcmL = getLSamples(currentFrame - range+1, currentFrame);
+                float[] pcmR = getRSamples(currentFrame - range+1, currentFrame);
                 deleteBefore(currentFrame  - range+1);
 
                 int numberOfLinePoints = pcmL.length / drawEvery;
@@ -76,27 +76,27 @@ public class WaveformVisuals extends BaseRenderer{
                     for (int i = 0; i < numberOfLinePoints - 1; i++) {
                         pcmIndex = i * drawEvery;
                         lines[i * 4] = i / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 1] = ((pcmL[pcmIndex]+pcmR[pcmIndex]) / 65534.0f + 1) * h / 2.0f;
+                        lines[i * 4 + 1] = ((pcmL[pcmIndex]+pcmR[pcmIndex]) / 2.0f + 1) * h / 2.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 3] = ((pcmL[pcmIndex + drawEvery]+pcmR[pcmIndex + drawEvery]) / 65534.0f + 1) * h / 2.0f;
+                        lines[i * 4 + 3] = ((pcmL[pcmIndex + drawEvery]+pcmR[pcmIndex + drawEvery]) / 2.0f + 1) * h / 2.0f;
                     }
                     c.drawLines(lines, pt);
                 }else{
                     for (int i = 0; i < numberOfLinePoints - 1; i++) {
                         pcmIndex = i * drawEvery;
                         lines[i * 4] = i / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 1] = (pcmL[pcmIndex] / 32767.0f + 1) * h / 4.0f;
+                        lines[i * 4 + 1] = (pcmL[pcmIndex]  + 1) * h / 4.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 3] = (pcmL[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f;
+                        lines[i * 4 + 3] = (pcmL[pcmIndex + drawEvery] + 1) * h / 4.0f;
                     }
                     c.drawLines(lines, pt);
 
                     for (int i = 0; i < numberOfLinePoints - 1; i++) {
                         pcmIndex = i * drawEvery;
                         lines[i * 4] = i / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 1] = (pcmR[pcmIndex] / 32767.0f + 1) * h / 4.0f+h/2.0f;
+                        lines[i * 4 + 1] = (pcmR[pcmIndex]  + 1) * h / 4.0f+h/2.0f;
                         lines[i * 4 + 2] = (i + 1) / (float) numberOfLinePoints * w;
-                        lines[i * 4 + 3] = (pcmR[pcmIndex + drawEvery] / 32767.0f + 1) * h / 4.0f+h/2.0f;
+                        lines[i * 4 + 3] = (pcmR[pcmIndex + drawEvery]  + 1) * h / 4.0f+h/2.0f;
 
                     }
                     c.drawLines(lines, pt);

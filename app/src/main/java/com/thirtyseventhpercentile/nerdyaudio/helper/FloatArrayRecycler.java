@@ -7,41 +7,41 @@ import java.util.ArrayList;
 /**
  * Created by Chan on 3/15/2016.
  */
-public class ShortArrayRecycler { //I want to use generic types here but
+public class FloatArrayRecycler { //I want to use generic types here but
 
-    private ShortArrayRecycler(){
+    private FloatArrayRecycler(){
 
     }
-    private static ShortArrayRecycler inst=new ShortArrayRecycler();
-    public static ShortArrayRecycler getInstance(){
+    private static FloatArrayRecycler inst=new FloatArrayRecycler();
+    public static FloatArrayRecycler getInstance(){
         return inst;
     }
     private static final String LOG_TAG="CS_AFN";
 
     int maxSize=100;
     int arraySize;
-    ArrayList<short[]> arrays=new ArrayList<>();
+    ArrayList<float[]> arrays=new ArrayList<>();
 
     public synchronized void setArraySize(int size){
         this.arraySize=size;
         arrays.clear();
     }
-    public synchronized void recycle(short[] obj){
+    public synchronized void recycle(float[] obj){
         if (obj.length!=arraySize) setArraySize(obj.length);
 
         if (arrays.size()>maxSize) {
-            Log.i(LOG_TAG, "ShortArrayRecycler full!");
+            Log.i(LOG_TAG, "FloatArrayRecycler full!");
             return;
         }
         arrays.add(obj);
     }
-    public synchronized short[] request(int size){
+    public synchronized float[] request(int size){
         if (size!=arraySize) setArraySize(size);
 
 
         if (arrays.size()>0){
             return arrays.remove(0);
         }
-        else return new short[arraySize];
+        else return new float[arraySize];
     }
 }

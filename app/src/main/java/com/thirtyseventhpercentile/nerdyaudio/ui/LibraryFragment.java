@@ -21,6 +21,7 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.ninthavenue.FileChooser;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 import java.io.File;
 
@@ -137,6 +138,14 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         if (fm.isScanning()) scanUI();
         else scanCompleteUI();
         updateUI();
+
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(false);
+            }
+        });
+
         return v;
     }
 

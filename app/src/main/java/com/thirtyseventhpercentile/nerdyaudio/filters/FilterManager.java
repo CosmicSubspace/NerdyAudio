@@ -28,7 +28,6 @@ public class FilterManager {
     }
     public static short[] floatToShort(float[] data){
         short[] res=new short[data.length];
-        short current;
         for (int i = 0; i < data.length; i++) {
             if (data[i]>1.0f) res[i]=32767;
             else if (data[i]<-1.0f) res[i]=-32768;

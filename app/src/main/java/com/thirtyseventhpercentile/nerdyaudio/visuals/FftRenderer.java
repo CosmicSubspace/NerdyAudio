@@ -95,14 +95,14 @@ public abstract class FftRenderer extends BaseRenderer {
 
     public void updateFFT(long currentFrame) throws BufferNotPresentException {
 
-        short[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
-        short[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
+        float[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
+        float[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
         deleteBefore(currentFrame - fftSize / 2 + 1);
 
         x = new double[fftSize];
         y = new double[fftSize];
         for (int i = 0; i < pcmL.length; i++) {
-            x[i] = pcmL[i] / 32767.0;
+            x[i] = pcmL[i];
             y[i] = 0;
         }
 

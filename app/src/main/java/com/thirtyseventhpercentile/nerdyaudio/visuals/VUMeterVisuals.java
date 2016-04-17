@@ -81,15 +81,17 @@ public class VUMeterVisuals extends BaseRenderer{
 
             long currentFrame = getCurrentFrame();
             try {
-                short[] pcmL = getLSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
-                short[] pcmR = getRSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
+                float[] pcmL = getLSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
+                float[] pcmR = getRSamples(currentFrame - range / 2 + 1, currentFrame + range / 2);
                 deleteBefore(currentFrame - range / 2 + 1);
 
 
-                long sumL = 0, sumR = 0, sumLSquared=0,sumRSquared=0;
+                double sumL = 0, sumR = 0, sumLSquared=0,sumRSquared=0;
                 long numSamples = 0;
-                int peakL=0,peakR=0;
+                float peakL=0,peakR=0;
                 float avgL, avgR,rmsL,rmsR,peakRf,peakLf;
+
+
                 for (int i = 0; i < pcmL.length; i++) {
                     sumL += Math.abs(pcmL[i]);
                     sumLSquared += pcmL[i]*pcmL[i];
@@ -101,24 +103,22 @@ public class VUMeterVisuals extends BaseRenderer{
 
                     numSamples++;
                 }
-                rmsL = (float) (Math.sqrt(sumLSquared / (double) numSamples) / 32767.0);
-                avgL = (float) ((sumL / (double) numSamples) / 32767.0);
 
 
-                rmsR = (float) (Math.sqrt(sumRSquared / (double) numSamples) / 32767.0);
-                avgR = (float) ((sumR / (double) numSamples) / 32767.0);
+                rmsL = (float) (Math.sqrt(sumLSquared / (double) numSamples));
+                avgL = (float) ((sumL / (double) numSamples));
 
 
-                peakLf=peakL/32767.0f;
-                peakRf=peakR/32767.0f;
+                rmsR = (float) (Math.sqrt(sumRSquared / (double) numSamples));
+                avgR = (float) ((sumR / (double) numSamples));
 
 
 
                 pushArrays();
                 lAvgHistory[0]=avgL;
-                lPeakHistory[0]=peakLf;
+                lPeakHistory[0]=peakL;
                 rAvgHistory[0]=avgR;
-                rPeakHistory[0]=peakRf;
+                rPeakHistory[0]=peakR;
 
                 for (int i = 0; i < historySize; i++) {
                     pt.setColor(Color.RED);
@@ -139,7 +139,7 @@ public class VUMeterVisuals extends BaseRenderer{
                 pt.setColor(Color.BLACK);
                 pt.setTextAlign(Paint.Align.CENTER);
                 pt.setTextSize(textDp * density);
-                c.drawText("Peak: " + String.format("%.3f | %.3f", peakLf,peakRf), w / 2, h / 2-30*density, pt);
+                c.drawText("Peak: " + String.format("%.3f | %.3f", peakL,peakR), w / 2, h / 2-30*density, pt);
                 c.drawText("RMS: "+String.format("%.3f | %.3f",rmsL,rmsR),w/2,h/2,pt);
                 c.drawText("AVG: "+String.format("%.3f | %.3f",avgL,avgR),w/2,h/2+30*density,pt);
 

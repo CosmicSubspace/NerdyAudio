@@ -34,7 +34,7 @@ public class AudioPlayer {
     protected File source;
     protected String sourceString;
     protected boolean mKeepPlaying;
-    protected BufferFeedListener bfl;
+    //protected BufferFeedListener bfl;
     protected CompletionListener cl;
 
     static AudioPlayer inst;
@@ -56,9 +56,9 @@ public class AudioPlayer {
     }
 
 
-    public synchronized void setBufferFeedListener(BufferFeedListener bfl){
+    /*public synchronized void setBufferFeedListener(BufferFeedListener bfl){
         this.bfl=bfl;
-    }
+    }*/
     public synchronized void setCompletionListener(CompletionListener cl){this.cl=cl;}
     public synchronized void getInfoFromFile(){
         SoundFile sf=new SoundFile();

@@ -8,17 +8,17 @@ import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
-import com.thirtyseventhpercentile.nerdyaudio.helper.ShortArrayRecycler;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
+import com.thirtyseventhpercentile.nerdyaudio.helper.FloatArrayRecycler;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.FloatFeedListener;
 
 import java.util.ArrayList;
 
 
-public class VisualizationBuffer implements BufferFeedListener {
+public class VisualizationBuffer implements FloatFeedListener {
     public static final int RIGHT_CHANNEL=53214;
     public static final int LEFT_CHANNEL=65965;
     public static final String LOG_TAG = "CS_AFN";
-    ArrayList<short[]> bufferR, bufferL;
+    ArrayList<float[]> bufferR, bufferL;
     long firstBufferStartingFrame = 0;
     long lastFrameNumber=0;
     int numChannels = 2;
@@ -34,13 +34,13 @@ public class VisualizationBuffer implements BufferFeedListener {
     }
 
     protected VisualizationBuffer() { // int bufferSize
-        bufferR = new ArrayList<short[]>();
-        bufferL = new ArrayList<short[]>();
+        bufferR = new ArrayList<float[]>();
+        bufferL = new ArrayList<float[]>();
         //this.bufferSize = bufferSize;
     }
     public synchronized void clear(){
-        bufferR = new ArrayList<short[]>();
-        bufferL = new ArrayList<short[]>();
+        bufferR = new ArrayList<float[]>();
+        bufferL = new ArrayList<float[]>();
         firstBufferStartingFrame=0;
         lastFrameNumber=0;
     }
@@ -50,16 +50,18 @@ public class VisualizationBuffer implements BufferFeedListener {
     public void setMaximumBufferSize(long s){
         this.maximumBufferSize=s;
     }
+
+
     @Override
-    public synchronized void feed(short[] buff) {
+    public synchronized void feed(float[] buff) {
         //TODO we're creating new short[] each time... GC disapproves.
-        short[] right = ShortArrayRecycler.getInstance().request(buff.length / 2);
+        float[] right = FloatArrayRecycler.getInstance().request(buff.length / 2);
 
         for (int i = 0; i < right.length; i++) {
             right[i] = buff[i *2+1];
         }
         bufferR.add(right);
-        short[] left = ShortArrayRecycler.getInstance().request(buff.length/2);
+        float[] left = FloatArrayRecycler.getInstance().request(buff.length/2);
         for (int i = 0; i < left.length; i++) {
             left[i] = buff[i *2];
         }
@@ -68,7 +70,7 @@ public class VisualizationBuffer implements BufferFeedListener {
         deleteBefore(lastFrameNumber-maximumBufferSize);
     }
 
-    public synchronized short[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
+    public synchronized float[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
         Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
         Log.v(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
 
@@ -77,7 +79,7 @@ public class VisualizationBuffer implements BufferFeedListener {
 
         assert bufferL.size()==bufferR.size();
 
-        short[] res = new short[(int) (endFrame - startFrame + 1)];
+        float[] res = new float[(int) (endFrame - startFrame + 1)];
         long currentIndex = startFrame;
         int currentBuffer = 0;
         long currentBufferStartingFrame = getNthBufferInitialFrameNumber(0);
@@ -145,8 +147,8 @@ public class VisualizationBuffer implements BufferFeedListener {
             firstBufferStartingFrame += bufferR.get(0).length;
             //lastFrameNumber-=bufferR.get(0).length;
             //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
-            ShortArrayRecycler.getInstance().recycle(bufferR.remove(0));
-            ShortArrayRecycler.getInstance().recycle(bufferL.remove(0));
+            FloatArrayRecycler.getInstance().recycle(bufferR.remove(0));
+            FloatArrayRecycler.getInstance().recycle(bufferL.remove(0));
 
             if (bufferR.size()<1) return;
             //deleteBefore(frameNumber); //If there is a delete, do it again recursively until there are no buffers to delete.

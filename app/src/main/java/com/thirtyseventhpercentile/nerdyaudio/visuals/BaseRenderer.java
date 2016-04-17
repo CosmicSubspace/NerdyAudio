@@ -59,13 +59,13 @@ public abstract class BaseRenderer implements SettingsUpdateListener{
     public void setAudioPlayer(AudioPlayer ap) {
         this.ap = ap;
     }
-    public short[] getLSamples(long start, long end) throws BufferNotPresentException{
+    public float[] getLSamples(long start, long end) throws BufferNotPresentException{
         if (vb != null) {
             return vb.getFrames(start, end, VisualizationBuffer.LEFT_CHANNEL);
 
         }else return null;
     }
-    public short[] getRSamples(long start, long end) throws BufferNotPresentException {
+    public float[] getRSamples(long start, long end) throws BufferNotPresentException {
         if (vb != null) {
 
             return vb.getFrames(start, end, VisualizationBuffer.RIGHT_CHANNEL);
