@@ -2,20 +2,19 @@ package com.thirtyseventhpercentile.nerdyaudio.helper;
 
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by Chan on 3/15/2016.
  */
-public class FloatArrayRecycler { //I want to use generic types here but
 
-    private FloatArrayRecycler(){
+public class FloatArrayRecycler { //I want to use generic types here but i dunno
+
+    public FloatArrayRecycler(){
 
     }
-    private static FloatArrayRecycler inst=new FloatArrayRecycler();
-    public static FloatArrayRecycler getInstance(){
-        return inst;
-    }
+
     private static final String LOG_TAG="CS_AFN";
 
     int maxSize=100;

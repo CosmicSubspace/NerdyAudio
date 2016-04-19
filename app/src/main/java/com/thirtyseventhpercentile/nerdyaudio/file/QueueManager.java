@@ -122,7 +122,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             current = new MusicInformation(list.get(i), ma);
             addMusic(current);
         }
-        //prepareWaveform();
+        prepareWaveform(); //why was this commented?
     }
 
     public ArrayList<MusicInformation> getQueue() {

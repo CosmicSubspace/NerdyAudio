@@ -4,6 +4,8 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.filters;
 
+import com.thirtyseventhpercentile.nerdyaudio.helper.FloatArrayRecycler;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,21 +20,24 @@ public class FilterManager {
     ArrayList<FilterListChangeListener> flcls=new ArrayList<>();
     static FilterManager inst;
 
+    FloatArrayRecycler far=new FloatArrayRecycler();
 
-    public static float[] shortToFloat(short[] data){
-        float[] res=new float[data.length];
+
+    private float[] shortToFloat(short[] data){ //Converts a short audio array to float array.
+        float[] res=far.request(data.length);
         for (int i = 0; i < data.length; i++) {
             res[i]=data[i]/32768.0f;
         }
         return res;
     }
-    public static short[] floatToShort(float[] data){
+    private short[] floatToShort(float[] data){ //Cnverts float array to short array. The float array is recycled.
         short[] res=new short[data.length];
         for (int i = 0; i < data.length; i++) {
             if (data[i]>1.0f) res[i]=32767;
             else if (data[i]<-1.0f) res[i]=-32768;
             else res[i]=(short)(data[i]*32767);
         }
+        far.recycle(data);
         return res;
     }
 

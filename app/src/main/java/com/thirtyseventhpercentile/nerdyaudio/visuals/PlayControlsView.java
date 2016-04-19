@@ -404,57 +404,58 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     boolean expanded = false;
 
     public void expand(boolean expand) {
+        int ease=EasingEquations.QUINTIC;
         if (this.expanded == expand) return;
         this.expanded = expand;
         if (expand) {
-            expandedBarHeightMP.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            normalBarHeightMP.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            expandedBarHeightMP.getInfluence().animate(1, 1, ease);
+            normalBarHeightMP.getInfluence().animate(0, 1, ease);
 
-            titleExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            titleNotExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            titleExpanded.getInfluence().animate(1, 1, ease);
+            titleNotExpanded.getInfluence().animate(0, 1, ease);
 
-            artistExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            artistNotExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            artistExpanded.getInfluence().animate(1, 1, ease);
+            artistNotExpanded.getInfluence().animate(0, 1, ease);
 
-            artBoundsExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            artBoundsNormal.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            artBoundsExpanded.getInfluence().animate(1, 1, ease);
+            artBoundsNormal.getInfluence().animate(0, 1, ease);
 
-            waveformExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            waveformNotExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            waveformExpanded.getInfluence().animate(1, 1, ease);
+            waveformNotExpanded.getInfluence().animate(0, 1, ease);
 
-            timestampExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            timestampNotExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            timestampExpanded.getInfluence().animate(1, 1, ease);
+            timestampNotExpanded.getInfluence().animate(0, 1, ease);
 
-            buttonFollowerYExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            buttonFollowerYNotExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            buttonFollowerYExpanded.getInfluence().animate(1, 1, ease);
+            buttonFollowerYNotExpanded.getInfluence().animate(0, 1, ease);
 
-            filePathActive.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            filePathInactive.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            filePathActive.getInfluence().animate(1, 1, ease);
+            filePathInactive.getInfluence().animate(0, 1, ease);
             buttonsCenter(true);
         } else {
-            expandedBarHeightMP.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            normalBarHeightMP.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            expandedBarHeightMP.getInfluence().animate(0, 1, ease);
+            normalBarHeightMP.getInfluence().animate(1, 1, ease);
 
-            titleExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            titleNotExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            titleExpanded.getInfluence().animate(0, 1, ease);
+            titleNotExpanded.getInfluence().animate(1, 1, ease);
 
-            artistExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            artistNotExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            artistExpanded.getInfluence().animate(0, 1, ease);
+            artistNotExpanded.getInfluence().animate(1, 1, ease);
 
-            artBoundsExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            artBoundsNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            artBoundsExpanded.getInfluence().animate(0, 1, ease);
+            artBoundsNormal.getInfluence().animate(1, 1, ease);
 
-            waveformExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            waveformNotExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            waveformExpanded.getInfluence().animate(0, 1, ease);
+            waveformNotExpanded.getInfluence().animate(1, 1, ease);
 
-            timestampExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            timestampNotExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            timestampExpanded.getInfluence().animate(0, 1, ease);
+            timestampNotExpanded.getInfluence().animate(1, 1, ease);
 
-            buttonFollowerYExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            buttonFollowerYNotExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            buttonFollowerYExpanded.getInfluence().animate(0, 1, ease);
+            buttonFollowerYNotExpanded.getInfluence().animate(1, 1, ease);
 
-            filePathActive.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            filePathInactive.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            filePathActive.getInfluence().animate(0, 1, ease);
+            filePathInactive.getInfluence().animate(1, 1, ease);
             if (currentMusic != null) if (currentMusic.hasArt()) buttonsCenter(false);
         }
     }

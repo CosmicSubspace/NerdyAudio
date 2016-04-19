@@ -22,8 +22,11 @@ public class VisualizationBuffer implements FloatFeedListener {
     long firstBufferStartingFrame = 0;
     long lastFrameNumber=0;
     int numChannels = 2;
-    //int bufferSize = 2048;
-    long maximumBufferSize=48000*20*2;
+
+    long maximumBufferSize=48000*10*2; //10 seconds.... is this too long? or too short?
+
+
+    FloatArrayRecycler far=new FloatArrayRecycler();
 
 
     static VisualizationBuffer inst;
@@ -39,8 +42,8 @@ public class VisualizationBuffer implements FloatFeedListener {
         //this.bufferSize = bufferSize;
     }
     public synchronized void clear(){
-        bufferR = new ArrayList<float[]>();
-        bufferL = new ArrayList<float[]>();
+        bufferR.clear();
+        bufferL.clear();
         firstBufferStartingFrame=0;
         lastFrameNumber=0;
     }
@@ -54,19 +57,20 @@ public class VisualizationBuffer implements FloatFeedListener {
 
     @Override
     public synchronized void feed(float[] buff) {
-        //TODO we're creating new short[] each time... GC disapproves.
-        float[] right = FloatArrayRecycler.getInstance().request(buff.length / 2);
+
+        float[] right = far.request(buff.length / 2);
 
         for (int i = 0; i < right.length; i++) {
             right[i] = buff[i *2+1];
         }
         bufferR.add(right);
-        float[] left = FloatArrayRecycler.getInstance().request(buff.length/2);
+        float[] left = far.request(buff.length/2);
         for (int i = 0; i < left.length; i++) {
             left[i] = buff[i *2];
         }
         bufferL.add(left);
         lastFrameNumber+=left.length;
+
         deleteBefore(lastFrameNumber-maximumBufferSize);
     }
 
@@ -147,8 +151,8 @@ public class VisualizationBuffer implements FloatFeedListener {
             firstBufferStartingFrame += bufferR.get(0).length;
             //lastFrameNumber-=bufferR.get(0).length;
             //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
-            FloatArrayRecycler.getInstance().recycle(bufferR.remove(0));
-            FloatArrayRecycler.getInstance().recycle(bufferL.remove(0));
+            far.recycle(bufferR.remove(0));
+            far.recycle(bufferL.remove(0));
 
             if (bufferR.size()<1) return;
             //deleteBefore(frameNumber); //If there is a delete, do it again recursively until there are no buffers to delete.
