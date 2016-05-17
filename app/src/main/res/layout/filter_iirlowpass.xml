@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filter_lowpass_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardElevation="2dp"
+    card_view:cardCornerRadius="4dp">
+
+
+        <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_lowpass_seekbar"
+            android:layout_toLeftOf="@+id/filter_lowpass_value" />
+
+        <TextView
+            android:id="@+id/filter_lowpass_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lowpass"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/filter_lowpass_seekbar"
+            android:layout_alignTop="@+id/filter_lowpass_seekbar"
+            android:gravity="center_vertical" />
+
+</RelativeLayout>

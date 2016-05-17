@@ -17,6 +17,8 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.filters.AutoGainFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.BaseFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.FilterManager;
+import com.thirtyseventhpercentile.nerdyaudio.filters.IirHighPassFilter;
+import com.thirtyseventhpercentile.nerdyaudio.filters.IirLowPassFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.VolumeFilter;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ClansFABHelper;
 import com.github.clans.fab.FloatingActionButton;
@@ -42,11 +44,11 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
         fam.setClosedOnTouchOutside(true);
         ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_add_white_24dp);
 
-        fabs[0]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_1);
-        fabs[0].setOnClickListener(this);
+        v.findViewById(R.id.filters_tab_fab_sub_1).setOnClickListener(this);
+        v.findViewById(R.id.filters_tab_fab_sub_2).setOnClickListener(this);
+        v.findViewById(R.id.filters_tab_fab_sub_3).setOnClickListener(this);
+        v.findViewById(R.id.filters_tab_fab_sub_4).setOnClickListener(this);
 
-        fabs[1]=(FloatingActionButton) v.findViewById(R.id.filters_tab_fab_sub_2);
-        fabs[1].setOnClickListener(this);
 
         //I don't think there will be too many filters in here, so we'll just use a linearlayout with scrollbar
         //instead of a listview.
@@ -84,17 +86,21 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
             BaseFilter newFilter=new VolumeFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
             lv.addView(newFilter.getView(getLayoutInflater(null), lv));
-            //fam.close(true);
         }else if (id==R.id.filters_tab_fab_sub_2){
             BaseFilter newFilter=new AutoGainFilter(FilterManager.getInstance());
-            Log.i(LOG_TAG,"BaseFilter:"+newFilter);
             fm.addFilter(newFilter);
-            Log.i(LOG_TAG, "fm:" + fm);
             View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
-            Log.i(LOG_TAG, "vvvvv:" + vvvvv);
-            Log.i(LOG_TAG, "lv:" + lv);
             lv.addView(vvvvv);
-            //fam.close(true);
+        }else if (id==R.id.filters_tab_fab_sub_3){
+            BaseFilter newFilter=new IirLowPassFilter(FilterManager.getInstance());
+            fm.addFilter(newFilter);
+            View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
+            lv.addView(vvvvv);
+        }else if (id==R.id.filters_tab_fab_sub_4){
+            BaseFilter newFilter=new IirHighPassFilter(FilterManager.getInstance());
+            fm.addFilter(newFilter);
+            View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
+            lv.addView(vvvvv);
         }
     }
 
