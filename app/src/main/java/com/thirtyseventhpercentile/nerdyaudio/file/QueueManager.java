@@ -13,7 +13,7 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicInformationUpdateListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSongListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
@@ -41,7 +41,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     ArrayList<MusicInformation> queue = new ArrayList<>();
 
     ArrayList<ProgressStringListener> psl = new ArrayList<>();
-    ArrayList<NewSongListener> nsl = new ArrayList<>();
+    ArrayList<QueueListener> nsl = new ArrayList<>();
     ArrayList<MusicInformationUpdateListener> miul = new ArrayList<>();
 
     //int currentlyCachingIndex=-1;
@@ -76,15 +76,41 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
-    public void addNewSongListener(NewSongListener nsl) {
+    public void addQueueListener(QueueListener nsl) {
         this.nsl.add(nsl);
     }
 
     protected void notifyNewSongListeners(MusicInformation newSong) {
-        for (NewSongListener nsl : this.nsl) {
+        for (QueueListener nsl : this.nsl) {
             nsl.newSong(newSong);
         }
     }
+
+    protected void notifyPlay() {
+        for (QueueListener nsl : this.nsl) {
+            nsl.playbackStarted();
+        }
+    }
+
+    protected void notifyStop() {
+        for (QueueListener nsl : this.nsl) {
+            nsl.playbackStopped();
+        }
+    }
+
+    protected void notifyNext() {
+        for (QueueListener nsl : this.nsl) {
+            nsl.nextSong();
+        }
+    }
+
+    protected void notifyPrevious() {
+        for (QueueListener nsl : this.nsl) {
+            nsl.previousSong();
+        }
+    }
+
+
 
     public void addMusicInformationUpdateListener(MusicInformationUpdateListener miul) {
         this.miul.add(miul);
@@ -142,10 +168,10 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         this.ma = ma;
     }
 
-    public void play() { //plays the CurrentlyPlaying.
+    private void newPlay() { //plays the CurrentlyPlaying.
         if (queue.size() == 0) return;
         Log.d(LOG_TAG, "Playing file.");
-        if (currentlyPlaying == null) { //first play
+        if (currentlyPlaying == null) { //first newPlay
             setCurrentMusicIndex(0);
         }
 
@@ -173,21 +199,47 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
+    public void playCurrent(){
+        if (ap != null) {
+            if (ap.isPaused()) {
+                ap.playAudio();
+            } else {
+                newPlay();
+            }
+        }
+
+        notifyPlay();
+    }
+
     public void playFile(int index) {
         setCurrentMusicIndex(index);
-        play();
+        newPlay();
+        notifyPlay();
     }
 
     public void playNextFile() {
         Log.d(LOG_TAG, "Playing next file.");
         nextFile();
-        play();
+        notifyNext();
+        newPlay();
+        notifyPlay();
     }
 
     public void playPreviousFile() {
         Log.d(LOG_TAG, "Playing Previous file.");
         previousFile();
-        play();
+        notifyPrevious();
+        newPlay();
+        notifyPlay();
+    }
+
+    public void pause(){
+        if (ap != null) {
+            if (ap.isPlaying()) {
+                ap.pause();
+            }
+        }
+        notifyStop();
     }
 
     private void nextFile() {
@@ -402,6 +454,8 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             }
 
         }
+
+        prepareWaveform();
     }
 
 /*

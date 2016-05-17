@@ -9,6 +9,8 @@ package com.thirtyseventhpercentile.nerdyaudio.animation;
 
 public class AnimatableValue {
 
+
+
     float value, target;
     boolean animate=false;
     long startTime;

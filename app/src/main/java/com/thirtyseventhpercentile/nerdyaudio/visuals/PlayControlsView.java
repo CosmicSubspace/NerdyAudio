@@ -32,11 +32,10 @@ import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
-import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSongListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
-public class PlayControlsView extends View implements ProgressStringListener, NewSongListener {
+public class PlayControlsView extends View implements ProgressStringListener, QueueListener {
     int w, h;
     Waveform wf;
     Paint pt;
@@ -110,11 +109,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     AnimatableShape nextBtn;
     MixNode<PropertySet> nextSide;
     MixNode<PropertySet> nextCenter;
+    MixNode<PropertySet> nextBounce;
 
 
     AnimatableShape prevBtn;
     MixNode<PropertySet> prevSide;
     MixNode<PropertySet> prevCenter;
+    MixNode<PropertySet> prevBounce;
 
     AnimatableText timestampAnim;
     MixNode<PropertySet> timestampRest;
@@ -237,6 +238,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         playBtnShapeNormal=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.play(buttonsSize / 2.0f * density));
         playBtnShapeDiamond=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.playDiamond(buttonsSize / 2.0f * density));
         playBtnShapeDiamond.getInfluence().set(0.0f);
+        playBtnShape.getInfluence().set(1.0f);
         playBtnShape.addNode(playBtnShapeNormal);
         playBtnShape.addNode(playBtnShapeDiamond);
 
@@ -278,6 +280,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         nextCenter.getInfluence().set(0.0f);
         nextBtn.getMixNode().addNode(nextSide);
         nextBtn.getMixNode().addNode(nextCenter);
+        nextBounce=new MixNode<PropertySet>("Next Bounce",new PropertySet().setValue("X",32*density));
+        nextBounce.getBasis().setMode(PropertySet.ADDITIVE);
+        nextBounce.getInfluence().set(0.0f);
+        nextBtn.getMixNode().addNode(nextBounce);
 
 
 
@@ -288,6 +294,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
         prevCenter.getInfluence().set(0.0f);
         prevBtn.getMixNode().addNode(prevSide);
         prevBtn.getMixNode().addNode(prevCenter);
+        prevBounce=new MixNode<PropertySet>("Prev Bounce",new PropertySet().setValue("X",-32*density));
+        prevBounce.getBasis().setMode(PropertySet.ADDITIVE);
+        prevBounce.getInfluence().set(0.0f);
+        prevBtn.getMixNode().addNode(prevBounce);
 
 
         titleAnimatable = new AnimatableText(new MixNode<PropertySet>("Mix"), textPrimary, "", 24 * density);
@@ -431,7 +441,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
             filePathActive.getInfluence().animate(1, 1, ease);
             filePathInactive.getInfluence().animate(0, 1, ease);
-            buttonsCenter(true);
+            buttonsCenter(true,ease);
         } else {
             expandedBarHeightMP.getInfluence().animate(0, 1, ease);
             normalBarHeightMP.getInfluence().animate(1, 1, ease);
@@ -456,33 +466,37 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
 
             filePathActive.getInfluence().animate(0, 1, ease);
             filePathInactive.getInfluence().animate(1, 1, ease);
-            if (currentMusic != null) if (currentMusic.hasArt()) buttonsCenter(false);
+            if (currentMusic != null) if (currentMusic.hasArt()) buttonsCenter(false,ease);
         }
     }
 
-    private void buttonsCenter(boolean center) {
+    private void buttonsCenter(boolean center){
+        buttonsCenter(center,EasingEquations.DEFAULT_EASE);
+    }
+
+    private void buttonsCenter(boolean center, int ease) {
         if (!center) {
-            playBtnRestCenter.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            playBtnRestSide.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            playBtnRestCenter.getInfluence().animate(0, 1, ease);
+            playBtnRestSide.getInfluence().animate(1, 1, ease);
 
-            pauseRestCenter.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            pauseRestSide.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            pauseRestCenter.getInfluence().animate(0, 1, ease);
+            pauseRestSide.getInfluence().animate(1, 1, ease);
 
-            prevCenter.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            prevSide.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            nextCenter.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            nextSide.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+            prevCenter.getInfluence().animate(0, 1, ease);
+            prevSide.getInfluence().animate(1, 1, ease);
+            nextCenter.getInfluence().animate(0, 1, ease);
+            nextSide.getInfluence().animate(1, 1, ease);
 
         } else {
-            playBtnRestCenter.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            playBtnRestSide.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            pauseRestCenter.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            pauseRestSide.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            playBtnRestCenter.getInfluence().animate(1, 1, ease);
+            playBtnRestSide.getInfluence().animate(0, 1, ease);
+            pauseRestCenter.getInfluence().animate(1, 1, ease);
+            pauseRestSide.getInfluence().animate(0, 1, ease);
 
-            prevCenter.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            prevSide.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
-            nextCenter.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
-            nextSide.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+            prevCenter.getInfluence().animate(1, 1, ease);
+            prevSide.getInfluence().animate(0, 1, ease);
+            nextCenter.getInfluence().animate(1, 1, ease);
+            nextSide.getInfluence().animate(0, 1, ease);
         }
     }
 
@@ -637,10 +651,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     }
 
     private void animateNext(){
-
+        nextBounce.getInfluence().set(1.0f);
+        nextBounce.getInfluence().animate(0.0f,1,EasingEquations.DEFAULT_EASE);
     }
     private void animatePrev(){
-
+        prevBounce.getInfluence().set(1.0f);
+        prevBounce.getInfluence().animate(0.0f,1,EasingEquations.DEFAULT_EASE);
     }
 
     float iniX, iniY;
@@ -714,23 +730,10 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
                 animatePrev();
                 return true;
             } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
-                if (ap != null) {
-                    if (ap.isPaused()) {
-                        ap.playAudio();
-                        animatePlay();
-                    } else {
-                        qm.play();
-                        animatePlay();
-                    }
-                }
+                qm.playCurrent();
                 return true;
             } else if (pauseBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
-                if (ap != null) {
-                    if (ap.isPlaying()) {
-                        ap.pause();
-                        animateStop();
-                    }
-                }
+                qm.pause();
                 return true;
             } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
@@ -818,6 +821,26 @@ public class PlayControlsView extends View implements ProgressStringListener, Ne
     @Override
     public void newSong(MusicInformation mi) {
         parseMusicInformation(mi);
+    }
+
+    @Override
+    public void playbackStarted() {
+        animatePlay();
+    }
+
+    @Override
+    public void playbackStopped() {
+        animateStop();
+    }
+
+    @Override
+    public void nextSong() {
+        animateNext();
+    }
+
+    @Override
+    public void previousSong() {
+        animatePrev();
     }
 
     @Override

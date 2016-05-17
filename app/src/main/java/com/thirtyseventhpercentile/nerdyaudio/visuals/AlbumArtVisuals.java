@@ -5,27 +5,25 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSongListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.AlbumArtSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.ui.QueueAdapter;
 
 /**
  * Created by Chan on 3/24/2016.
  */
-public class AlbumArtVisuals extends BaseRenderer implements NewSongListener {
+public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
     AlbumArtSettings newSettings = null;
 
     Bitmap art;
     Paint pt;
     public AlbumArtVisuals(float density) {
         super(density);
-        QueueManager.getInstance().addNewSongListener(this);
+        QueueManager.getInstance().addQueueListener(this);
         pt=new Paint();
         newSong(QueueManager.getInstance().getCurrentlyPlaying());
     }
@@ -68,5 +66,25 @@ public class AlbumArtVisuals extends BaseRenderer implements NewSongListener {
             art = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), w, h);
             recalculateBounds();
         }
+    }
+
+    @Override
+    public void playbackStarted() {
+
+    }
+
+    @Override
+    public void playbackStopped() {
+
+    }
+
+    @Override
+    public void nextSong() {
+
+    }
+
+    @Override
+    public void previousSong() {
+
     }
 }

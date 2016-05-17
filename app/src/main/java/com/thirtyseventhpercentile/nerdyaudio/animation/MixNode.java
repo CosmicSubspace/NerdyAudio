@@ -81,7 +81,8 @@ public class MixNode<T extends Mixable> {
             }catch(UnMixableException e){
                 ErrorLogger.log(e);
             }catch(NullPointerException e){
-                Log2.log(4,this,"NPE",this.name);
+                ErrorLogger.log(e);
+                Log2.log(4,this,"NPE",this.name,mixer,node,node.getBasis());
             }
         }
         //Log2.log(2,this,"Returning",mixer,mixer.mix());

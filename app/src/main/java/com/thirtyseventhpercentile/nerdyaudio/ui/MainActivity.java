@@ -52,9 +52,11 @@ import java.io.File;
 //TODO : Better UI Colors
 //TODO : Shuffle & Repeat
 //TODO : Waveform color always accent?
-//TODO : PlayControls drag to resize.
+//TODO : PlayControls drag to resize?
 //TODO : Playcontrols button bottom spacing.
 //TODO : Ball Visuals more settings
+//TODO : Playlist/state save on exit
+
 
 /**
  * Other Libraries:
@@ -166,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wfv.setTimestampBackgroundColor(Color.argb(128, 0, 0, 0));
 
         wfv.setWaveform(wf);
-        qm.addNewSongListener(wfv);
+        qm.addQueueListener(wfv);
         qm.addProgressStringListener(wfv);
 /*
         play=(Button) findViewById(R.id.controls_play);

@@ -33,10 +33,14 @@ public class PointsCompound implements Mixable {
             if (!initialized) {
                 points = new float[thing.pointsArray.length];
 
+
                 cuts = new int[thing.cutsArray.length];
-                for (int i = 0; i < cuts.length; i++) { //TODO replace with more efficient copy.
+                /*
+                for (int i = 0; i < cuts.length; i++) {
                    cuts[i]= thing.cutsArray[i];
                 }
+                */
+                System.arraycopy( thing.cutsArray, 0, cuts, 0, thing.cutsArray.length );
 
                 initialized = true;
             }

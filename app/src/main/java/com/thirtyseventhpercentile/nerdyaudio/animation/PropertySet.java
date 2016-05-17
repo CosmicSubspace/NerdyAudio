@@ -6,69 +6,91 @@ package com.thirtyseventhpercentile.nerdyaudio.animation;
 
 import android.util.Log;
 
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+
 import java.util.HashMap;
 
-public class PropertySet implements Mixable{
-    private static final String LOG_TAG="CS_AFN";
+
+//TODO Additive/Overwrite Value Mode
+
+public class PropertySet implements Mixable {
+    private static final String LOG_TAG = "CS_AFN";
 
     @Override
     public Mixer getMixer() {
         return new PropertySetMixer();
     }
 
-    public static class PropertySetMixer implements Mixer<PropertySet>{
-        PropertySet res=new PropertySet();
-        HashMap<String,Float> influences=new HashMap<>();
+    public static class PropertySetMixer implements Mixer<PropertySet> {
+        PropertySet res = new PropertySet();
+        PropertySet additive = new PropertySet();
+        HashMap<String, Float> influences = new HashMap<>();
 
         @Override
-        public void addMix(PropertySet thing,float influence) {
+        public void addMix(PropertySet thing, float influence) {
 
             for (Object k : thing.getIter()) {
                 String key = (String) k;
                 if (influences.get(key) == null) influences.put(key, 0.0f);
-                influences.put(key, influences.get(key) + influence);
-                res.setValue(key, res.getValue(key, 0) + thing.getValue(key) * influence);
+
+                if (thing.mode == OVERWRITE) {
+                    influences.put(key, influences.get(key) + influence);
+                    res.setValue(key, res.getValue(key, 0) + thing.getValue(key) * influence);
+                } else if (thing.mode == ADDITIVE) {
+                    additive.setValue(key,additive.getValue(key,0)+thing.getValue(key)*influence);
+                }else{
+                    Log2.log(4,this,"MODE ERROR");
+                }
             }
         }
 
         @Override
         public PropertySet mix() {
-            for (Object k:res.getIter()){
-                String key=(String)k;
-                if (influences.get(key)<0.0001f) Log.w(LOG_TAG,"Influence sum of "+key+" is near zero. Expect Animation errors.");
-                res.setValue(key, res.getValue(key)/influences.get(key));
+            for (Object k : res.getIter()) {
+                String key = (String) k;
+                if (influences.get(key) < 0.0001f)
+                    Log.w(LOG_TAG, "Influence sum of " + key + " is near zero. Expect Animation errors.");
+                res.setValue(key, res.getValue(key) / influences.get(key) + additive.getValue(key,0));
             }
             return res;
         }
     }
 
+    public static final int ADDITIVE = 1;
+    public static final int OVERWRITE = 0;
 
 
-    private HashMap<String,Float> properties=new HashMap<String,Float>();
+    private HashMap<String, Float> properties = new HashMap<String, Float>();
 
-    public Float getValue(String key){
+    private int mode = OVERWRITE;
+
+    public Float getValue(String key) {
         //Log2.log(2,this,properties);
         return properties.get(key);
     }
-    public float getValue(String key, float defaultValue){
+
+    public float getValue(String key, float defaultValue) {
         //Log2.log(2,this,properties);
-        if (properties.get(key)==null) return defaultValue;
+        if (properties.get(key) == null) return defaultValue;
         return properties.get(key);
     }
 
-    public PropertySet setValue(String key,float value) {
-        properties.put(key,value);
+    public PropertySet setValue(String key, float value) {
+        properties.put(key, value);
         return this;
     }
 
 
-    public Iterable getIter(){
+    public Iterable getIter() {
         return properties.keySet();
     }
 
 
+    public PropertySet() {
+    }
 
-    public PropertySet(){
+    public void setMode(int mode){
+        this.mode=mode;
     }
 
     /*
@@ -77,16 +99,15 @@ public class PropertySet implements Mixable{
     }*/
 
 
-
-    public int getNumKeys(){
+    public int getNumKeys() {
         return properties.size();
     }
 
     @Override
-    public String toString(){
-        StringBuilder res=new StringBuilder();
-        for(String key:properties.keySet()){
-            res.append("("+key+", "+properties.get(key)+")");
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        for (String key : properties.keySet()) {
+            res.append("(" + key + ", " + properties.get(key) + ")");
         }
 
         return res.toString();

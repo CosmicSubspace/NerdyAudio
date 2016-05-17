@@ -6,6 +6,12 @@ package com.thirtyseventhpercentile.nerdyaudio.interfaces;
 
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 
-public interface NewSongListener {
+public interface QueueListener {
     void newSong(MusicInformation mi);
+
+    void playbackStarted();
+    void playbackStopped();
+
+    void nextSong();
+    void previousSong();
 }

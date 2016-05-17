@@ -10,10 +10,14 @@ import android.util.Log;
 public class Log2 {
     public static final String LOG_TAG="CS_AFN";
     public static void log(int level,Object callingClass,Object... arguments){
+        if (callingClass!=null) log(level,callingClass.getClass(), arguments);
+        else log(level,null, arguments);
+    }
+    public static void log(int level,Class callingClass,Object... arguments){
         StringBuilder log=new StringBuilder();
         log.append("[From ");
-        if (callingClass!=null) log.append(callingClass.getClass().getSimpleName());
-        else log.append("?");
+        if (callingClass!=null) log.append(callingClass.getSimpleName());
+        else log.append("NULL");
         log.append("]");
         for (Object arg:arguments){
             log.append(" | ");
