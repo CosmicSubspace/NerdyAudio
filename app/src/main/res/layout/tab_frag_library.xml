@@ -119,7 +119,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="By Name"
+                android:text="No Sorting"
                 android:textColor="@color/colorLightSecondaryText"
                 android:id="@+id/library_tab_current_sort"
                 android:layout_alignParentRight="true"
@@ -128,7 +128,8 @@
                 android:layout_centerVertical="true"
                 style="@style/singleline_cutstart"
                 android:layout_toRightOf="@+id/library_tab_sort_seperator"
-                android:layout_margin="8dp" />
+                android:layout_margin="8dp"
+                android:singleLine="false" />
 
             <View
                 android:layout_width="1dp"

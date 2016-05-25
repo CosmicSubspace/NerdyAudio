@@ -32,10 +32,10 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder
         public ImageView status;
         public myViewHolder(View v) {
             super(v);
-            title = (TextView)v.findViewById(R.id.music_list_element_title);
-            artist=(TextView)v.findViewById(R.id.music_list_element_artist);
-            container=(RelativeLayout)v.findViewById(R.id.music_list_element_container);
-            status=(ImageView)v.findViewById(R.id.music_list_element_status);
+            title = (TextView)v.findViewById(R.id.queue_list_element_title);
+            artist=(TextView)v.findViewById(R.id.queue_list_element_artist);
+            container=(RelativeLayout)v.findViewById(R.id.queue_list_element_container);
+            status=(ImageView)v.findViewById(R.id.queue_list_element_status);
         }
     }
 
@@ -50,7 +50,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.myViewHolder
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.music_list_element, parent, false);
+                .inflate(R.layout.queue_list_element, parent, false);
         // set the view's size, margins, paddings and layout parameters
         myViewHolder vh = new myViewHolder(v);
         return vh;

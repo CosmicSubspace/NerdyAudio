@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:id="@+id/queue_list_element_container">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/queue_list_element_handle"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp">
+        <View android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#90000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp">
+
+        </View>
+        <View android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#90000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp">
+
+        </View>
+        <View android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#90000000"
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp">
+
+        </View>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/queue_list_element_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="false"
+        android:textColor="@color/colorDarkPrimaryText"
+        android:textSize="16dp"
+        android:layout_toRightOf="@+id/queue_list_element_handle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/queue_list_element_artist"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:textColor="@color/colorDarkSecondaryText"
+        android:textSize="12dp"
+        android:layout_below="@+id/queue_list_element_title"
+        android:layout_toRightOf="@+id/queue_list_element_handle"
+        android:layout_alignLeft="@+id/queue_list_element_title" />
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/queue_list_element_status"
+        android:layout_alignParentLeft="false"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

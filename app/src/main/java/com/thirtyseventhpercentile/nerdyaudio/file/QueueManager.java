@@ -12,7 +12,7 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicInformationUpdateListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueElementUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-
+//TODO : Seperate QueueManager and PlayManager or something.
 public class QueueManager implements CompletionListener, SampleProgressListener, WaveformReturnListener {
     static final String LOG_TAG = "CS_AFN";
 
@@ -42,7 +42,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     ArrayList<ProgressStringListener> psl = new ArrayList<>();
     ArrayList<QueueListener> nsl = new ArrayList<>();
-    ArrayList<MusicInformationUpdateListener> miul = new ArrayList<>();
+    ArrayList<QueueElementUpdateListener> miul = new ArrayList<>();
 
     //int currentlyCachingIndex=-1;
 
@@ -112,17 +112,17 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
 
 
-    public void addMusicInformationUpdateListener(MusicInformationUpdateListener miul) {
+    public void addMusicInformationUpdateListener(QueueElementUpdateListener miul) {
         this.miul.add(miul);
     }
 
-    public void removeMusicInformationUpdateListener(MusicInformationUpdateListener miul) {
+    public void removeMusicInformationUpdateListener(QueueElementUpdateListener miul) {
         this.miul.remove(miul);
     }
 
     private void notifyMusicInformationUpdateListeners(int index) {
-        for (MusicInformationUpdateListener miul : this.miul) {
-            miul.musicInformationUpdated(index);
+        for (QueueElementUpdateListener miul : this.miul) {
+            miul.elementUpdated(index);
         }
     }
 
@@ -403,7 +403,6 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     public static final int INTERSECT = 27523;
 
     public void parsePlaylists(Playlist[] playlists, int mode, Context c) {
-        //TODO man this code is ugly as fuck
         queue.clear();
         if (mode == ADD) {
             for (Playlist playlist : playlists) {
@@ -457,6 +456,10 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
         prepareWaveform();
     }
+
+
+
+
 
 /*
     public static final int APPEND=6422235;

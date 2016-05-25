@@ -8,11 +8,12 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 
 import java.io.File;
 import java.util.Comparator;
 
-public class MusicInformation{
+public class MusicInformation implements MusicListDisplayable{
 
     static class TitleComparator implements Comparator<MusicInformation>{
         @Override
@@ -39,9 +40,26 @@ public class MusicInformation{
         return filepath;
     }
 
+
+    @Override
+    public boolean expanded() {
+        return false;
+    }
+
+    @Override
+    public boolean isAGroup() {
+        return false;
+    }
+
     public String getTitle() {
         return title;
     }
+
+    @Override
+    public String getSubTitle() {
+        return artist;
+    }
+
 
     public String getArtist() {
         return artist;
@@ -50,6 +68,15 @@ public class MusicInformation{
     public boolean hasArt() {
         return hasArt;
     }
+    public String getAlbum() {
+        return album;
+    }
+
+
+    public String getFolderName() {
+        return folderName;
+    }
+
 
 
     public int getStatus() {
@@ -84,6 +111,11 @@ public class MusicInformation{
     String filepath;
     String title;
     String artist;
+
+
+
+    String album;
+    String folderName;
     boolean hasArt;
     boolean isReady = false, isPlaying = false, isCaching=false;
 
@@ -96,6 +128,14 @@ public class MusicInformation{
     }
     public MusicInformation(String source, Context c) {
         this.filepath = source;
+
+        String[] split=source.split("\\/");
+        try {
+            this.folderName = split[split.length - 2];
+        }catch (ArrayIndexOutOfBoundsException e){
+            this.folderName="(No Folder?)";
+        }
+
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(source);
         title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
@@ -105,6 +145,10 @@ public class MusicInformation{
         artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         if (artist == null || artist.equals("")) {
             artist = "(No Artist Data)";
+        }
+        album=mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        if (album == null || album.equals("")) {
+            album = "(No Album Data)";
         }
         if (mmr.getEmbeddedPicture() == null) hasArt = false;
         else hasArt = true;

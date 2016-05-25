@@ -52,11 +52,13 @@ import java.io.File;
 //TODO : Better UI Colors
 //TODO : Shuffle & Repeat
 //TODO : Waveform color always accent?
-//TODO : PlayControls drag to resize?
-//TODO : Playcontrols button bottom spacing.
 //TODO : Ball Visuals more settings
 //TODO : Playlist/state save on exit
-
+//TODO : Background Play
+//TODO : Headphone Controls
+//TODO : Playback device selection
+//TODO : Volume button control
+//TODO : Exception Hook
 
 /**
  * Other Libraries:

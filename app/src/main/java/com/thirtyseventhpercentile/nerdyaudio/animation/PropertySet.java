@@ -11,7 +11,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import java.util.HashMap;
 
 
-//TODO Additive/Overwrite Value Mode
 
 public class PropertySet implements Mixable {
     private static final String LOG_TAG = "CS_AFN";

@@ -11,7 +11,7 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 /**
  * Created by Chan on 4/19/2016.
  */
-//TODO implement simple IIR Low-Pass Filter. (x=ix+(1-i)x)
+
 public class IirHighPassFilter extends BaseFilter implements SeekBar.OnSeekBarChangeListener {
 
     float ratio=0.7f;

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
 import java.io.File;
@@ -40,6 +41,8 @@ public class FileManager implements FileListReturnListener{
     //ArrayList<String> fileList=new ArrayList<String>();
 
     ArrayList<MusicInformation> musics=new ArrayList<>();
+
+    ArrayList<MusicGroup> grouped=new ArrayList<>();
 
     public static FileManager getInstance(){
         if (inst==null) inst=new FileManager();
@@ -81,21 +84,39 @@ public class FileManager implements FileListReturnListener{
         return scanning;
     }
 
+    boolean grouping=false;
     public void setGrouping(int mode){
         //TODO Implementation
-        switch (mode){
-            case GROUPING_NONE:
-                //pass
-                break;
-            case GROUPING_ALBUM:
+        if (mode==GROUPING_NONE){
+            grouping=false;
+            return;
+        }
 
-                break;
-            case GROUPING_ARTIST:
-                break;
-            case GROUPING_DIRECTORY:
-                break;
-            case GROUPING_TITLE_FIRST:
-                break;
+        grouping=true;
+        grouped.clear();
+        for (MusicInformation mi:musics) {
+            String groupIdent="";
+            if (mode==GROUPING_TITLE_FIRST) groupIdent=Character.toString(mi.getTitle().charAt(0)).toUpperCase();
+            else if (mode==GROUPING_ALBUM) groupIdent=mi.getAlbum();
+            else if (mode==GROUPING_DIRECTORY) groupIdent=mi.getFolderName();
+            else if (mode==GROUPING_ARTIST) groupIdent=mi.getArtist();
+
+
+            boolean success=false;
+            for (MusicGroup group:grouped){ //Try to put this in one of the groups.
+                if (group.getIdentity().equals(groupIdent)){
+                    success=true;
+                    group.addMusic(mi);
+                    break;
+                }
+            }
+
+            if (!success){//No group.. Create a new one!
+                MusicGroup newGroup=new MusicGroup(groupIdent);
+                newGroup.addMusic(mi);
+                grouped.add(newGroup);
+            }
+
         }
     }
 
@@ -111,6 +132,23 @@ public class FileManager implements FileListReturnListener{
             case SORTING_TITLE:
                 break;
         }
+    }
+
+    public ArrayList updateMusicList(){
+        ArrayList res=new ArrayList<>();
+        if (!grouping){ //Don't group....
+            res=new ArrayList(musics);
+        }else{
+            for (MusicGroup group:grouped) {
+                res.add(group);
+
+                if (group.expanded()){
+                    res.addAll(group.getElements());
+                }
+            }
+        }
+
+        return res;
     }
 
     @Override

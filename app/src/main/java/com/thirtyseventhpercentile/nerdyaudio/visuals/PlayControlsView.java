@@ -35,6 +35,8 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
+//TODO : Enlarge time when scrubbing.
+
 public class PlayControlsView extends View implements ProgressStringListener, QueueListener {
     int w, h;
     Waveform wf;
@@ -727,7 +729,6 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
             //Button doing stuff.
             if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
-                animatePrev();
                 return true;
             } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playCurrent();
@@ -737,7 +738,6 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                 return true;
             } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
-                animateNext();
                 return true;
             } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 toggleExpand();

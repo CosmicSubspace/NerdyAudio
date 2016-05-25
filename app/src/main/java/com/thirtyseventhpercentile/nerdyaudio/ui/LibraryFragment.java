@@ -21,9 +21,11 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.ninthavenue.FileChooser;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class LibraryFragment extends Fragment implements View.OnClickListener{
@@ -43,6 +45,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         fm=FileManager.getInstance();
 
         View v = inflater.inflate(R.layout.tab_frag_library, container, false);
@@ -58,7 +61,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MusicListAdapter(fm.getMusics());
+        mAdapter = new MusicListAdapter(fm);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -84,18 +87,23 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
                 switch (item.getItemId()) {
                     case R.id.menu_lib_group_none:
                         fm.setGrouping(FileManager.GROUPING_NONE);
+                        currentGrouping.setText("No Grouping.");
                         break;
                     case R.id.menu_lib_group_album:
-                        fm.setGrouping(FileManager.GROUPING_ARTIST);
+                        fm.setGrouping(FileManager.GROUPING_ALBUM);
+                        currentGrouping.setText("Album");
                         break;
                     case R.id.menu_lib_group_artist:
                         fm.setGrouping(FileManager.GROUPING_ARTIST);
+                        currentGrouping.setText("Artist");
                         break;
                     case R.id.menu_lib_group_directory:
                         fm.setGrouping(FileManager.GROUPING_DIRECTORY);
+                        currentGrouping.setText("Directory");
                         break;
                     case R.id.menu_lib_group_first_letter:
                         fm.setGrouping(FileManager.GROUPING_TITLE_FIRST);
+                        currentGrouping.setText("Title First Letter");
                         break;
 
                 }
@@ -111,16 +119,20 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_lib_sort_none:
-                        fm.setGrouping(FileManager.SORTING_NONE);
+                        fm.setSorting(FileManager.SORTING_NONE);
+                        currentSorting.setText("No Sorting.");
                         break;
                     case R.id.menu_lib_sort_album:
-                        fm.setGrouping(FileManager.SORTING_ALBUM);
+                        fm.setSorting(FileManager.SORTING_ALBUM);
+                        currentSorting.setText("Album");
                         break;
                     case R.id.menu_lib_sort_name:
-                        fm.setGrouping(FileManager.SORTING_TITLE);
+                        fm.setSorting(FileManager.SORTING_TITLE);
+                        currentSorting.setText("Title");
                         break;
                     case R.id.menu_lib_sort_artist:
-                        fm.setGrouping(FileManager.SORTING_ARTIST);
+                        fm.setSorting(FileManager.SORTING_ARTIST);
+                        currentSorting.setText("Artist");
                         break;
                 }
                 updateUI();
@@ -150,7 +162,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI(){
-        mAdapter.newData(fm.getMusics());
+        mAdapter.updateMusicList();
         currentDir.setText(fm.getCurrentDirectoryPath());
     }
     private void scanUI(){

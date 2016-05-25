@@ -58,6 +58,7 @@ public class VisualsRenderThread extends Thread{
     @Override
     public void run(){
         while (active) {
+            //TODO : Better FPS Counter
             c = sf.lockCanvas();
 
             if (c==null) {

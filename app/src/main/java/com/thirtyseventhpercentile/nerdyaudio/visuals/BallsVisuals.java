@@ -14,7 +14,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 
 import java.util.ArrayList;
 
-
+//TODO : Sticky Balls
 public class BallsVisuals extends FftRenderer {
     Paint pt;
 
@@ -23,6 +23,7 @@ public class BallsVisuals extends FftRenderer {
 
     int iterations=10;
     float sensitivity=100, bounciness=30;
+    float stickyness=0.3f;
 
 
     private void syncChanges() {
@@ -99,6 +100,14 @@ public class BallsVisuals extends FftRenderer {
                     ball.update(balls, iterations);
                     ball.collision(balls);
                     ball.wallIn(0,0,w,h);
+                }
+            }
+
+            for (Ball ball:balls){
+                for (Ball ball2:balls){
+                    if (ball==ball2) continue;
+
+                    ball.attract(ball2.x,ball2.y,stickyness);
                 }
             }
 

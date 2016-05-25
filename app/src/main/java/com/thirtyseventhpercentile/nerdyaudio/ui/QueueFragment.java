@@ -17,14 +17,14 @@ import android.widget.TextView;
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ClansFABHelper;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicInformationUpdateListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueElementUpdateListener;
 import com.emtronics.dragsortrecycler.DragSortRecycler;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 
-public class QueueFragment extends Fragment implements View.OnClickListener, MusicInformationUpdateListener{
+public class QueueFragment extends Fragment implements View.OnClickListener, QueueElementUpdateListener {
     public static final String LOG_TAG="CS_AFN";
 
     RecyclerView mRecyclerView;
@@ -77,7 +77,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         DragSortRecycler dragSortRecycler = new DragSortRecycler();
-        dragSortRecycler.setViewHandleId(R.id.music_list_element_handle); //View you wish to use as the handle
+        dragSortRecycler.setViewHandleId(R.id.queue_list_element_handle); //View you wish to use as the handle
 
         dragSortRecycler.setOnItemMovedListener(new DragSortRecycler.OnItemMovedListener() {
             @Override
@@ -178,7 +178,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Mus
     }
 
     @Override
-    public void musicInformationUpdated(int index) {
+    public void elementUpdated(int index) {
         if (index<0){
             mAdapter.notifyDataSetChanged();
         }else{
