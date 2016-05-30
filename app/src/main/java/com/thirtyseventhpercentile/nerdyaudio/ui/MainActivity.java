@@ -6,6 +6,7 @@ package com.thirtyseventhpercentile.nerdyaudio.ui;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+import com.thirtyseventhpercentile.nerdyaudio.service.BackgroundMusicService;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //ap.setBufferFeedListener(vb);
 
-        qm.passActivity(this);
+        qm.passContext(getApplicationContext());
 
 
 
@@ -293,8 +296,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mn2.getInfluence().set(1.0f-i/100.0f);
                 Log2.log(2,this,mn.getValue(0).value);
             }
+        }else if(id==R.id.db_6){
+            Log.i(LOG_TAG, "Starting Service....");
+            Intent itt = new Intent(this, BackgroundMusicService.class);
+            itt.setAction(BackgroundMusicService.START_SERVICE);
+            startService(itt);
+        }else if (id==R.id.db_7){
+            Log.i(LOG_TAG, "Stopping Service....");
+            Intent itt = new Intent(this, BackgroundMusicService.class);
+            itt.setAction(BackgroundMusicService.STOP_SERVICE);
+            startService(itt);
         }
         return true;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+        if (wfv!=null) wfv.refreshPlaying();
     }
 
     @Override
@@ -302,12 +322,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         mHandler.removeCallbacks(mUpdateClockTask);
         mHandler.postDelayed(mUpdateClockTask, 100);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacks(mUpdateClockTask);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 
     @Override
@@ -377,6 +408,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onDrawerStateChanged(int newState) {
 
+    }
+
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    Log2.log(2,this,"Vol Up.");
+                }
+                return false;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    Log2.log(2,this,"Vol Down.");
+                }
+                return false;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 /*
     private Handler mHandler = new Handler();

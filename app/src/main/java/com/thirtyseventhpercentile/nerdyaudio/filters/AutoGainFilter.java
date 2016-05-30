@@ -21,7 +21,7 @@ public class AutoGainFilter extends BaseFilter {
     }
 
     private float getGain(){
-        Log.d(LOG_TAG,"Peak:"+wf.getPeak());
+        //Log.d(LOG_TAG,"Peak:"+wf.getPeak());
         return 32767.0f/wf.getPeak();
     }
 

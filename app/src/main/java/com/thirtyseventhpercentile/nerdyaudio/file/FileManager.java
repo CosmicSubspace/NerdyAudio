@@ -15,6 +15,7 @@ import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class FileManager implements FileListReturnListener{
@@ -84,9 +85,16 @@ public class FileManager implements FileListReturnListener{
         return scanning;
     }
 
+
+    private void regroup(){
+        setGrouping(lastGrouping);
+    }
     boolean grouping=false;
+    int lastGrouping=GROUPING_NONE;
     public void setGrouping(int mode){
-        //TODO Implementation
+
+        lastGrouping=mode;
+
         if (mode==GROUPING_NONE){
             grouping=false;
             return;
@@ -124,12 +132,19 @@ public class FileManager implements FileListReturnListener{
         //TODO Implementation
         switch (mode){
             case SORTING_ALBUM:
+                Collections.sort(musics,new MusicInformation.AlbumComparator());
+                regroup();
                 break;
             case SORTING_ARTIST:
+                Collections.sort(musics,new MusicInformation.ArtistComparator());
+                regroup();
                 break;
             case SORTING_NONE:
+                //TODO : Wat do?
                 break;
             case SORTING_TITLE:
+                Collections.sort(musics,new MusicInformation.TitleComparator());
+                regroup();
                 break;
         }
     }

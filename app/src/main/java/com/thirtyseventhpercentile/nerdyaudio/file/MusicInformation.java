@@ -14,7 +14,16 @@ import java.io.File;
 import java.util.Comparator;
 
 public class MusicInformation implements MusicListDisplayable{
-
+    static class AlbumComparator implements Comparator<MusicInformation>{
+        @Override
+        public int compare(MusicInformation a, MusicInformation b){
+            return a.album.compareToIgnoreCase(b.album);
+        }
+        @Override
+        public boolean equals(Object o){
+            return this.equals(o);
+        }
+    }
     static class TitleComparator implements Comparator<MusicInformation>{
         @Override
         public int compare(MusicInformation a, MusicInformation b){
@@ -150,7 +159,8 @@ public class MusicInformation implements MusicListDisplayable{
         if (album == null || album.equals("")) {
             album = "(No Album Data)";
         }
-        if (mmr.getEmbeddedPicture() == null) hasArt = false;
+
+        if (mmr.getEmbeddedPicture() == null) hasArt = false; //TODO : this may cause lag.
         else hasArt = true;
 
         updateReadyness(c);

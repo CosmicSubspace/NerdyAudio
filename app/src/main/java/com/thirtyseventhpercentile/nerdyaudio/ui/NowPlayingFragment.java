@@ -48,7 +48,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
         if (vv == null) Log.e(LOG_TAG, "VisualizationView is null!");
         else if (vv.getRenderThread() == null) Log.e(LOG_TAG, "Renderer is null!");
         else {
-            vv.getRenderThread().setMaxFPS(60);
+            //vv.getRenderThread().setMaxFPS(60);
         }
 
         updated(sbs.getSetting(BaseSetting.VISUALIZATION));

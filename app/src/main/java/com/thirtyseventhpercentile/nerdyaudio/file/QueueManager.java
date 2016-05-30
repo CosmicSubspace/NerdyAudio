@@ -36,7 +36,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     FileManager fm;
     VisualizationBuffer vb;
 
-    MainActivity ma;
+    Context ctxt;
 
     ArrayList<MusicInformation> queue = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     public void getQueueFromFileList(ArrayList<String> list) {
         MusicInformation current;
         for (int i = 0; i < list.size(); i++) {
-            current = new MusicInformation(list.get(i), ma);
+            current = new MusicInformation(list.get(i), ctxt);
             addMusic(current);
         }
         prepareWaveform(); //why was this commented?
@@ -164,8 +164,8 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         queue.add(mi);
     }*/
 
-    public void passActivity(MainActivity ma) {
-        this.ma = ma;
+    public void passContext(Context ma) {
+        this.ctxt = ma;
     }
 
     private void newPlay() { //plays the CurrentlyPlaying.
@@ -180,13 +180,13 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyMusicInformationUpdateListeners(currentlyPlayingIndex());
 
 
-        vb.clear();
+        vb.reset();
         ap.killThread();
         ap.release();
         ap.setFileStr(currentlyPlaying.getFilepath());
         ap.playAudio();
-        if (currentlyPlaying.updateReadyness(ma).isReady()) {
-            Waveform.getInstance().loadFromFile(currentlyPlaying.getFilepath(), 1.0, ma);
+        if (currentlyPlaying.updateReadyness(ctxt).isReady()) {
+            Waveform.getInstance().loadFromFile(currentlyPlaying.getFilepath(), 1.0, ctxt);
         } else Waveform.getInstance().loadBlank();
     }
 
@@ -287,7 +287,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
-                    Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
+                    Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ctxt, this, this);
                     return;
                 }
             }
@@ -298,7 +298,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
-                    Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ma, this, this);
+                    Waveform.calculateIfDoesntExist(queue.get(i).getFilepath(), 1, ctxt, this, this);
                     return;
                 }
             }
@@ -471,7 +471,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
         switch (mode){
             case AND:
-                queue.clear();
+                queue.reset();
                 for (int i = 0; i < pl.files.length; i++) {
                     addMusic(new MusicInformation(pl.files[i],c));
                 }

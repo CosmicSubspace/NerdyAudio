@@ -9,6 +9,7 @@ import android.util.Log;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.FloatArrayRecycler;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FloatFeedListener;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class VisualizationBuffer implements FloatFeedListener {
     long firstBufferStartingFrame = 0;
     long lastFrameNumber=0;
     int numChannels = 2;
+
+    boolean active=false;
 
     long maximumBufferSize=48000*10*2; //10 seconds.... is this too long? or too short?
 
@@ -41,12 +44,14 @@ public class VisualizationBuffer implements FloatFeedListener {
         bufferL = new ArrayList<float[]>();
         //this.bufferSize = bufferSize;
     }
-    public synchronized void clear(){
+
+    public synchronized void reset(){
         bufferR.clear();
         bufferL.clear();
         firstBufferStartingFrame=0;
         lastFrameNumber=0;
     }
+
     public void setNumChannels(int n){
         this.numChannels = n;
     }
@@ -57,6 +62,12 @@ public class VisualizationBuffer implements FloatFeedListener {
 
     @Override
     public synchronized void feed(float[] buff) {
+
+        if (!active){
+            firstBufferStartingFrame+=buff.length/2;
+            lastFrameNumber+=buff.length/2;
+            return;
+        }
 
         float[] right = far.request(buff.length / 2);
 
@@ -75,6 +86,8 @@ public class VisualizationBuffer implements FloatFeedListener {
     }
 
     public synchronized float[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
+        if (!active) Log2.log(4,this,"Frames requested while not active!");
+
         Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
         Log.v(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
 
@@ -157,6 +170,24 @@ public class VisualizationBuffer implements FloatFeedListener {
             if (bufferR.size()<1) return;
             //deleteBefore(frameNumber); //If there is a delete, do it again recursively until there are no buffers to delete.
         }
+    }
+
+    public synchronized void clearBuffer(){
+        //deleteBefore(Long.MAX_VALUE);
+
+        while (bufferR.size()>0){
+            firstBufferStartingFrame += bufferR.get(0).length;
+            far.recycle(bufferR.remove(0));
+            far.recycle(bufferL.remove(0));
+        }
+    }
+
+    public synchronized void deactivate(){
+        clearBuffer();
+        this.active=false;
+    }
+    public synchronized void activate(){
+        this.active=true;
     }
 }
 

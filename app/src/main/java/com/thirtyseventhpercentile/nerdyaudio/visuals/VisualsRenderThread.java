@@ -7,6 +7,7 @@ package com.thirtyseventhpercentile.nerdyaudio.visuals;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -20,8 +21,7 @@ public class VisualsRenderThread extends Thread{
     int w,h;
     long lastDrawn=0, currentDrawn=1;
     float fps=0;
-    float maxFPS=60.0f;
-    int minDelay=16;
+    //float maxFPS=60.0f;
 
     BaseRenderer renderer;
 
@@ -48,17 +48,28 @@ public class VisualsRenderThread extends Thread{
         this.w=w;
         this.h=h;
     }
+    /*
     public void setMaxFPS(float maxFPS){
         this.maxFPS=maxFPS;
         this.minDelay=(int)(1000.0f/maxFPS);
-    }
+    }*/
     public BaseRenderer getRenderer(){
         return renderer;
     }
+
+    long lastTime=0, currentTime;
+    int framesDrawn=0;
     @Override
     public void run(){
         while (active) {
-            //TODO : Better FPS Counter
+            framesDrawn++;
+            currentTime= System.currentTimeMillis();
+            if (lastTime+1000<currentTime){ //1 sec has elapsed. Update FPS.
+                fps=framesDrawn;
+                lastTime=currentTime;
+                framesDrawn=0;
+            }
+
             c = sf.lockCanvas();
 
             if (c==null) {
@@ -70,19 +81,20 @@ public class VisualsRenderThread extends Thread{
 
             if (renderer!=null) renderer.draw(c,w,h);
 
+            /*
             //Log.d(LOG_TAG,"DB: "+lastDrawn+" | "+minDelay+" | "+System.currentTimeMillis());
             while (lastDrawn+minDelay>System.currentTimeMillis()){
                 try {
                     //Log.d(LOG_TAG,"Sleeping(FPS too high)");
-                    Thread.sleep(3);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     ErrorLogger.log(e);
                 }
             }
+            */
 
-            currentDrawn=System.currentTimeMillis();
-            fps=1000.0f/((currentDrawn-lastDrawn));
+
             pt.setTextSize(36.0f);
 
             pt.setStyle(Paint.Style.STROKE);
@@ -95,7 +107,6 @@ public class VisualsRenderThread extends Thread{
             c.drawText("FPS: "+(int)fps, 10, 40, pt);
 
 
-            lastDrawn=currentDrawn;
             sf.unlockCanvasAndPost(c);
         }
 

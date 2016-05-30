@@ -173,10 +173,15 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         //It also takes care of a bug with Paths.
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-
         prepareLayout();
 
         inst=this;
+
+        refreshPlaying();
+    }
+
+    public void refreshPlaying(){
+        parseMusicInformation(qm.getCurrentlyPlaying());
     }
 
     public void setWaveform(Waveform w) {
@@ -509,6 +514,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     MusicInformation currentMusic;
 
     protected void parseMusicInformation(final MusicInformation mi) {
+        if (mi==null) return;
+
         currentMusic = mi;
         title = mi.getTitle();
         titleAnimatable.setText(mi.getTitle());
