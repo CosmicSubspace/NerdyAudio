@@ -242,6 +242,16 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyStop();
     }
 
+    public void togglePlay(){
+        if (ap != null) {
+            if (ap.isPlaying()) {
+                pause();
+                return;
+            }
+        }
+        playCurrent();
+    }
+
     private void nextFile() {
         setCurrentMusicIndex(currentlyPlayingIndex() + 1);
     }

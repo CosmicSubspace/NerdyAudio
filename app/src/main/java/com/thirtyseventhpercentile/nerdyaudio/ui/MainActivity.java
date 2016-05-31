@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onStart(){
         super.onStart();
         //Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
-        if (wfv!=null) wfv.refreshPlaying();
+
     }
 
     @Override
@@ -322,14 +322,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         mHandler.removeCallbacks(mUpdateClockTask);
         mHandler.postDelayed(mUpdateClockTask, 100);
+        if (wfv!=null) wfv.refreshPlaying();
 
+        Log.i(LOG_TAG, "Stopping Service....");
+        Intent itt = new Intent(this, BackgroundMusicService.class);
+        itt.setAction(BackgroundMusicService.STOP_SERVICE);
+        startService(itt);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacks(mUpdateClockTask);
+
+        if (ap.isPlaying()) {
+            Log.i(LOG_TAG, "Starting Service....");
+            Intent itt = new Intent(this, BackgroundMusicService.class);
+            itt.setAction(BackgroundMusicService.START_SERVICE);
+            startService(itt);
+        }
     }
+
 
     @Override
     public void onStop(){
