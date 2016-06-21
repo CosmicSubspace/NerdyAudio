@@ -67,7 +67,6 @@ import java.util.Date;
 //TODO : Playlist/state save on exit
 //TODO : Headphone Controls
 //TODO : Playback device selection
-//TODO : Log --> Log2
 
 /**
  * Other Libraries:
@@ -113,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 Log2.log(2,this,"UncaughtException:",ErrorLogger.logToString(e));
                 //Toast.makeText(c, ErrorLogger.logToString(e), Toast.LENGTH_SHORT).show();
-
                 FileWriter f;
                 try {
                     f = new FileWriter(
@@ -126,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }catch(IOException e1){
                     ErrorLogger.log(e1);
                 } //Double exception?
+
+                Log2.dumpLogsAsync();
                 
                 orig.uncaughtException(thread,e);
             }
@@ -134,8 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         requestPermission();
 
-        Log2.log(2,this, "MainActivity Created!");
-
+        Log2.log(1,this, "MainActivity Created!");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -163,10 +162,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         qm.passContext(getApplicationContext());
 
-
-
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Library"));
@@ -212,21 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wfv.setWaveform(wf);
         qm.addQueueListener(wfv);
         qm.addProgressStringListener(wfv);
-/*
-        play=(Button) findViewById(R.id.controls_play);
-        rewind=(Button) findViewById(R.id.controls_rewind);
-        forward=(Button) findViewById(R.id.controls_fastforward);
 
-        play.setOnClickListener(this);
-        rewind.setOnClickListener(this);
-        forward.setOnClickListener(this);
-
-        title=(TextView) findViewById(R.id.controls_title);
-        title.setSelected(true);
-        artist=(TextView) findViewById(R.id.controls_artist);
-
-        art=(ImageView) findViewById(R.id.controls_art);
-*/
         vv=(VisualizationView)findViewById(R.id.visualization);
 
         dl=(DrawerLayout)findViewById(R.id.drawer_layout);
@@ -283,9 +264,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
 
                 } else {
+                    Log2.log(3,this,"Ext. Storage permission denied.");
                     Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                     Toast.makeText(this, "You won't be able to play music...", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
@@ -463,105 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return super.dispatchKeyEvent(event);
         } else return true;
     }
-/*
-    private Handler mHandler = new Handler();
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mHandler.removeCallbacks(mUpdateClockTask);
-        mHandler.postDelayed(mUpdateClockTask, 100);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mHandler.removeCallbacks(mUpdateClockTask);
-    }
-
-    private Runnable mUpdateClockTask = new Runnable() {
-        public void run() {
-            updateUI();
-            mHandler.postDelayed(mUpdateClockTask, 1000);
-        }
-    };
-
-    public void updateUI() {
-        Log2.log(0,this,"Updating UI...");
-        if (ap!=null) {
-            long currentFrame = ap.getCurrentFrame();
-            Log2.log(0,this, "Reported: " + currentFrame);
-            Log2.log(0,this, "Setting position to: " + wf.frameNumberToRatio(currentFrame));
-            wfv.setCurrentPosition(wf.frameNumberToRatio(currentFrame));
-            wfv.invalidate();
-        }
-    }*/
-
-    /*
-    class AudioLoadThread extends Thread {
-
-
-        private void PlayAudioFileViaAudioTrack(String filePath) throws IOException {
-// We keep temporarily filePath globally as we have only two sample sounds now..
-            if (filePath == null)
-                return;
-
-            int intSize = android.media.AudioTrack.getMinBufferSize(44100, AudioFormat.CHANNEL_CONFIGURATION_STEREO,
-                    AudioFormat.ENCODING_PCM_16BIT);
-
-            AudioTrack at = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_CONFIGURATION_STEREO,
-                    AudioFormat.ENCODING_PCM_16BIT, intSize, AudioTrack.MODE_STREAM);
-
-
-            if (at == null) {
-                Log2.log(1,this, "audio track is not initialized ");
-                return;
-            }
-
-            int count = 64 * 1024; // 64 kb
-            //Reading the file..
-            byte[] byteData = null;
-            File file = null;
-
-            file = new File(filePath);
-
-            byteData = new byte[(int) count];
-            FileInputStream in = null;
-            try {
-                in = new FileInputStream(file);
-
-            } catch (FileNotFoundException e) {
-                Log2.log(4,this, "FNFE");
-            }
-
-            int bytesread = 0, ret = 0;
-            int size = (int) file.length();
-            at.play();
-            while (bytesread < size) {
-                Log.v("AudioForNerds", "read bytes: " + bytesread);
-                ret = in.read(byteData, 0, count);
-                if (ret != -1) { // Write the byte array to the track
-                    at.write(byteData, 0, ret);
-                    bytesread += ret;
-                } else break;
-            }
-            in.close();
-            at.stop();
-            at.release();
-        }
-
-        @Override
-        public void run() {
-            try {
-                //PlayAudioFileViaAudioTrack("mnt/sdcard/AE_RenderSuccess.wav");
-                PlayAudioFileViaAudioTrack("/mnt/sdcard/marbleWAV.wav");
-            } catch (IOException e) {
-                StringWriter errors = new StringWriter();
-                e.printStackTrace(new PrintWriter(errors));
-                Log2.log(4,this, "IOException\n" + e.toString());
-            }
-        }
-    }*/
 }
 
 
