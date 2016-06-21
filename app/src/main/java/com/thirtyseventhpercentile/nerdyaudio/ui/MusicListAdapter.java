@@ -19,6 +19,7 @@ import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicGroup;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 
 import java.lang.reflect.Array;
@@ -85,7 +86,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG_TAG, "Clicked");
+                Log2.log(2,this, "Clicked");
                 if (!currentMusic.isAGroup()) { //Is a single music.
                     QueueManager.getInstance().addMusic(new MusicInformation(((MusicInformation) currentMusic)));
                 } else { //It's a group -- Expand and update list.

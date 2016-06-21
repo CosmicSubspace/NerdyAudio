@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.AlbumArtSettings;
@@ -18,7 +19,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
  */
 public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
     AlbumArtSettings newSettings = null;
-
+    RectF bounds=new RectF();
     Bitmap art;
     Paint pt;
     public AlbumArtVisuals(float density) {
@@ -28,7 +29,7 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
         newSong(QueueManager.getInstance().getCurrentlyPlaying());
     }
 
-    RectF bounds=new RectF();
+
 
     public void recalculateBounds(){
         if (art!=null) bounds=SimpleMaths.fit(new RectF(0,0,art.getWidth(),art.getHeight()),new RectF(0,0,w,h));
@@ -56,13 +57,24 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
 
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
+        //Log2.log(1,this,"Drawing visuals.");
         syncChanges();
-        if (art!=null) c.drawBitmap(art,null,bounds,pt);
+
+        //We're not using any samples, but clear the buffer anyway.
+        //TODO art does not draw sometimes...?
+        deleteBefore(getCurrentFrame());
+        if (art!=null) {
+            Log2.log(1,this,"we gonn draw shit.",art,bounds,pt);
+            c.drawBitmap(art,null,bounds,pt);
+        }
+        //Log2.log(1,this,"Drawing finished.");
     }
 
     @Override
     public void newSong(MusicInformation mi) {
+        //Log2.log(2,this,"New Song!");
         if (mi!=null && mi.hasArt()) {
+            Log2.log(2,this,"New song has art.");
             art = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), w, h);
             recalculateBounds();
         }

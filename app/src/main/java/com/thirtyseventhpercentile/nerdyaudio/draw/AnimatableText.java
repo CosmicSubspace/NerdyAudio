@@ -15,7 +15,6 @@ import android.graphics.Shader;
 
 import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
-import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 
 
@@ -122,12 +121,15 @@ public class AnimatableText extends Animatable{
     public void draw(Canvas c, Paint pt, long currentTime) {
         if (!visible) return;
         //TODO : Perf Improvements.
+        current = mixedProperties.getValue(currentTime);
+
+
 
         pt.setTextSize(textSize);
         if (align == ALIGN_BOTTOM_LEFT_CORNER) pt.setTextAlign(Paint.Align.LEFT);
         else if (align == ALIGN_CENTER) pt.setTextAlign(Paint.Align.CENTER);
 
-        current = mixedProperties.getValue(currentTime);
+
         fm = pt.getFontMetrics();
 
 

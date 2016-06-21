@@ -8,6 +8,7 @@ import android.util.Log;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BallsVisualSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
@@ -29,7 +30,7 @@ public class BallsVisuals extends FftRenderer {
     private void syncChanges() {
         if (newSettings != null) {
             setFFTSize(newSettings.getFftSize());
-            Log.i(LOG_TAG, "Spectrum: size changing" + fftSize);
+            Log2.log(2,this, "Spectrum: size changing" + fftSize);
             setIterations(newSettings.getIter());
             setSensitivity(newSettings.getSensitivity());
             setBounciness(newSettings.getBounciness());
@@ -52,7 +53,7 @@ public class BallsVisuals extends FftRenderer {
     }
     public void setSensitivity(float sensitivity){
         this.sensitivity=sensitivity;
-        Log.i(LOG_TAG,"Setting Sensitivity...");
+        Log2.log(2,this,"Setting Sensitivity...");
     }
     public void setBounciness(float bounciness){
         this.bounciness=bounciness;
@@ -71,7 +72,7 @@ public class BallsVisuals extends FftRenderer {
     }
 
     private void initializeSimulation() {
-        Log.i(LOG_TAG,"Sim Init...");
+        Log2.log(2,this,"Sim Init...");
         balls.clear();
         for (int i = 0; i < 4; i++) {
             balls.add(new Ball(i * 100, 100, 0, 0,ColorFiddler.rampColor(Color.RED,Color.BLUE,i/5.0f)));
@@ -84,7 +85,7 @@ public class BallsVisuals extends FftRenderer {
         long currentFrame = getCurrentFrame();
         try {
             updateFFT(currentFrame);
-            Log.i(LOG_TAG, "Sensitivity: "+sensitivity);
+            Log2.log(2,this, "Sensitivity: "+sensitivity);
             //Bass
             balls.get(0).r= 0.5f*balls.get(0).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 50+sensitivity*3);
             //Low
@@ -118,9 +119,9 @@ public class BallsVisuals extends FftRenderer {
             }
 
         } catch (BufferNotPresentException e) {
-            Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
+            Log2.log(1,this, "Buffer not present! Requested around " + currentFrame);
         }catch (NullPointerException e) {
-            Log.d(LOG_TAG, "NPE @ BallsVisuals " + currentFrame);
+            Log2.log(1,this, "NPE @ BallsVisuals " + currentFrame);
         }
     }
 

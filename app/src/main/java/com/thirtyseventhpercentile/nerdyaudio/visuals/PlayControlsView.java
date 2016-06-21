@@ -70,6 +70,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     MixNode<PointsCompound> playBtnShape;
     MixNode<PointsCompound> playBtnShapeNormal;
     MixNode<PointsCompound> playBtnShapeDiamond;
+    MixNode<PointsCompound> playBtnShapeExpanded;
+
     MixNode<PropertySet> buttonFollower;
     MixNode<PropertySet> buttonFollowerProgress;
     MixNode<PropertySet> buttonFollowerUser;
@@ -222,9 +224,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
 
         buttonFollower = new MixNode<PropertySet>("Follower");
-        buttonFollowerUser = new MixNode<PropertySet>("User", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
-        buttonFollowerProgress = new MixNode<PropertySet>("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 0.3f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        buttonFollowerUser = new MixNode<PropertySet>("User", new PropertySet().setValue("X", 0).setValue("Scale", 1.0f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
+        buttonFollowerProgress = new MixNode<PropertySet>("Progress", new PropertySet().setValue("X", 0).setValue("Scale", 1.0f).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         buttonFollowerUser.getInfluence().set(0.0f);
+
+
+
         buttonFollowerYExpanded = new MixNode<PropertySet>("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density));
         buttonFollowerYExpanded.getInfluence().set(0.0f);
         buttonFollowerYNotExpanded = new MixNode<PropertySet>("YNotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight) * density));
@@ -243,11 +248,17 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
         playBtnShape=new MixNode<PointsCompound>("Play Btn Shape");
         playBtnShapeNormal=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.play(buttonsSize / 2.0f * density));
-        playBtnShapeDiamond=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.playDiamond(buttonsSize / 2.0f * density));
+        playBtnShapeDiamond=new MixNode<PointsCompound>("Play Btn Diamond",PrimitivePaths.playDiamond(buttonsSize / 2.0f * density*0.3f));
+        playBtnShapeExpanded=
+                new MixNode<PointsCompound>("Play Btn Expanded",
+                        PrimitivePaths.playExpanded(buttonsSize / 2.0f * density*0.3f,
+                        15 * density,40 * density,30* density));
         playBtnShapeDiamond.getInfluence().set(0.0f);
+        playBtnShapeExpanded.getInfluence().set(0.0f);
         playBtnShape.getInfluence().set(1.0f);
         playBtnShape.addNode(playBtnShapeNormal);
         playBtnShape.addNode(playBtnShapeDiamond);
+        playBtnShape.addNode(playBtnShapeExpanded);
 
         playBtn = new AnimatableShape(playBtnShape, buttonColor, new MixNode<PropertySet>("Mix"));
         playBtn.getMixNode().addNode(buttonFollower);
@@ -359,7 +370,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         timestampRest = new MixNode<PropertySet>("Rest", new PropertySet().setValue("X", w - 30 * density));
         timestampFollow = new MixNode<PropertySet>("Follow", new PropertySet().setValue("X", 0));
         timestampNotExpanded = new MixNode<PropertySet>("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight + 30) * density));
-        timestampExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 40 + 45) * density));
+
+        timestampExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize +10) * density));
         timestampExpanded.getInfluence().set(0.0f);
         timestampFollow.getInfluence().set(0.0f);
         timestampAnim.getMixNode().addNode(timestampRest);
@@ -586,24 +598,14 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         if (albumArt != null) {
             pt.setAlpha(Math.round(albumArtColor.getValue(currentFrameTime).getValue("alpha")));
             canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
-            //Log.d(LOG_TAG, "trying to draw..");
+            //Log2.log(1,this, "trying to draw..");
             pt.setAlpha(255);
         }
 
 
         waveform.draw(canvas, pt,currentFrameTime);
 
-        if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
-            setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
 
-            if (!dragMode) {
-                timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
-            }
-
-            timestampAnim.draw(canvas, pt,currentFrameTime);
-
-            buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
-        }
 
 
 
@@ -618,6 +620,20 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
         prevBtn.draw(canvas, pt,currentFrameTime);
         nextBtn.draw(canvas, pt,currentFrameTime);
+
+
+        if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
+            setCurrentPosition((float) (ap.getMusicCurrentFrame() / (double) wf.getNumOfFrames()));
+
+            if (!dragMode) {
+                timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
+            }
+
+            timestampAnim.draw(canvas, pt,currentFrameTime);
+
+            buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
+        }
+
 
         invalidate();
 
@@ -688,6 +704,11 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                     timestampFollow.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
                     timestampRest.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
+                    //TODO not zeroing the PlayBtnShapeNormal may cause anim bugs.
+                    playBtnShapeExpanded.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+                    //playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                    playBtnShapeDiamond.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+
                     buttonFollowerUser.getBasis().setValue("X", ev.getX());
                     timestampFollow.getBasis().setValue("X", ev.getX());
                     return true;
@@ -722,6 +743,11 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
             if (dragMode) {
                 buttonFollowerUser.getInfluence().animate(0, 0.5f, EasingEquations.DEFAULT_EASE);
                 buttonFollowerProgress.getInfluence().animate(1, 0.5f, EasingEquations.DEFAULT_EASE);
+
+                playBtnShapeExpanded.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                //playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                playBtnShapeDiamond.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+
                 float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
                 ap.seekTo(totalTime * ev.getX() / w);
 
@@ -759,7 +785,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
 
     protected int rampColor(int colorA, int colorB, float ramp) {
-        //Log.d(LOG_TAG,"Ramping color..."+colorA+" | "+colorB+" | "+ramp);
+        //Log2.log(1,this,"Ramping color..."+colorA+" | "+colorB+" | "+ramp);
         return Color.argb(Math.round(Color.alpha(colorA) * ramp + Color.alpha(colorB) * (1.0f - ramp)),
                 Math.round(Color.red(colorA) * ramp + Color.red(colorB) * (1.0f - ramp)),
                 Math.round(Color.green(colorA) * ramp + Color.green(colorB) * (1.0f - ramp)),

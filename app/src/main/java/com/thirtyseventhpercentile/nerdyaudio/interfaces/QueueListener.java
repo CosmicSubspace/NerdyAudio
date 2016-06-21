@@ -7,11 +7,14 @@ package com.thirtyseventhpercentile.nerdyaudio.interfaces;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 
 public interface QueueListener {
+    //A new song has begun playing.
     void newSong(MusicInformation mi);
 
+    //Playback has stopped/started.
     void playbackStarted();
     void playbackStopped();
 
+    //Next/Prev song. newSong() will be called after these callbacks.
     void nextSong();
     void previousSong();
 }

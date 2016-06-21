@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 
 public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarChangeListener{
@@ -96,7 +97,7 @@ public class VUMeterSettings extends BaseSetting implements SeekBar.OnSeekBarCha
         }else if (seekBar.getId()==R.id.vis_vu_setting_length_seekbar) {
             setRange(progress * 10);
         }else{
-            Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
+            Log2.log(3,this, "I think I'm not the only seekbar around here....");
         }
         if (fromUser){
         save();

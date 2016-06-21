@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 
 public class VisualizationView extends SurfaceView implements SurfaceHolder.Callback{
@@ -37,7 +38,7 @@ public class VisualizationView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        Log.i(LOG_TAG, "Surface Created. Starting render.");
+        Log2.log(2,this, "Surface Created. Starting render.");
         vb.activate();
         vr.setSurfaceHolder(surfaceHolder);
         vr.start();
@@ -50,7 +51,7 @@ public class VisualizationView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        Log.i(LOG_TAG,"Surface Destroyed. Stopping render.");
+        Log2.log(2,this,"Surface Destroyed. Stopping render.");
         vr.stopRender();
        vb.deactivate();
     }

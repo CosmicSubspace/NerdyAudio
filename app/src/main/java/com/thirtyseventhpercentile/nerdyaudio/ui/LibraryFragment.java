@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.ninthavenue.FileChooser;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
@@ -194,7 +195,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         }else*/ if (id==R.id.tab_library_dir){
             new FileChooser(getActivity(),fm.getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
                 @Override public void fileSelected(final File file) {
-                    Log.d(LOG_TAG,"File chosen:"+file.getAbsolutePath());
+                    Log2.log(1,this,"File chosen:"+file.getAbsolutePath());
                     fm.setDirectory(file);
                     scanUI();
                     fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {

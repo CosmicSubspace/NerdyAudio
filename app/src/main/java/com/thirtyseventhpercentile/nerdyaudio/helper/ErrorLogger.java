@@ -14,9 +14,15 @@ public class ErrorLogger {
     public static final int e=-1;
     public static void log(Exception e){
 
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        Log.e("CS_AFN","Error Handled:\n"+sw.toString());
+
+        Log.e("CS_AFN","Error Handled:\n"+logToString(e));
 
     }
+    public static String logToString(Throwable e){
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return e.toString();
+    }
+
+
 }

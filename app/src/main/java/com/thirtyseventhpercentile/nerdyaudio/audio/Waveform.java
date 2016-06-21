@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
 
@@ -66,7 +67,7 @@ public class Waveform implements Serializable {
     }
 
     public static Waveform getWaveform(String filename, double barEvery, Context c) throws IOException, ClassNotFoundException {
-        Log.i(LOG_TAG, "Loading from file.");
+        Log2.log(2,Waveform.class, "Loading from file.");
 
         FileInputStream fis = c.openFileInput(getUniqueID(filename, barEvery));
         ObjectInputStream is = new ObjectInputStream(fis);
@@ -86,7 +87,7 @@ public class Waveform implements Serializable {
         //TODO Hash this or something
         String res;
         res = filename.replace("/", "") + barEvery;
-        Log.d(LOG_TAG, "Generating Unique ID: " + res);
+        Log2.log(1,Waveform.class, "Generating Unique ID: " + res);
         return res;
     }
 
@@ -112,7 +113,7 @@ public class Waveform implements Serializable {
     }
 
     private void copy(Waveform w) {
-        Log.d(LOG_TAG, "Copying to instance...");
+        Log2.log(1,this, "Copying to instance...");
         this.filename = w.filename;
         this.data = w.data;
         this.peak = w.peak;
@@ -177,12 +178,12 @@ public class Waveform implements Serializable {
 
         // this.saveToFile(c);
 
-        Log.d(LOG_TAG, getDebugData());
+        Log2.log(1,this, getDebugData());
     }
 
 
     public void saveToFile(Context c) {
-        Log.i(LOG_TAG, "Saving...");
+        Log2.log(2,this, "Saving...");
         try {
             String name = getUniqueID(filename, barEvery);
             FileOutputStream fos = c.openFileOutput(name, Context.MODE_PRIVATE);
@@ -190,7 +191,7 @@ public class Waveform implements Serializable {
             os.writeObject(this);
             os.close();
             fos.close();
-            Log.i(LOG_TAG, "WaveformVisuals saved to " + name);
+            Log2.log(2,this, "WaveformVisuals saved to " + name);
         } catch (Exception e) {
             ErrorLogger.log(e);
         }
@@ -198,7 +199,7 @@ public class Waveform implements Serializable {
 
 
     public void loadFromFile(String filename, double barEvery, Context c) {
-        Log.i(LOG_TAG, "Loading...");
+        Log2.log(2,this, "Loading...");
         try {
             copy(Waveform.getWaveform(filename, barEvery, c));
         }catch(Exception e){

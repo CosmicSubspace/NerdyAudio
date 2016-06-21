@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 public class VisualsRenderThread extends Thread{
     public static final String LOG_TAG="CS_AFN";
@@ -73,7 +74,7 @@ public class VisualsRenderThread extends Thread{
             c = sf.lockCanvas();
 
             if (c==null) {
-                Log.i(LOG_TAG,"VisualsRenderThread: lockCanvas() returned null. breaking loop.");
+                Log2.log(2,this,"VisualsRenderThread: lockCanvas() returned null. breaking loop.");
                 break;
             }
 
@@ -82,10 +83,10 @@ public class VisualsRenderThread extends Thread{
             if (renderer!=null) renderer.draw(c,w,h);
 
             /*
-            //Log.d(LOG_TAG,"DB: "+lastDrawn+" | "+minDelay+" | "+System.currentTimeMillis());
+            //Log2.log(1,this,"DB: "+lastDrawn+" | "+minDelay+" | "+System.currentTimeMillis());
             while (lastDrawn+minDelay>System.currentTimeMillis()){
                 try {
-                    //Log.d(LOG_TAG,"Sleeping(FPS too high)");
+                    //Log2.log(1,this,"Sleeping(FPS too high)");
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

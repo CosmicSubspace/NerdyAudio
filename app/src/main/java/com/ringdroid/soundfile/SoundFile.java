@@ -88,7 +88,9 @@ public class SoundFile {
     }
 
     public static String[] getSupportedExtensions() {
-        return new String[]{"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg", "mp4", "3gp"}; //TODO more formats.
+        //TODO ogg is temporarily taken out of the list, as it causes crashes in SGS3.
+        //"ogg"
+        return new String[]{"mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "mp4", "3gp"}; //TODO more formats.
     }
 
     public static boolean isFilenameSupported(String filename) {

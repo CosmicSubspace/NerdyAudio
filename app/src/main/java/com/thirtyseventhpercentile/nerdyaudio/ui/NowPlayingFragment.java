@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
@@ -45,8 +46,8 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
 
         vv = (VisualizationView) v.findViewById(R.id.visualization);
-        if (vv == null) Log.e(LOG_TAG, "VisualizationView is null!");
-        else if (vv.getRenderThread() == null) Log.e(LOG_TAG, "Renderer is null!");
+        if (vv == null) Log2.log(4,this, "VisualizationView is null!");
+        else if (vv.getRenderThread() == null) Log2.log(4,this, "Renderer is null!");
         else {
             //vv.getRenderThread().setMaxFPS(60);
         }
@@ -79,7 +80,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        Log.i(LOG_TAG, "Adapter > Nothing selected.");
+        Log2.log(2,this, "Adapter > Nothing selected.");
     }
 
     @Override
@@ -112,7 +113,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 BallsVisuals vis = new BallsVisuals(getResources().getDisplayMetrics().density);
                 vv.getRenderThread().setRenderer(vis);
             } else {
-                Log.w(LOG_TAG, "WHAT? (NowPlayingFragment)");
+                Log2.log(3,this, "WHAT? (NowPlayingFragment)");
             }
         }
     }

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
@@ -61,8 +62,8 @@ this.c=ctxt;
             timePerSample=1.0/(double)sampleRate;
             channels=sf.getChannels();
 
-            Log.d(LOG_TAG, "Sample rate:" + sampleRate);
-            Log.d(LOG_TAG, "Channels:" + channels);
+            Log2.log(1,this, "Sample rate:" + sampleRate);
+            Log2.log(1,this, "Channels:" + channels);
 
 
             sf.ReadFileWithCallback(file, this);
@@ -91,14 +92,14 @@ this.c=ctxt;
     @Override
     public void feed(short[] buff) {
         //TODO performance improvement needed here. This loop runs millions of times when analyzing a music file.
-        //Log.v(LOG_TAG,"WaveformVisuals: Fed shorts. length="+buff.length);
+        //Log2.log(0,this,"WaveformVisuals: Fed shorts. length="+buff.length);
         for (int i=0; i<buff.length;i++){
             if (i%4==0) {//TODO HASTY SPEED IMPROVEMENT
                 currentTimeInSeconds = currentSample * timePerSample / (double) channels; //TODO This is a hasty fix for stereo support.
                 currentBar = (int) (currentTimeInSeconds / divisionEvery);
                 if (sumData.size() <= currentBar) {
                     sumData.add(0L);
-                    Log.d(LOG_TAG, "Adding bar. (number " + sumData.size() + ", " + currentTimeInSeconds + " seconds)");
+                    Log2.log(1,this, "Adding bar. (number " + sumData.size() + ", " + currentTimeInSeconds + " seconds)");
                 }
                 sumData.set(currentBar, sumData.get(currentBar) + Math.abs(buff[i]));
                 if (maxAmp < buff[i]) maxAmp = buff[i];
@@ -115,7 +116,7 @@ this.c=ctxt;
             sf = SoundFile.create(filename, new SoundFile.ProgressListener() {
                 @Override
                 public boolean reportProgress(double fractionComplete) {
-                    Log.v(LOG_TAG,"WaveformVisuals>Decoding..."+fractionComplete);
+                    Log2.log(0,this,"WaveformVisuals>Decoding..."+fractionComplete);
                     return true;
                 }
             });
@@ -139,10 +140,10 @@ this.c=ctxt;
         for (int i=0;i<size;i++){
             if (i>samplesPerDivision*(currentDivision+1)) {
                 currentDivision++;
-                Log.v(LOG_TAG, "On division" + currentDivision);
+                Log2.log(0,this, "On division" + currentDivision);
             }
             if (currentDivision>size){
-                Log.w(LOG_TAG, "Rounding error?");
+                Log2.log(3,this, "Rounding error?");
                 currentDivision=divisions-1;
             }
             sums[currentDivision]+=sb.get(i)*sb.get(i);

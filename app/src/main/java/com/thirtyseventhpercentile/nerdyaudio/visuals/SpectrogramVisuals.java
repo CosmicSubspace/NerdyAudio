@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
@@ -36,12 +37,12 @@ public class SpectrogramVisuals extends FftRenderer{
     private void syncChanges(){
         if (newSettings!=null){
             setFFTSize(newSettings.getFftSize());
-            Log.i(LOG_TAG, "Spectrum: size changing" + fftSize);
+            Log2.log(2,this, "Spectrum: size changing" + fftSize);
 
             try {
                 setFrequencyRange(newSettings.getStartFreq(), newSettings.getEndFreq());
             }catch(InvalidParameterException e){
-                Log.w(LOG_TAG,"SpectrogramVisuals>syncChanges() wut?");
+                Log2.log(3,this,"SpectrogramVisuals>syncChanges() wut?");
             }
             setLogScale(newSettings.getLogScale());
             setScrollPerRedraw(newSettings.getScrollSpeed());
@@ -110,7 +111,7 @@ public class SpectrogramVisuals extends FftRenderer{
 
 
             } catch (BufferNotPresentException e) {
-                Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
+                Log2.log(1,this, "Buffer not present! Requested around " + currentFrame);
             }
 
 
@@ -154,7 +155,7 @@ public class SpectrogramVisuals extends FftRenderer{
     @Override
     public void updated(BaseSetting setting) {
         if (setting instanceof SpectrogramVisualSettings){
-            Log.i(LOG_TAG,"SpectrumVisuals settings match.");
+            Log2.log(2,this,"SpectrumVisuals settings match.");
             newSettings=(SpectrogramVisualSettings)setting;
         }
     }
@@ -237,7 +238,7 @@ public class SpectrogramVisuals extends BaseRenderer{
 
 
             } catch (BufferNotPresentException e) {
-                Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
+                Log2.log(1,this, "Buffer not present! Requested around " + currentFrame);
             }
 
         }

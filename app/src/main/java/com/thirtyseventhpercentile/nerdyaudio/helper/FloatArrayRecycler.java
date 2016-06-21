@@ -29,7 +29,7 @@ public class FloatArrayRecycler { //I want to use generic types here but i dunno
         if (obj.length!=arraySize) setArraySize(obj.length);
 
         if (arrays.size()>maxSize) {
-            Log.i(LOG_TAG, "FloatArrayRecycler full!");
+            Log2.log(2,this, "FloatArrayRecycler full!");
             return;
         }
         arrays.add(obj);

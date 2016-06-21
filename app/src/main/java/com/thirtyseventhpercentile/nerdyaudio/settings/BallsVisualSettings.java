@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 
 public class BallsVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
@@ -48,7 +49,7 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
                     return;
                 }
             }
-            Log.w(LOG_TAG, "ballsVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
+            Log2.log(3,this, "ballsVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
         }
 
     }
@@ -183,11 +184,11 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
             setIter(progress);
         }else if (seekBar.getId() == R.id.vis_balls_setting_sensitivity_seekbar) {
             setSensitivity(progress/ 10.f);
-            Log.i(LOG_TAG,"!!!");
+            Log2.log(2,this,"!!!");
         }else if (seekBar.getId() == R.id.vis_balls_setting_bounciness_seekbar) {
             setBounciness(progress / 10.f);
         } else {
-            Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
+            Log2.log(3,this, "I think I'm not the only seekbar around here....");
         }
         if (fromUser) {
             save();

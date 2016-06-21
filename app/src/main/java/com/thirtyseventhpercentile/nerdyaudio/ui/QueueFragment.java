@@ -184,6 +184,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Que
         }else{
             //TODO this sometimes causes [java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling]
             for (int i = 0; i < 5; i++) {
+                //TODO and this is a _very_ ugly fix.
                 try {
                     mAdapter.notifyItemChanged(index);
                     break;

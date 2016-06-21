@@ -88,8 +88,8 @@ public class VisualizationBuffer implements FloatFeedListener {
     public synchronized float[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
         if (!active) Log2.log(4,this,"Frames requested while not active!");
 
-        Log.v(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
-        Log.v(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
+        Log2.log(0,this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
+        Log2.log(0,this, "Requested: " + startFrame + " | End Num:" + endFrame);
 
         checkRange(startFrame);
         checkRange(endFrame);
@@ -108,13 +108,13 @@ public class VisualizationBuffer implements FloatFeedListener {
                     else return null;
                     break;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.v(LOG_TAG, "AIOOB");
+                    Log2.log(0,this, "AIOOB");
                     currentBuffer++;
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
                 } catch (IndexOutOfBoundsException e){ //TODO this exception is caught at random points. Fix that.
-                    Log.e(LOG_TAG,"Index Out Of Bounds Exception in VisualizationBuffer.");
-                    Log.e(LOG_TAG, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
-                    Log.e(LOG_TAG, "Requested: " + startFrame + " | End Num:" + endFrame);
+                    Log2.log(4,this,"Index Out Of Bounds Exception in VisualizationBuffer.");
+                    Log2.log(4,this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
+                    Log2.log(4,this, "Requested: " + startFrame + " | End Num:" + endFrame);
                     ErrorLogger.log(e);
                     break;
                 }
@@ -133,7 +133,7 @@ public class VisualizationBuffer implements FloatFeedListener {
         for (int i = 0; i < index; i++) {
             res += bufferR.get(i).length; //Should add one, but java's zero-index.
         }
-        //Log.d(LOG_TAG,""+index+" Buffer start frame num: "+res);
+        //Log2.log(1,this,""+index+" Buffer start frame num: "+res);
         return res;
     }
 
@@ -154,16 +154,16 @@ public class VisualizationBuffer implements FloatFeedListener {
     }
 */
     public synchronized void deleteBefore(long frameNumber) {
-        Log.v(LOG_TAG, "Deletion request for frames less than " + frameNumber);
+        Log2.log(0,this, "Deletion request for frames less than " + frameNumber);
 
         if (bufferR.size()<1) return;
 
         while ((getNthBufferInitialFrameNumber(0) + bufferR.get(0).length ) <= frameNumber) {
-            Log.v(LOG_TAG, "Deleting buffer");
-            Log.v(LOG_TAG, "First Buffer Starting Frame: " + firstBufferStartingFrame);
+            Log2.log(0,this, "Deleting buffer");
+            Log2.log(0,this, "First Buffer Starting Frame: " + firstBufferStartingFrame);
             firstBufferStartingFrame += bufferR.get(0).length;
             //lastFrameNumber-=bufferR.get(0).length;
-            //Log.i(LOG_TAG, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
+            //Log2.log(2,this, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
             far.recycle(bufferR.remove(0));
             far.recycle(bufferL.remove(0));
 

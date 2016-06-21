@@ -160,7 +160,7 @@ public class MusicInformation implements MusicListDisplayable{
             album = "(No Album Data)";
         }
 
-        if (mmr.getEmbeddedPicture() == null) hasArt = false; //TODO : this may cause lag.
+        if (mmr.getEmbeddedPicture() == null) hasArt = false; //TODO : this causes lag.
         else hasArt = true;
 
         updateReadyness(c);

@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     public static SidebarSettings getInstance() {
         if (inst == null) {
-            Log.e(LOG_TAG,"getInstance() called before instantiate() was called. Expect a NullPopinterException soon.");
+            Log2.log(4,SidebarSettings.class,"getInstance() called before instantiate() was called. Expect a NullPopinterException soon.");
         }
         return inst;
     }
@@ -56,14 +57,14 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
 
-        //Log.d(LOG_TAG, "addSettingsUpdateListener() Entered");
+        //Log2.log(1,this, "addSettingsUpdateListener() Entered");
         this.suls.add(sul);
 
     }
 
     public void removeSettingsUpdateListener(SettingsUpdateListener sul) {
 
-        //Log.d(LOG_TAG, "removeSettingsUpdateListener() Entered");
+        //Log2.log(1,this, "removeSettingsUpdateListener() Entered");
         this.suls.remove(sul);
 
     }
@@ -98,12 +99,12 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         //Therefore, we copy the arraylist before iterating though it.
         ArrayList<SettingsUpdateListener> tSuls = new ArrayList<>(this.suls);
 
-        Log.i(LOG_TAG, "Notifying UI...");
-        //Log.d(LOG_TAG, "NotifyUI() Entered");
+        Log2.log(2,this, "Notifying UI...");
+        //Log2.log(1,this, "NotifyUI() Entered");
         for (SettingsUpdateListener sul : tSuls) {
             sul.updated(setting);
         }
-        //Log.d(LOG_TAG, "NotifyUI() Exited");
+        //Log2.log(1,this, "NotifyUI() Exited");
 
     }
 

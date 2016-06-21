@@ -85,7 +85,7 @@ public class AnimatableWaveform extends Animatable {
 
                 currentHeight=wf.getRatio(i)*maxHeight+currentBarHeight;
 
-                //Log.v(LOG_TAG, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
+                //Log2.log(0,this, "Drawing"+(i*spacing)+" to "+(i*spacing+width));
                 c.drawRect(current.getValue("X")+i * spacing, current.getValue("Y")- (balance)*currentHeight,
                         current.getValue("X")+i * spacing + width, current.getValue("Y")+(1-balance)*currentHeight, pt);
             }

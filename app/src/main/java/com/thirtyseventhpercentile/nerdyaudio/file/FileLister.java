@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.ringdroid.soundfile.SoundFile;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
@@ -50,7 +51,7 @@ public class FileLister extends Thread{
                     if (checkFileValidity(f.getAbsolutePath()))
                         musics.add(new MusicInformation(f.getCanonicalPath(), c));
                 }catch(IOException e){
-                    Log.e(LOG_TAG, "Error while parsing canonical path.");
+                    Log2.log(4,this, "Error while parsing canonical path.");
                     ErrorLogger.log(e);
 
                 }

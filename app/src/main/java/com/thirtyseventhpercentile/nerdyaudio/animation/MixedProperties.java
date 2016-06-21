@@ -6,6 +6,8 @@ package com.thirtyseventhpercentile.nerdyaudio.animation;
 
 import android.util.Log;
 
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,7 +50,7 @@ public class MixedProperties {
     }
 
     public PropertySet getBasis(){
-        if (basis==null) Log.w(LOG_TAG,"getBasis() called to a non-basic instance!");
+        if (basis==null) Log2.log(3,this,"getBasis() called to a non-basic instance!");
         return basis;
     }
 
@@ -87,7 +89,7 @@ public class MixedProperties {
         }
         for (Object k:res.getIter()){
             String key=(String)k;
-            if (influences.get(key)==0) Log.w(LOG_TAG,"Influence of "+key+" is ZERO. Expect Animation errors.");
+            if (influences.get(key)==0) Log2.log(3,this,"Influence of "+key+" is ZERO. Expect Animation errors.");
             res.setValue(key, res.getValue(key)/influences.get(key));
 
         }

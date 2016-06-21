@@ -48,7 +48,7 @@ public class PropertySet implements Mixable {
             for (Object k : res.getIter()) {
                 String key = (String) k;
                 if (influences.get(key) < 0.0001f)
-                    Log.w(LOG_TAG, "Influence sum of " + key + " is near zero. Expect Animation errors.");
+                    Log2.log(3,this, "Influence sum of " + key + " is near zero. Expect Animation errors.");
                 res.setValue(key, res.getValue(key) / influences.get(key) + additive.getValue(key,0));
             }
             return res;

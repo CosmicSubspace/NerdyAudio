@@ -21,19 +21,34 @@ public class PrimitivePaths {
 
     public static PointsCompound play(float radius) {
         PointsCompound.Builder builder = new PointsCompound.Builder();
-        builder.addPoint(0, radius);
-        builder.addPoint(radius * sqrt3 / 2.0f, -radius / 2.0f);
-        builder.addPoint(0, -radius / 2.0f);
-        builder.addPoint(-radius * sqrt3 / 2.0f, -radius / 2.0f);
+        builder.addPoint(0, radius); //Pointy
+        builder.addPoint(radius * sqrt3 / 2.0f, -radius / 2.0f); //Right bottom
+        builder.addPoint(radius * sqrt3 / 4.0f, -radius / 2.0f); //Right-center bottom
+        builder.addPoint(0, -radius / 2.0f); //Bottom center
+        builder.addPoint(radius * sqrt3 / 4.0f, -radius / 2.0f); //Left-center bottom
+        builder.addPoint(-radius * sqrt3 / 2.0f, -radius / 2.0f); //Left bottom
         return builder.build();
     }
 
     public static PointsCompound playDiamond(float radius) {
         PointsCompound.Builder builder = new PointsCompound.Builder();
-        builder.addPoint(0, radius);
-        builder.addPoint(radius, 0);
-        builder.addPoint(0, -radius);
-        builder.addPoint(-radius, 0);
+        builder.addPoint(0, radius); //Pointy
+        builder.addPoint(radius, 0); //Right
+        builder.addPoint(radius/2.0f, -radius/2.0f); //Right-Bottom
+        builder.addPoint(0, -radius); //Bottom
+        builder.addPoint(-radius/2.0f, -radius/2.0f); //Left-bottom
+        builder.addPoint(-radius, 0); //Left
+        return builder.build();
+    }
+
+    public static PointsCompound playExpanded(float radius, float move, float textAreaX, float textAreaY) {
+        PointsCompound.Builder builder = new PointsCompound.Builder();
+        builder.addPoint(0, 0); //Pointy
+        builder.addPoint(textAreaX/2.0f, -move); //Right
+        builder.addPoint(textAreaX/2.0f, -move-textAreaY); //Right-Bottom
+        builder.addPoint(0, -move-textAreaY); //Bottom
+        builder.addPoint(-textAreaX/2.0f, -move-textAreaY); //Left-bottom
+        builder.addPoint(-textAreaX/2.0f, -move); //Left
         return builder.build();
     }
 

@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -36,7 +38,9 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.FileManager;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
+import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+import com.thirtyseventhpercentile.nerdyaudio.interaction.VolumeControls;
 import com.thirtyseventhpercentile.nerdyaudio.service.BackgroundMusicService;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 
@@ -46,6 +50,10 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 
 //TODO : Numerical Setting Input
@@ -57,11 +65,9 @@ import java.io.File;
 //TODO : Waveform color always accent?
 //TODO : Ball Visuals more settings
 //TODO : Playlist/state save on exit
-//TODO : Background Play
 //TODO : Headphone Controls
 //TODO : Playback device selection
-//TODO : Volume button control
-//TODO : Exception Hook
+//TODO : Log --> Log2
 
 /**
  * Other Libraries:
@@ -93,13 +99,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     SharedPreferences sf;
 
+    VolumeControls volCtrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final Thread.UncaughtExceptionHandler orig=Thread.getDefaultUncaughtExceptionHandler();
+        final Context c=getApplicationContext();
+        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
+        {
+            @Override
+            public void uncaughtException (Thread thread, Throwable e)
+            {
+                Log2.log(2,this,"UncaughtException:",ErrorLogger.logToString(e));
+                //Toast.makeText(c, ErrorLogger.logToString(e), Toast.LENGTH_SHORT).show();
+
+                FileWriter f;
+                try {
+                    f = new FileWriter(
+                            new File(Environment.getExternalStorageDirectory()+"/AFN_exceptions.txt")
+                            ,true);
+                    f.write("\n\n\n"+ DateFormat.getDateTimeInstance().format(new Date())+"\n");
+                    f.write(ErrorLogger.logToString(e));
+                    f.flush();
+                    f.close();
+                }catch(IOException e1){
+                    ErrorLogger.log(e1);
+                } //Double exception?
+                
+                orig.uncaughtException(thread,e);
+            }
+        });
+
 
         requestPermission();
 
-        Log.i(LOG_TAG, "MainActivity Created!");
+        Log2.log(2,this, "MainActivity Created!");
 
 
         super.onCreate(savedInstanceState);
@@ -111,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String[] files=fileList();
         for (String i:files){
-            Log.d(LOG_TAG,"File: "+i);
+            Log2.log(1,this,"File: "+i);
         }
 
 
@@ -121,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fm=FileManager.getInstance();
         wf=Waveform.getInstance();
         sbs=SidebarSettings.instantiate(getApplicationContext());
+
+        volCtrl=new VolumeControls(getApplicationContext(),qm);
 
         //ap.setBufferFeedListener(vb);
 
@@ -297,15 +334,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log2.log(2,this,mn.getValue(0).value);
             }
         }else if(id==R.id.db_6){
-            Log.i(LOG_TAG, "Starting Service....");
+            Log2.log(2,this, "Starting Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.START_SERVICE);
             startService(itt);
         }else if (id==R.id.db_7){
-            Log.i(LOG_TAG, "Stopping Service....");
+            Log2.log(2,this, "Stopping Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.STOP_SERVICE);
             startService(itt);
+            //int a=0/0;
         }
         return true;
     }
@@ -324,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler.postDelayed(mUpdateClockTask, 100);
         if (wfv!=null) wfv.refreshPlaying();
 
-        Log.i(LOG_TAG, "Stopping Service....");
+        Log2.log(2,this, "Stopping Service....");
         Intent itt = new Intent(this, BackgroundMusicService.class);
         itt.setAction(BackgroundMusicService.STOP_SERVICE);
         startService(itt);
@@ -336,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler.removeCallbacks(mUpdateClockTask);
 
         if (ap.isPlaying()) {
-            Log.i(LOG_TAG, "Starting Service....");
+            Log2.log(2,this, "Starting Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.START_SERVICE);
             startService(itt);
@@ -346,11 +384,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onStop(){
+        Log2.dumpLogsAsync();
+
         super.onStop();
     }
 
     @Override
     public void onDestroy(){
+
         super.onDestroy();
     }
 
@@ -382,14 +423,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dl.openDrawer(Gravity.RIGHT);
         }
     }
-
-    public void updateUI(){
-        //title.setText(qm.getCurrentMusic().getTitle());
-        //artist.setText(qm.getCurrentMusic().getArtist());
-        //art.setImageBitmap(qm.getCurrentMusic().getArt());
-        //TODO implement this in the custom view
-    }
-
     public void updateStatusString(){
         //statusText.setText(qm.getStatusString());
     }
@@ -426,22 +459,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-                if (action == KeyEvent.ACTION_DOWN) {
-                    Log2.log(2,this,"Vol Up.");
-                }
-                return false;
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (action == KeyEvent.ACTION_DOWN) {
-                    Log2.log(2,this,"Vol Down.");
-                }
-                return false;
-            default:
-                return super.dispatchKeyEvent(event);
-        }
+        if (!volCtrl.event(event)) {
+            return super.dispatchKeyEvent(event);
+        } else return true;
     }
 /*
     private Handler mHandler = new Handler();
@@ -467,11 +487,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     public void updateUI() {
-        Log.v(LOG_TAG,"Updating UI...");
+        Log2.log(0,this,"Updating UI...");
         if (ap!=null) {
             long currentFrame = ap.getCurrentFrame();
-            Log.v(LOG_TAG, "Reported: " + currentFrame);
-            Log.v(LOG_TAG, "Setting position to: " + wf.frameNumberToRatio(currentFrame));
+            Log2.log(0,this, "Reported: " + currentFrame);
+            Log2.log(0,this, "Setting position to: " + wf.frameNumberToRatio(currentFrame));
             wfv.setCurrentPosition(wf.frameNumberToRatio(currentFrame));
             wfv.invalidate();
         }
@@ -494,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             if (at == null) {
-                Log.d(LOG_TAG, "audio track is not initialized ");
+                Log2.log(1,this, "audio track is not initialized ");
                 return;
             }
 
@@ -511,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 in = new FileInputStream(file);
 
             } catch (FileNotFoundException e) {
-                Log.e(LOG_TAG, "FNFE");
+                Log2.log(4,this, "FNFE");
             }
 
             int bytesread = 0, ret = 0;
@@ -538,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e) {
                 StringWriter errors = new StringWriter();
                 e.printStackTrace(new PrintWriter(errors));
-                Log.e(LOG_TAG, "IOException\n" + e.toString());
+                Log2.log(4,this, "IOException\n" + e.toString());
             }
         }
     }*/

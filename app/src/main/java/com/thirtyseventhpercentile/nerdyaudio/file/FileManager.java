@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
@@ -129,7 +130,6 @@ public class FileManager implements FileListReturnListener{
     }
 
     public void setSorting(int mode){
-        //TODO Implementation
         switch (mode){
             case SORTING_ALBUM:
                 Collections.sort(musics,new MusicInformation.AlbumComparator());
@@ -171,6 +171,6 @@ public class FileManager implements FileListReturnListener{
         scanning=false;
         this.musics=musics;
         if (cl!=null) cl.onComplete("");
-        Log.d(LOG_TAG,"Files List Returned!");
+        Log2.log(1,this,"Files List Returned!");
     }
 }

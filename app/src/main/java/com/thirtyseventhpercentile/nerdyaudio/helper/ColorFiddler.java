@@ -10,7 +10,7 @@ public class ColorFiddler {
         return Color.argb(alpha,Color.red(color),Color.green(color),Color.blue(color));
     }
     public static int rampColor(int colorA, int colorB, float ramp) {
-        //Log.d(LOG_TAG,"Ramping color..."+colorA+" | "+colorB+" | "+ramp);
+        //Log2.log(1,this,"Ramping color..."+colorA+" | "+colorB+" | "+ramp);
         return Color.argb(Math.round(Color.alpha(colorA) * ramp + Color.alpha(colorB) * (1.0f - ramp)),
                 Math.round(Color.red(colorA) * ramp + Color.red(colorB) * (1.0f - ramp)),
                 Math.round(Color.green(colorA) * ramp + Color.green(colorB) * (1.0f - ramp)),

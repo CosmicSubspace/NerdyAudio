@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 
 public class CircleVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
@@ -49,7 +50,7 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
                     return;
                 }
             }
-            Log.w(LOG_TAG, "circleVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
+            Log2.log(3,this, "circleVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
         }
 
     }
@@ -263,7 +264,7 @@ public class CircleVisualSettings extends BaseSetting implements AdapterView.OnI
         } else if (seekBar.getId() == R.id.vis_circle_setting_bass_sensitivity_seekbar) {
             setBassSensitivity(progress / 1000.f); //0~5
         }else {
-            Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
+            Log2.log(3,this, "I think I'm not the only seekbar around here....");
         }
         if (fromUser) {
             save();

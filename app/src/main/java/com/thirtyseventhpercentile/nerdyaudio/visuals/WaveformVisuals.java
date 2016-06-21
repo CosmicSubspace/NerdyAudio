@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
@@ -39,7 +40,7 @@ public class WaveformVisuals extends BaseRenderer{
 
     private void syncChanges(){
         if (newSettings!=null){
-            Log.d(LOG_TAG,"WaveformVisuals state changed. syncing.");
+            Log2.log(1,this,"WaveformVisuals state changed. syncing.");
             range=newSettings.getRange();
 
             drawEvery=range/1024; //TODO more elegant way of optimizing
@@ -104,7 +105,7 @@ public class WaveformVisuals extends BaseRenderer{
                 //c.drawPoints(points,pt);
 
             } catch (BufferNotPresentException e) {
-                Log.d(LOG_TAG, "Buffer not present! Requested around " + currentFrame);
+                Log2.log(1,this, "Buffer not present! Requested around " + currentFrame);
             }
 
     }

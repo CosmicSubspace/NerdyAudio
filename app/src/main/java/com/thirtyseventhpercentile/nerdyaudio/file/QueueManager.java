@@ -11,6 +11,7 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueElementUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
@@ -170,7 +171,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     private void newPlay() { //plays the CurrentlyPlaying.
         if (queue.size() == 0) return;
-        Log.d(LOG_TAG, "Playing file.");
+        Log2.log(1,this, "Playing file.");
         if (currentlyPlaying == null) { //first newPlay
             setCurrentMusicIndex(0);
         }
@@ -218,7 +219,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void playNextFile() {
-        Log.d(LOG_TAG, "Playing next file.");
+        Log2.log(1,this, "Playing next file.");
         nextFile();
         notifyNext();
         newPlay();
@@ -226,7 +227,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void playPreviousFile() {
-        Log.d(LOG_TAG, "Playing Previous file.");
+        Log2.log(1,this, "Playing Previous file.");
         previousFile();
         notifyPrevious();
         newPlay();
@@ -284,7 +285,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     @Override
     public void onComplete(String s) {
-        Log.d(LOG_TAG, "Playback Finished: " + s);
+        Log2.log(1,this, "Playback Finished: " + s);
         playNextFile();
     }
 
@@ -293,7 +294,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             //Songs that are in front of the currently playing gets priority.
             for (int i = currentlyPlayingIndex(); i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
-                    Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
+                    Log2.log(2,this, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
@@ -304,7 +305,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             //But the ones in the back should be calculated too.
             for (int i = 0; i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
-                    Log.i(LOG_TAG, "Starting Calculation of: " + queue.get(i).getFilepath());
+                    Log2.log(2,this, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
@@ -373,8 +374,8 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         currentMusicIndex=shiftIndex(currentMusicIndex,from,to);
         currentlyCachingIndex=shiftIndex(currentlyCachingIndex,from,to);
 
-        Log.i(LOG_TAG,"Shift from "+from+" to "+to);
-        Log.i(LOG_TAG,"CurrentMusicIndex Shift from "+origIdx+" to "+currentMusicIndex);*/
+        Log2.log(2,this,"Shift from "+from+" to "+to);
+        Log2.log(2,this,"CurrentMusicIndex Shift from "+origIdx+" to "+currentMusicIndex);*/
         notifyMusicInformationUpdateListeners(-1);
     }
 

@@ -13,6 +13,7 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
@@ -40,7 +41,7 @@ public class SpectrumVisuals extends FftRenderer{
     private void syncChanges(){
         if (newSettings!=null){
             setFFTSize(newSettings.getFftSize());
-            Log.i(LOG_TAG, "Spectrum: size changing" + fftSize);
+            Log2.log(2,this, "Spectrum: size changing" + fftSize);
 
             bars=newSettings.getBars();
             spacing=newSettings.getSpacing();
@@ -66,17 +67,17 @@ public class SpectrumVisuals extends FftRenderer{
             long currentFrame = getCurrentFrame();
             try {
                 updateFFT(currentFrame);
-                //Log.d(LOG_TAG, "FFT size: " + canvasX.length);
+                //Log2.log(1,this, "FFT size: " + canvasX.length);
 /*
                     for (int i=0;i<canvasX.length;i++){
                         debugStr=debugStr+canvasX[i]+",";
                     }
 
-                    Log.d(LOG_TAG,"Calculated Real FFT: "+debugStr);*/
+                    Log2.log(1,this,"Calculated Real FFT: "+debugStr);*/
 
                 pt.setColor(Color.BLACK);
                 float magnitude;
-                //Log.d(LOG_TAG,"BetweenBars: "+betweenBars);
+                //Log2.log(1,this,"BetweenBars: "+betweenBars);
                 float betweenBars=w/(float)bars;
                 for (int i = 0; i < bars; i++) {
                     c.drawRect(i * betweenBars, h - barHeightMultiplier*getMagnitudeRatio(i / (float)bars), (i + 1 - spacing) * betweenBars, h, pt);
@@ -86,7 +87,7 @@ public class SpectrumVisuals extends FftRenderer{
 
 
             } catch (BufferNotPresentException e) {
-                Log.d(LOG_TAG, "Buffer not present! Requested around " + getCurrentFrame());
+                Log2.log(1,this, "Buffer not present! Requested around " + getCurrentFrame());
             }
 
 
@@ -98,9 +99,9 @@ public class SpectrumVisuals extends FftRenderer{
 
     @Override
     public void updated(BaseSetting setting) {
-        Log.i(LOG_TAG,"SpectrumVisuals updated.");
+        Log2.log(2,this,"SpectrumVisuals updated.");
         if (setting instanceof SpectrumVisualSettings){
-            Log.i(LOG_TAG,"SpectrumVisuals settings match.");
+            Log2.log(2,this,"SpectrumVisuals settings match.");
             newSettings=(SpectrumVisualSettings)setting;
         }
     }

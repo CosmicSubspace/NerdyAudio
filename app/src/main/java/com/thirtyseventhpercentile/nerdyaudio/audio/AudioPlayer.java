@@ -142,18 +142,18 @@ public class AudioPlayer {
     }
 
     public synchronized void playAudio() {
-        Log.d(LOG_TAG, "PlayAudio called.");
-        Log.d(LOG_TAG, "mAudioTrack is null:"+(mAudioTrack==null));
+        Log2.log(1,this, "PlayAudio called.");
+        Log2.log(1,this, "mAudioTrack is null:"+(mAudioTrack==null));
         if (isPlaying()) {
-            Log.d(LOG_TAG,"isPlaying");
+            Log2.log(1,this,"isPlaying");
             return;
         }
         if (isPaused()){
-            Log.d(LOG_TAG,"isPaused");
+            Log2.log(1,this,"isPaused");
             mAudioTrack.play();
             return;
         }
-        Log.d(LOG_TAG,"Normal Startup");
+        Log2.log(1,this,"Normal Startup");
 
         getInfoFromFile();
         initializeAudio();
@@ -172,19 +172,19 @@ public class AudioPlayer {
 
 
     public synchronized void pause() {
-        Log.i(LOG_TAG, "Ckecking if able to pause...");
+        Log2.log(2,this, "Ckecking if able to pause...");
         if (isPlaying()) {
             mAudioTrack.pause();
-            Log.i(LOG_TAG, "Pausing...");
+            Log2.log(2,this, "Pausing...");
             // mAudioTrack.write() should block if it cannot write.
         }
     }
 
     public synchronized void stop() {
-        Log.i(LOG_TAG, "Ckecking if able to stop...");
+        Log2.log(2,this, "Ckecking if able to stop...");
         if (mAudioTrack!=null){
         if (isPlaying() || isPaused()) {
-            Log.i(LOG_TAG,"Stopping...");
+            Log2.log(2,this,"Stopping...");
             mKeepPlaying = false;
             mAudioTrack.pause();  // pause() stops the playback immediately.
             mAudioTrack.stop();   // Unblock mAudioTrack.write() to avoid deadlocks.

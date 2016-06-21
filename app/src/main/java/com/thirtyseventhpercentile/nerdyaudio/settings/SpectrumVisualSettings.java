@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 
 public class SpectrumVisualSettings extends BaseSetting implements AdapterView.OnItemSelectedListener,
@@ -50,7 +51,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
                     return;
                 }
             }
-            Log.w(LOG_TAG, "SpectrumVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
+            Log2.log(3,this, "SpectrumVisualSettings>setFftSize(): fftSize NOT in fftSizes[]!!");
         }
 
     }
@@ -264,7 +265,7 @@ public class SpectrumVisualSettings extends BaseSetting implements AdapterView.O
         }else if (seekBar.getId() == R.id.vis_spectrum_setting_height_seekbar) {
             setBarHeight(progress / 200.f); //0~5
         } else {
-            Log.w(LOG_TAG, "I think I'm not the only seekbar around here....");
+            Log2.log(3,this, "I think I'm not the only seekbar around here....");
         }
         if (fromUser) {
             save();
