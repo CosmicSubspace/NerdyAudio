@@ -15,7 +15,7 @@ public class ErrorLogger {
     public static void log(Exception e){
 
 
-        Log.e("CS_AFN","Error Handled:\n"+logToString(e));
+        Log2.log(4,ErrorLogger.class,"Error Handled:\n"+logToString(e));
 
     }
     public static String logToString(Throwable e){

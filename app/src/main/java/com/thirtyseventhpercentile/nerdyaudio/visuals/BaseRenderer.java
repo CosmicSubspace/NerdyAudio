@@ -17,13 +17,13 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 public abstract class BaseRenderer implements SettingsUpdateListener{
     public static final String LOG_TAG="CS_AFN";
 
+    //TODO : Remove variables altogether : use VisualizationSettings for variable storage.
 
     VisualizationBuffer vb;
     AudioPlayer ap;
     SidebarSettings sbs;
 
     int w,h;
-
     float density;
 
     public BaseRenderer(float density) {

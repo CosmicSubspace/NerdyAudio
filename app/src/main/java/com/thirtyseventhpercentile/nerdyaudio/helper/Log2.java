@@ -58,6 +58,7 @@ public class Log2 {
 
     public static void log(int level,Class callingClass,Object... arguments){
         StringBuilder log=new StringBuilder();
+        log.append(level+" ");
         log.append("[From ");
         if (callingClass!=null) log.append(callingClass.getSimpleName());
         else log.append("NULL");

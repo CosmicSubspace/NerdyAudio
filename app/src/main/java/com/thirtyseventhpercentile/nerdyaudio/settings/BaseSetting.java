@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 
 public abstract class BaseSetting {
 
-    //TODO : Remove variables altogether : use VisualizationSettings for variable storage.
+
 
     public static final int VISUALIZATION=124;
     public static final int VU=129642;

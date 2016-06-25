@@ -25,6 +25,7 @@ public class BallsVisuals extends FftRenderer {
     int iterations=10;
     float sensitivity=100, bounciness=30;
     float stickyness=0.3f;
+    float lowpass=0.4f;
 
 
     private void syncChanges() {
@@ -34,6 +35,8 @@ public class BallsVisuals extends FftRenderer {
             setIterations(newSettings.getIter());
             setSensitivity(newSettings.getSensitivity());
             setBounciness(newSettings.getBounciness());
+            setLowpass(newSettings.getLowpass());
+            setStickyness(newSettings.getStickyness());
 
             newSettings = null;
         }
@@ -47,7 +50,12 @@ public class BallsVisuals extends FftRenderer {
         updated(sbs.getSetting(BaseSetting.BALLS));
         initializeSimulation();
     }
-
+    public void setStickyness(float f){
+        this.stickyness=f;
+    }
+    public void setLowpass(float f){
+        this.lowpass=f;
+    }
     public void setIterations(int n){
         this.iterations=n;
     }
@@ -85,15 +93,15 @@ public class BallsVisuals extends FftRenderer {
         long currentFrame = getCurrentFrame();
         try {
             updateFFT(currentFrame);
-            Log2.log(2,this, "Sensitivity: "+sensitivity);
+            //Log2.log(2,this, "Sensitivity: "+sensitivity);
             //Bass
-            balls.get(0).r= 0.5f*balls.get(0).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 50+sensitivity*3);
+            balls.get(0).r= (1.0f-lowpass)*balls.get(0).r+lowpass*SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true), 0, 300, 50, 50+sensitivity*3);
             //Low
-            balls.get(1).r= 0.5f*balls.get(1).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(150, 450, true), 0, 150, 50, 50+sensitivity*3);
+            balls.get(1).r= (1.0f-lowpass)*balls.get(1).r+lowpass*SimpleMaths.linearMapClamped(getMagnitudeRange(150, 450, true), 0, 150, 50, 50+sensitivity*3);
             //Mid
-            balls.get(2).r= 0.5f*balls.get(2).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(450, 1000, true), 0, 100, 50, 50+sensitivity*3);
+            balls.get(2).r= (1.0f-lowpass)*balls.get(2).r+lowpass*SimpleMaths.linearMapClamped(getMagnitudeRange(450, 1000, true), 0, 100, 50, 50+sensitivity*3);
             //High
-            balls.get(3).r= 0.5f*balls.get(3).r+0.5f*SimpleMaths.linearMapClamped(getMagnitudeRange(1000, 10000, true), 0, 50, 50, 50+sensitivity*3);
+            balls.get(3).r= (1.0f-lowpass)*balls.get(3).r+lowpass*SimpleMaths.linearMapClamped(getMagnitudeRange(1000, 10000, true), 0, 50, 50, 50+sensitivity*3);
 
 
             for (int i = 0; i < iterations; i++) { //Sim Iterations
@@ -104,6 +112,7 @@ public class BallsVisuals extends FftRenderer {
                 }
             }
 
+            //Balls attract each other.
             for (Ball ball:balls){
                 for (Ball ball2:balls){
                     if (ball==ball2) continue;
@@ -112,6 +121,7 @@ public class BallsVisuals extends FftRenderer {
                 }
             }
 
+            //We draw the balls, attract them to the center, and damp them.
             for (Ball ball : balls) {
                 ball.draw(c,pt);
                 ball.attract(w/2, h/2, 1);

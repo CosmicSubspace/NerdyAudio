@@ -29,7 +29,6 @@ public class SpectrogramVisuals extends FftRenderer{
     int canvasX, canvasY;
     IntBuffer graphBuffer;
     int scrollPxPerRedraw=1;
-
     float contrast=2.0f;
 
     SpectrogramVisualSettings newSettings=null;

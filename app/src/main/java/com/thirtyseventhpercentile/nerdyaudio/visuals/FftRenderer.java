@@ -1,8 +1,10 @@
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
+import com.thirtyseventhpercentile.nerdyaudio.exceptions.FFTException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.meapsoft.FFT;
+import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 /**
  * Created by Chan on 3/9/2016.
@@ -15,7 +17,6 @@ public abstract class FftRenderer extends BaseRenderer {
 
     int fftSize = 2048;
     FFT fft;
-
 
     private boolean logScale=false;
     private float maxFreq=5000, minFreq=20;
@@ -106,6 +107,13 @@ public abstract class FftRenderer extends BaseRenderer {
             y[i] = 0;
         }
 
-        fft.fft(x, y);
+        try {
+            fft.fft(x, y);
+        }catch(FFTException e){ //FFT Size Mismatch
+
+                Log2.log(4,this,"FFT Size Mismatch Exception. wtf?");
+
+        }
+
     }
 }

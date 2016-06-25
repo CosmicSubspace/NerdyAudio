@@ -33,6 +33,8 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
     int iter=10;
     float bounciness=30;
     float sensitivity=100;
+    float lowpass=0.5f;
+    float stickyness=0.3f;
 
     public int getFftSize() {
         return fftSize;
@@ -78,6 +80,30 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
         }
     }
 
+    public float getStickyness() {
+        return stickyness;
+    }
+
+    public void setStickyness(float stickyness) {
+        this.stickyness=stickyness;
+        if (stickynessSeekbar!=null && stickynessTV!=null) {
+            stickynessTV.setText(Float.toString(this.stickyness));
+            stickynessSeekbar.setProgress((int)(this.stickyness*100));
+        }
+    }
+
+    public float getLowpass() {
+        return lowpass;
+    }
+
+    public void setLowpass(float lowpass) {
+        this.lowpass=lowpass;
+        if (lowpassSeekbar!=null && lowpassTV!=null) {
+            lowpassTV.setText(Float.toString(this.lowpass));
+            lowpassSeekbar.setProgress((int)(this.lowpass*100));
+        }
+    }
+
     public float getSensitivity() {
         return sensitivity;
     }
@@ -98,8 +124,8 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
     private static final String[] fftSizes = {"256", "512", "1024", "2048", "4096", "8192"};
     Spinner fftSizeSpinner;
 
-    SeekBar bouncinessSeekbar, sensitivitySeekbar, iterationsSeekbar;
-    TextView  bouncinessTV, sensitivityTV, iterationsTV;
+    SeekBar bouncinessSeekbar, sensitivitySeekbar, iterationsSeekbar, stickynessSeekbar, lowpassSeekbar;
+    TextView  bouncinessTV, sensitivityTV, iterationsTV,stickynessTV,lowpassTV;
 
     public View getSettingsView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.visuals_setting_ball, container, false);
@@ -130,6 +156,14 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
         iterationsTV = (TextView) v.findViewById(R.id.vis_balls_setting_iter_value);
         iterationsSeekbar.setOnSeekBarChangeListener(this);
 
+        lowpassSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_smooth_seekbar);
+        lowpassTV = (TextView) v.findViewById(R.id.vis_balls_setting_smooth_value);
+        lowpassSeekbar.setOnSeekBarChangeListener(this);
+
+        stickynessSeekbar = (SeekBar) v.findViewById(R.id.vis_balls_setting_stick_seekbar);
+        stickynessTV = (TextView) v.findViewById(R.id.vis_balls_setting_stick_value);
+        stickynessSeekbar.setOnSeekBarChangeListener(this);
+
         load();
         return v;
     }
@@ -144,10 +178,16 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
     protected void save() {
 
         SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
+
         editor.putInt("fftSize", fftSize);
         editor.putInt("iter",iter);
         editor.putFloat("bounciness", bounciness);
         editor.putFloat("sensitivity",sensitivity);
+
+        editor.putFloat("bounciness",bounciness);
+
+        editor.putFloat("stickyness",stickyness);
+
 
         editor.apply();
     }
@@ -160,6 +200,10 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
         setIter(pref.getInt("iter", iter));
         setBounciness(pref.getFloat("bounciness", bounciness));
         setSensitivity(pref.getFloat("sensitivity", sensitivity));
+
+        setBounciness(pref.getFloat("bounciness",bounciness));
+
+        setStickyness(pref.getFloat("stickyness",stickyness));
 
         sbs.notifyUI(this);
     }
@@ -187,9 +231,14 @@ public class BallsVisualSettings extends BaseSetting implements AdapterView.OnIt
             Log2.log(2,this,"!!!");
         }else if (seekBar.getId() == R.id.vis_balls_setting_bounciness_seekbar) {
             setBounciness(progress / 10.f);
+        }else if (seekBar.getId() == R.id.vis_balls_setting_stick_seekbar) {
+            setStickyness(progress / 100.f);
+        }else if (seekBar.getId() == R.id.vis_balls_setting_smooth_seekbar) {
+            setLowpass(progress / 100.f);
         } else {
             Log2.log(3,this, "I think I'm not the only seekbar around here....");
         }
+
         if (fromUser) {
             save();
             sbs.notifyUI(this);

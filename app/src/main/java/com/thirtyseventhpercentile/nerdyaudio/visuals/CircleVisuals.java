@@ -122,12 +122,11 @@ public class CircleVisuals extends FftRenderer {
         //TODO here
 
 
-
         for (int i = 0; i < bars; i++) {
             radiuses[i] = 0;
         }
         int currentRadiusIndex;
-        float currentSpectrumRatio;
+        float currentCircleRatio, currentFftRatio;
         float influence;
         float offsetPerRepeat = 1.0f / repeats;
 
@@ -135,16 +134,17 @@ public class CircleVisuals extends FftRenderer {
 
             for (int i = 0; i < bars + overlap*bars ; i++) { //Loop for all bars plus overlap.
                 //Loop here and do stuff.
-                currentRadiusIndex = i % bars; //Index to put data in
-                currentSpectrumRatio=(i/(float)bars+offsetPerRepeat*rpt)%1.0f;
+                currentRadiusIndex = (i+(int)(offsetPerRepeat*bars*rpt))%bars; //Index to put data in
+                currentCircleRatio=i/(float)bars; //How far into the circle we are.
 
-                if (currentSpectrumRatio<1.0f) { //Ramp up.
-                    influence = SimpleMaths.linearMapClamped(currentSpectrumRatio, 0, overlap, 0, 1.0f);
+
+                if (currentCircleRatio<1.0f) { //Ramp up.
+                    influence = SimpleMaths.linearMapClamped(currentCircleRatio, 0, overlap, 0, 1.0f);
                 } else { //Ramp down.
-                    influence = SimpleMaths.linearMapClamped(currentSpectrumRatio, 1, 1 + overlap, 1.0f, 0);
+                    influence = SimpleMaths.linearMapClamped(currentCircleRatio, 1, 1 + overlap, 1.0f, 0);
                 }
 
-                radiuses[currentRadiusIndex] += influence * getMagnitudeRatio(currentSpectrumRatio) * sensitivity;
+                radiuses[currentRadiusIndex] += influence * getMagnitudeRatio(currentCircleRatio) * sensitivity;
             }
         }
 

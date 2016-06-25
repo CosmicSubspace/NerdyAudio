@@ -126,5 +126,73 @@
             style="@style/setting_text"/>
     </RelativeLayout>
 
+    <include layout="@layout/subdivider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stickyness"
+        android:id="@+id/vis_balls_setting_stick_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_balls_setting_stick">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_balls_setting_stick_seekbar"
+            android:layout_toLeftOf="@+id/vis_balls_setting_stick_value"
+            android:max="100"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_balls_setting_stick_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
+    <include layout="@layout/subdivider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smoothness(Lowpass)"
+        android:id="@+id/vis_balls_setting_smooth_title"
+
+        style="@style/setting_text"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vis_balls_setting_smooth">
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vis_balls_setting_smooth_seekbar"
+            android:layout_toLeftOf="@+id/vis_balls_setting_smooth_value"
+            android:max="100"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:id="@+id/vis_balls_setting_smooth_value"
+            android:layout_alignParentRight="true"
+            style="@style/setting_text"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

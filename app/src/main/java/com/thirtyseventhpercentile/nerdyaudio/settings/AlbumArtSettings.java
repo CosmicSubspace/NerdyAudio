@@ -18,7 +18,6 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 
 
 public class AlbumArtSettings extends BaseSetting{
-    private static final String LOG_TAG="CS_AFN";
     private static final String PREF_IDENTIFIER = "com.thirtyseventhpercentile.audiofornerds.settings.AlbumArtSettings";
 
     public int getType(){

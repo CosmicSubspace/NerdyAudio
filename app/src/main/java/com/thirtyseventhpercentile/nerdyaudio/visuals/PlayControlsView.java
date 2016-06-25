@@ -724,9 +724,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                 return true;
             } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } /*else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            }
+            }*/
 
 
         } else if (action == MotionEvent.ACTION_MOVE) {
@@ -772,11 +772,11 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
             } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
                 return true;
-            } else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } /*else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 toggleExpand();
 
                 return true;
-            }
+            }*/
 
 
         }
