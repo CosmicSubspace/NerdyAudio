@@ -13,6 +13,7 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.AlbumArtSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 
 /**
  * Created by Chan on 3/24/2016.
@@ -22,6 +23,12 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
     RectF bounds=new RectF();
     Bitmap art;
     Paint pt;
+
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
+    }
+
     public AlbumArtVisuals(float density) {
         super(density);
         QueueManager.getInstance().addQueueListener(this);

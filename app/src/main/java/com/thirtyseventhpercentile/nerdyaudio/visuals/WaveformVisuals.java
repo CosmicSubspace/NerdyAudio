@@ -13,6 +13,7 @@ import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentExcepti
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.WaveformVisualSettings;
 
@@ -28,6 +29,10 @@ public class WaveformVisuals extends BaseRenderer{
     Paint pt;
 
 
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
+    }
 
     public WaveformVisuals(float density) {
         super(density);

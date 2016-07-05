@@ -18,6 +18,9 @@ import android.widget.Spinner;
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
+import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.BaseRenderer;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.LoudnessGraphVisuals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,6 +57,9 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     AlbumArtSettings albumArtSettings;
     BallsVisualSettings ballsVisualSettings;
 
+    VisualizationManager vm;
+
+
 
     public void addSettingsUpdateListener(SettingsUpdateListener sul) {
 
@@ -69,6 +75,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     }
 
+    Context ctxt;
     private SidebarSettings(Context c) {
         visualizationSettings = new VisualizationSettings(this,c);
         vuMeterSettings = new VUMeterSettings(this,c);
@@ -78,6 +85,9 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         circleVisualSettings=new CircleVisualSettings(this,c);
         albumArtSettings=new AlbumArtSettings(this,c);
         ballsVisualSettings=new BallsVisualSettings(this,c);
+
+        vm=VisualizationManager.getInstance();
+        this.ctxt=c;
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,7 +126,12 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
             case 0:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.VU);
                 visual_setting_container.removeAllViews();
-                visual_setting_container.addView(vuMeterSettings.getSettingsView(li, visual_setting_container, null));
+
+                vm.setActiveRenderer(new LoudnessGraphVisuals(ctxt.getResources().getDisplayMetrics().density));
+
+                //visual_setting_container.addView(vuMeterSettings.getSettingsView(li, visual_setting_container, null));
+                visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettingUI(),ctxt,null));
+
                 break;
             case 1:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.WAVEFORM);

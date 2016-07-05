@@ -12,6 +12,7 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BallsVisualSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,11 @@ public class BallsVisuals extends FftRenderer {
 
             newSettings = null;
         }
+    }
+
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
     }
 
     public BallsVisuals(float density) {

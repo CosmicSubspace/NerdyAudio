@@ -14,6 +14,7 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
 import com.thirtyseventhpercentile.nerdyaudio.settings.CircleVisualSettings;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 
 /**
  * Created by Chan on 3/24/2016.
@@ -76,6 +77,11 @@ public class CircleVisuals extends FftRenderer {
 
             newSettings = null;
         }
+    }
+
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
     }
 
     public CircleVisuals(float density) {

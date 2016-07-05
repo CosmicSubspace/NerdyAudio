@@ -67,6 +67,21 @@ import java.util.Date;
 //TODO : Playlist/state save on exit
 //TODO : Headphone Controls
 //TODO : Playback device selection
+//TODO : Artwork existance check on actual play
+//TODO : Dynamic Range Compression
+//TODO : CircleVisuals base radius setting
+//TODO : Lowpass on FFT result
+//TODO : Spline interpolation on FFT result
+//TODO : Pocket Play / Cinema Mode
+//TODO : Display audio length on queue/file
+//TODO : ClashWithDash.mp3 error
+//TODO : L/R Balance Filter
+//TODO : Filters enable toggle
+
+
+
+
+
 
 /**
  * Other Libraries:

@@ -9,12 +9,20 @@ import android.graphics.Canvas;
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 
 
 public abstract class BaseRenderer implements SettingsUpdateListener{
+    public static class RendererParameters{
+
+    }
+
+    public abstract SettingsUiFactory.SettingElement[] getSettingUI();
+
     public static final String LOG_TAG="CS_AFN";
 
     //TODO : Remove variables altogether : use VisualizationSettings for variable storage.

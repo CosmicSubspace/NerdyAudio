@@ -6,7 +6,6 @@ package com.thirtyseventhpercentile.nerdyaudio.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
-import com.thirtyseventhpercentile.nerdyaudio.visuals.VUMeterVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.LoudnessGraphVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.WaveformVisuals;
 
@@ -85,15 +84,15 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void updated(BaseSetting setting) {
-        if (setting.getType() == BaseSetting.VISUALIZATION) {
+        if (setting.getType() == BaseSetting.VISUALIZATION) {/*
             VisualizationSettings visSet = (VisualizationSettings) setting;
             if (visSet.getActiveVisualization() == VisualizationSettings.VU) {
-                VUMeterVisuals vis = new VUMeterVisuals(getResources().getDisplayMetrics().density);
+                LoudnessGraphVisuals vis = new LoudnessGraphVisuals(getResources().getDisplayMetrics().density);
 
                 vv.getRenderThread().setRenderer(vis);
             } else if (visSet.getActiveVisualization() == VisualizationSettings.SPECTRUM) {
                 SpectrumVisuals vis = new SpectrumVisuals(getResources().getDisplayMetrics().density);
-
+                VisualizationManager.getInstance()
                 vv.getRenderThread().setRenderer(vis);
             } else if (visSet.getActiveVisualization() == VisualizationSettings.WAVEFORM) {
                 WaveformVisuals vis = new WaveformVisuals(getResources().getDisplayMetrics().density);
@@ -114,7 +113,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
                 vv.getRenderThread().setRenderer(vis);
             } else {
                 Log2.log(3,this, "WHAT? (NowPlayingFragment)");
-            }
+            }*/
         }
     }
 

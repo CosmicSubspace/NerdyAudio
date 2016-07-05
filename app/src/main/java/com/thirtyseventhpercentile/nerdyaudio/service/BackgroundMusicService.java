@@ -150,11 +150,12 @@ public class BackgroundMusicService extends Service implements QueueListener {
     }
 
     public void updateNotification(MusicInformation mi) {
-
+        //TODO fix notification "Flicker"
         if (mi != null) {
             nb.setContentTitle(mi.getTitle());
             nb.setContentText(mi.getArtist());
             if (mi.hasArt()) {
+
                 Bitmap bmp = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), largeIconW, largeIconH);
                 //nb.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bmp));
                 nb.setLargeIcon(bmp);

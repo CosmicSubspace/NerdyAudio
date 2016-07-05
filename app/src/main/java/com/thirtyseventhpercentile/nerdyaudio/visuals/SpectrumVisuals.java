@@ -16,6 +16,7 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrumVisualSettings;
 
@@ -29,6 +30,11 @@ public class SpectrumVisuals extends FftRenderer{
     float barHeightMultiplier=1.0f;
 
     SpectrumVisualSettings newSettings=null;
+
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
+    }
 
     public SpectrumVisuals(float density) {
         super(density);

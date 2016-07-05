@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
 
 public class VisualsRenderThread extends Thread{
     public static final String LOG_TAG="CS_AFN";
@@ -24,7 +25,8 @@ public class VisualsRenderThread extends Thread{
     float fps=0;
     //float maxFPS=60.0f;
 
-    BaseRenderer renderer;
+    //BaseRenderer renderer;
+    VisualizationManager vm;
 
     SurfaceHolder sf;
 
@@ -33,6 +35,7 @@ public class VisualsRenderThread extends Thread{
     Canvas c;
     public VisualsRenderThread(){
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
+        vm=VisualizationManager.getInstance();
     }
     public void setSurfaceHolder(SurfaceHolder sf){ //is this valid?
         this.sf=sf;
@@ -40,11 +43,11 @@ public class VisualsRenderThread extends Thread{
     public void stopRender(){
         active=false;
     }
-
+/*
     public void setRenderer(BaseRenderer r){
         if (this.renderer!=null) this.renderer.release();
         this.renderer=r;
-    }
+    }*/
     public void setSize(int w,int h){
         this.w=w;
         this.h=h;
@@ -54,9 +57,11 @@ public class VisualsRenderThread extends Thread{
         this.maxFPS=maxFPS;
         this.minDelay=(int)(1000.0f/maxFPS);
     }*/
+    /*
     public BaseRenderer getRenderer(){
         return renderer;
     }
+    */
 
     long lastTime=0, currentTime;
     int framesDrawn=0;
@@ -80,7 +85,7 @@ public class VisualsRenderThread extends Thread{
 
             c.drawColor(Color.WHITE);
 
-            if (renderer!=null) renderer.draw(c,w,h);
+            if (vm.getActiveRenderer()!=null) vm.getActiveRenderer().draw(c,w,h);
 
             /*
             //Log2.log(1,this,"DB: "+lastDrawn+" | "+minDelay+" | "+System.currentTimeMillis());

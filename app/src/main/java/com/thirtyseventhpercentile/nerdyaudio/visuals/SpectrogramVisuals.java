@@ -15,6 +15,7 @@ import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterExcepti
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrogramVisualSettings;
 
@@ -55,6 +56,11 @@ public class SpectrogramVisuals extends FftRenderer{
         canvasY=h;
         graphBuffer=IntBuffer.allocate(w*h);
         graph=Bitmap.createBitmap(canvasX,canvasY, Bitmap.Config.ARGB_8888);
+    }
+
+    @Override
+    public SettingsUiFactory.SettingElement[] getSettingUI() {
+        return new SettingsUiFactory.SettingElement[0];
     }
 
     public SpectrogramVisuals(float density) {
