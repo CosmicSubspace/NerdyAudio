@@ -77,7 +77,7 @@ import java.util.Date;
 //TODO : ClashWithDash.mp3 error
 //TODO : L/R Balance Filter
 //TODO : Filters enable toggle
-
+//TODO : Replace assertioons with exceptions.
 
 
 
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     VisualizationBuffer vb;
     QueueManager qm;
     FileManager fm;
+    VisualizationManager vm;
     SidebarSettings sbs;
 
     private Handler mHandler = new Handler();
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void uncaughtException (Thread thread, Throwable e)
             {
-                Log2.log(2,this,"UncaughtException:",ErrorLogger.logToString(e));
+                Log2.log(0,this,"UncaughtException logged:",ErrorLogger.logToString(e));
                 //Toast.makeText(c, ErrorLogger.logToString(e), Toast.LENGTH_SHORT).show();
                 FileWriter f;
                 try {
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fm=FileManager.getInstance();
         wf=Waveform.getInstance();
         sbs=SidebarSettings.instantiate(getApplicationContext());
+        vm=VisualizationManager.getInstance();
 
         volCtrl=new VolumeControls(getApplicationContext(),qm);
 
@@ -369,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacks(mUpdateClockTask);
+        vm.saveSettings();
 
         if (ap.isPlaying()) {
             Log2.log(2,this, "Starting Service....");
@@ -388,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onDestroy(){
-
+        Log2.log(2,this,"I'm dyingggggggggg");
         super.onDestroy();
     }
 

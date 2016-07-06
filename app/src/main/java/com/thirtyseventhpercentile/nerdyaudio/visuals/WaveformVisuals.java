@@ -4,62 +4,64 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
-import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
+import com.thirtyseventhpercentile.nerdyaudio.settings.BooleanElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.WaveformVisualSettings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WaveformVisuals extends BaseRenderer{
+    /*
     int range = 2048;
     int drawEvery = 1;
     boolean downmix=false;
+    */
+
+    SliderElement range=new SliderElement("Range",100,10000,2048);
+    BooleanElement downmix=new BooleanElement("Downmix",true);
 
 
-    WaveformVisualSettings newSettings=null;
 
 
     Paint pt;
 
 
     @Override
-    public SettingsUiFactory.SettingElement[] getSettingUI() {
-        return new SettingsUiFactory.SettingElement[0];
+    public List<SettingElement> getSettings() {
+        List<SettingElement> res=new ArrayList<>();
+        res.add(range);
+        res.add(downmix);
+        return res;
     }
 
-    public WaveformVisuals(float density) {
-        super(density);
+
+
+    @Override
+    public String getKey() {
+        return "WaveformVisuals";
+    }
+
+    public WaveformVisuals(Context ctxt) {
+        super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        updated(sbs.getSetting(BaseSetting.WAVEFORM));
     }
 
-
-
-    private void syncChanges(){
-        if (newSettings!=null){
-            Log2.log(1,this,"WaveformVisuals state changed. syncing.");
-            range=newSettings.getRange();
-
-            drawEvery=range/1024; //TODO more elegant way of optimizing
-            if (drawEvery<1) drawEvery=1;
-
-            downmix=newSettings.getDownmix();
-
-            newSettings=null;
-        }
-    }
 
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
-        syncChanges();
+        int range = this.range.getValue();
+        boolean downmix=this.downmix.getValue();
+        int drawEvery=range/1024+1;
 
 
             long currentFrame = getCurrentFrame();
@@ -115,14 +117,6 @@ public class WaveformVisuals extends BaseRenderer{
 
     }
 
-
-    @Override
-    public void updated(BaseSetting setting) {
-        if (setting instanceof WaveformVisualSettings){
-            newSettings=(WaveformVisualSettings) setting;
-
-        }
-    }
 
     @Override
     public void dimensionsChanged(int w, int h) {

@@ -4,72 +4,62 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
-import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
-import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
-import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
-import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
+import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrumVisualSettings;
+
+import java.util.List;
 
 
 public class SpectrumVisuals extends FftRenderer{
     Paint pt;
 
+    /*
     int bars=100;
     float spacing = 0.0f;
-    double startLog=Math.log(20), endLog=Math.log(1000);
     float barHeightMultiplier=1.0f;
+    */
 
-    SpectrumVisualSettings newSettings=null;
+    SliderElement bars=new SliderElement("Number of Bars",1,500,100);
+    FloatSliderElement spacing=new FloatSliderElement("Spacing",0,1,0,100);
+    FloatSliderElement barHeightMultiplier=new FloatSliderElement("Bar Height",0,10,2,100);
+
 
     @Override
-    public SettingsUiFactory.SettingElement[] getSettingUI() {
-        return new SettingsUiFactory.SettingElement[0];
+    public List<SettingElement> getSettings() {
+        List<SettingElement> res=super.getSettings();
+        res.add(bars);
+        res.add(spacing);
+        res.add(barHeightMultiplier);
+        return res;
     }
 
-    public SpectrumVisuals(float density) {
-        super(density);
+
+    @Override
+    public String getKey() {
+        return "SpectrumVisuals";
+    }
+
+    public SpectrumVisuals(Context ctxt) {
+        super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        //I have a feeling that this would cause some nasty shit in the future.
-        updated(sbs.getSetting(BaseSetting.SPECTRUM));
     }
 
-    private void syncChanges(){
-        if (newSettings!=null){
-            setFFTSize(newSettings.getFftSize());
-            Log2.log(2,this, "Spectrum: size changing" + fftSize);
-
-            bars=newSettings.getBars();
-            spacing=newSettings.getSpacing();
-
-            try {
-                setFrequencyRange(newSettings.getStartFreq(),newSettings.getEndFreq());
-            } catch (InvalidParameterException e) {
-                ErrorLogger.log(e);
-            }
-
-
-            barHeightMultiplier=newSettings.getBarHeight();
-            setLogScale(newSettings.getLogScale());
-
-            newSettings=null;
-        }
-    }
 
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
-        syncChanges();
-
+        int bars=this.bars.getValue();
+        float spacing = this.spacing.getFloatValue();
+        float barHeightMultiplier=this.barHeightMultiplier.getFloatValue();
             long currentFrame = getCurrentFrame();
             try {
                 updateFFT(currentFrame);
@@ -97,19 +87,6 @@ public class SpectrumVisuals extends FftRenderer{
             }
 
 
-    }
-
-
-
-
-
-    @Override
-    public void updated(BaseSetting setting) {
-        Log2.log(2,this,"SpectrumVisuals updated.");
-        if (setting instanceof SpectrumVisualSettings){
-            Log2.log(2,this,"SpectrumVisuals settings match.");
-            newSettings=(SpectrumVisualSettings)setting;
-        }
     }
 
     @Override

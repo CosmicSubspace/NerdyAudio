@@ -66,6 +66,8 @@ public class FFT {
         makeWindow();
     }
 
+    public int getFftSize(){return n;}
+
     protected void makeWindow() {
         // Make a blackman window:
         // w(n)=0.42-0.5cos{(2*PI*n)/(N-1)}+0.08cos{(4*PI*n)/(N-1)};

@@ -1,84 +1,67 @@
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
-import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BallsVisualSettings;
-import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
+import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //TODO : Sticky Balls
 public class BallsVisuals extends FftRenderer {
     Paint pt;
 
-    BallsVisualSettings newSettings = null;
     ArrayList<Ball> balls = new ArrayList<>();
 
+    /*
     int iterations=10;
     float sensitivity=100, bounciness=30;
     float stickyness=0.3f;
     float lowpass=0.4f;
+    */
+
+    SliderElement iterations=new SliderElement("Simulation Iterations",1,100,30);
+    FloatSliderElement sensitivity=new FloatSliderElement("Sensitivity",0,3,1,100);
+    FloatSliderElement bounciness=new FloatSliderElement("Bounciness",0,100,10,100);
+    FloatSliderElement stickyness=new FloatSliderElement("Stickyness",0,1,0.3f,100);
+    FloatSliderElement lowpass=new FloatSliderElement("Lowpass",0,1,0.3f,100);
 
 
-    private void syncChanges() {
-        if (newSettings != null) {
-            setFFTSize(newSettings.getFftSize());
-            Log2.log(2,this, "Spectrum: size changing" + fftSize);
-            setIterations(newSettings.getIter());
-            setSensitivity(newSettings.getSensitivity());
-            setBounciness(newSettings.getBounciness());
-            setLowpass(newSettings.getLowpass());
-            setStickyness(newSettings.getStickyness());
-
-            newSettings = null;
-        }
-    }
 
     @Override
-    public SettingsUiFactory.SettingElement[] getSettingUI() {
-        return new SettingsUiFactory.SettingElement[0];
+    public List<SettingElement> getSettings() {
+        List<SettingElement> res=super.getSettings();
+        res.add(iterations);
+        res.add(sensitivity);
+        res.add(bounciness);
+        res.add(stickyness);
+        return res;
     }
 
-    public BallsVisuals(float density) {
-        super(density);
+
+
+    @Override
+    public String getKey() {
+        return "BallsVisuals";
+    }
+
+    public BallsVisuals(Context ctxt) {
+        super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        //I have a feeling that this would cause some nasty shit in the future.
-        updated(sbs.getSetting(BaseSetting.BALLS));
         initializeSimulation();
     }
-    public void setStickyness(float f){
-        this.stickyness=f;
-    }
-    public void setLowpass(float f){
-        this.lowpass=f;
-    }
-    public void setIterations(int n){
-        this.iterations=n;
-    }
-    public void setSensitivity(float sensitivity){
-        this.sensitivity=sensitivity;
-        Log2.log(2,this,"Setting Sensitivity...");
-    }
-    public void setBounciness(float bounciness){
-        this.bounciness=bounciness;
-    }
 
-    @Override
-    public void updated(BaseSetting setting) {
-        if (setting instanceof BallsVisualSettings) {
-            newSettings = (BallsVisualSettings) setting;
-        }
-    }
 
     @Override
     public void dimensionsChanged(int w, int h) {
@@ -95,8 +78,11 @@ public class BallsVisuals extends FftRenderer {
 
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
-        syncChanges();
+
         long currentFrame = getCurrentFrame();
+        float lowpass=this.lowpass.getFloatValue();
+        float sensitivity=this.sensitivity.getFloatValue();
+        int iterations=this.iterations.getValue();
         try {
             updateFFT(currentFrame);
             //Log2.log(2,this, "Sensitivity: "+sensitivity);
@@ -113,7 +99,7 @@ public class BallsVisuals extends FftRenderer {
             for (int i = 0; i < iterations; i++) { //Sim Iterations
                 for (Ball ball : balls) {
                     ball.update(balls, iterations);
-                    ball.collision(balls);
+                    ball.collision(balls, bounciness.getFloatValue());
                     ball.wallIn(0,0,w,h);
                 }
             }
@@ -123,7 +109,7 @@ public class BallsVisuals extends FftRenderer {
                 for (Ball ball2:balls){
                     if (ball==ball2) continue;
 
-                    ball.attract(ball2.x,ball2.y,stickyness);
+                    ball.attract(ball2.x,ball2.y,stickyness.getFloatValue());
                 }
             }
 
@@ -165,7 +151,7 @@ public class BallsVisuals extends FftRenderer {
             return distance(b) - b.r - this.r;
         }
 
-        public void collision(ArrayList<Ball> balls) {
+        public void collision(ArrayList<Ball> balls, float bounciness) {
             for (Ball ball : balls) {
                 if (ball.equals(this)) continue;
                 if (intersect(ball) < 0) {

@@ -14,9 +14,10 @@ public class VisualizationManager {
 
     BaseRenderer renderer;
     public void setActiveRenderer(BaseRenderer r){
+        if (renderer!=null) renderer.release();
         renderer=r;
-
     }
+    public void saveSettings(){renderer.saveSettingsAsync();}
     public BaseRenderer getActiveRenderer(){
         return renderer;
     }

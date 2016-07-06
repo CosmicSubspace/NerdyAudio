@@ -10,33 +10,30 @@ import android.content.SharedPreferences;
 import java.io.Serializable;
 
 
-public class VisualizationSettings extends BaseSetting implements Serializable {
+public class VisualizationSettings implements Serializable {
 
     private static final String PREF_IDENTIFIER = "com.thirtyseventhpercentile.audiofornerds.settings.VisualizationSettings";
-
+    Context c;
     public VisualizationSettings(SidebarSettings sbs, Context c){
-        super(sbs,c);
+        this.c=c;
 
         load();
-        sbs.notifyUI(this);
-    }
-    @Override
-    public int getType(){
-        return BaseSetting.VISUALIZATION;
+
     }
 
-    @Override
+
+
     protected void save() {
-        SharedPreferences.Editor editor=getSharedPreferences(PREF_IDENTIFIER).edit();
+        SharedPreferences.Editor editor=c.getSharedPreferences(PREF_IDENTIFIER,Context.MODE_PRIVATE).edit();
         editor.putInt("activeVisualization",activeVisualization);
         editor.apply();
     }
 
-    @Override
+
     protected void load() {
-        SharedPreferences pref=getSharedPreferences(PREF_IDENTIFIER);
+        SharedPreferences pref=c.getSharedPreferences(PREF_IDENTIFIER,Context.MODE_PRIVATE);
         setActiveVisualization(pref.getInt("activeVisualization", activeVisualization));
-        sbs.notifyUI(this);
+
     }
 
     public static final String[] visualizations=new String[]{"Loudness Graph","Waveform","Spectrum","Spectrogram","Circle","Album Art","Ball Physics"};

@@ -4,61 +4,57 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
-import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSettingsUpdateListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
-import com.thirtyseventhpercentile.nerdyaudio.settings.BaseSetting;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
-import com.thirtyseventhpercentile.nerdyaudio.settings.VUMeterSettings;
 
-import java.util.Set;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
 
 
-public class LoudnessGraphVisuals extends BaseRenderer {
+import java.util.ArrayList;
+import java.util.List;
 
 
-    public static class RendererParameters extends BaseRenderer.RendererParameters {
-        public int range = 2048;
-        public int historySize = 64;
-    }
+public class LoudnessGraphVisuals extends BaseRenderer{
 
-    SettingsUiFactory.SliderElement range = new SettingsUiFactory.SliderElement("Range", 1, 2048, 1024);
-    SettingsUiFactory.SliderElement historySize = new SettingsUiFactory.SliderElement("History Size", 1, 64, 32);
+    SliderElement range = new SliderElement("Range", 1, 2048, 1024);
+    SliderElement historySize = new SliderElement("History Size", 1, 64, 32);
 
-    public SettingsUiFactory.SettingElement[] getSettingUI() {
-        SettingsUiFactory.SettingElement[] elements = new SettingsUiFactory.SettingElement[2];
-        elements[0] = range;
-        elements[1] = historySize;
-        return elements;
+    @Override
+    public List<SettingElement> getSettings() {
+        Log2.log(2,this,range,historySize);
+        List<SettingElement> res=new ArrayList<>();
+        res.add(range);
+        res.add(historySize);
+
+        return res;
     }
 
 
-    RendererParameters params, newParams;
+    @Override
+    public String getKey() {
+        return "LoudnessGraphVisuals";
+    }
+
 
     Paint pt;
 
     float[] lAvgHistory, rAvgHistory, lPeakHistory, rPeakHistory;
 
-    float textDp = 16; //No need for Synchronization.
-    float barsDp = 100; //No need for Synchronization.
+    float textDp = 16;
+    float barsDp = 100;
 
 
-    public LoudnessGraphVisuals(float density) {
-
-        super(density);
+    public LoudnessGraphVisuals(Context ctxt) {
+        super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         initArrays();
-
-        updated(sbs.getSetting(BaseSetting.VU));
-
+        Log2.log(2,this,"Constructing",range,historySize);
     }
 
     private void initArrays() {
@@ -87,17 +83,12 @@ public class LoudnessGraphVisuals extends BaseRenderer {
     }
 
 
-    private void syncChanges() {
-        range.applyValue();
-        historySize.applyValue();
-    }
-
-
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
-        syncChanges();
+
         int range = this.range.getValue();
         int historySize = this.historySize.getValue();
+        //Log2.log(1,this,historySize,lAvgHistory.length);
         if (historySize != lAvgHistory.length) initArrays();
 
         long currentFrame = getCurrentFrame();
@@ -170,11 +161,6 @@ public class LoudnessGraphVisuals extends BaseRenderer {
 
     }
 
-
-    @Override
-    public void updated(BaseSetting setting) {
-
-    }
 
     @Override
     public void dimensionsChanged(int w, int h) {

@@ -6,7 +6,6 @@ package com.thirtyseventhpercentile.nerdyaudio.settings;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,15 @@ import android.widget.Spinner;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.SettingsUpdateListener;
+
 import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
-import com.thirtyseventhpercentile.nerdyaudio.visuals.BaseRenderer;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.BallsVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.LoudnessGraphVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
+import com.thirtyseventhpercentile.nerdyaudio.visuals.WaveformVisuals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,47 +48,19 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     private static final String LOG_TAG = "CS_AFN";
 
-    transient ArrayList<SettingsUpdateListener> suls = new ArrayList<>();
     transient Spinner visSpinner;
     transient FrameLayout visual_setting_container;
 
     VisualizationSettings visualizationSettings;
-    VUMeterSettings vuMeterSettings;
-    WaveformVisualSettings waveformVisualSettings;
-    SpectrumVisualSettings spectrumVisualSettings;
-    SpectrogramVisualSettings spectrogramVisualSettings;
-    CircleVisualSettings circleVisualSettings;
-    AlbumArtSettings albumArtSettings;
-    BallsVisualSettings ballsVisualSettings;
 
     VisualizationManager vm;
 
 
 
-    public void addSettingsUpdateListener(SettingsUpdateListener sul) {
-
-        //Log2.log(1,this, "addSettingsUpdateListener() Entered");
-        this.suls.add(sul);
-
-    }
-
-    public void removeSettingsUpdateListener(SettingsUpdateListener sul) {
-
-        //Log2.log(1,this, "removeSettingsUpdateListener() Entered");
-        this.suls.remove(sul);
-
-    }
-
     Context ctxt;
     private SidebarSettings(Context c) {
         visualizationSettings = new VisualizationSettings(this,c);
-        vuMeterSettings = new VUMeterSettings(this,c);
-        waveformVisualSettings = new WaveformVisualSettings(this,c);
-        spectrumVisualSettings=new SpectrumVisualSettings(this,c);
-        spectrogramVisualSettings =new SpectrogramVisualSettings(this,c);
-        circleVisualSettings=new CircleVisualSettings(this,c);
-        albumArtSettings=new AlbumArtSettings(this,c);
-        ballsVisualSettings=new BallsVisualSettings(this,c);
+
 
         vm=VisualizationManager.getInstance();
         this.ctxt=c;
@@ -103,70 +79,56 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         return v;
     }
 
-    protected void notifyUI(BaseSetting setting) {
-        //Since updated() invokes a Renderer construction, which in turns registers itself as a SettingsUpdateListener,
-        //A ConcurrentModificationException is raised.
-        //Therefore, we copy the arraylist before iterating though it.
-        ArrayList<SettingsUpdateListener> tSuls = new ArrayList<>(this.suls);
-
-        Log2.log(2,this, "Notifying UI...");
-        //Log2.log(1,this, "NotifyUI() Entered");
-        for (SettingsUpdateListener sul : tSuls) {
-            sul.updated(setting);
-        }
-        //Log2.log(1,this, "NotifyUI() Exited");
-
-    }
 
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         LayoutInflater li = LayoutInflater.from(parent.getContext());
+        visual_setting_container.removeAllViews();
         switch (position) {
             case 0:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.VU);
-                visual_setting_container.removeAllViews();
+                vm.setActiveRenderer(new LoudnessGraphVisuals(ctxt));
 
-                vm.setActiveRenderer(new LoudnessGraphVisuals(ctxt.getResources().getDisplayMetrics().density));
-
-                //visual_setting_container.addView(vuMeterSettings.getSettingsView(li, visual_setting_container, null));
-                visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettingUI(),ctxt,null));
 
                 break;
             case 1:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.WAVEFORM);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(waveformVisualSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new WaveformVisuals(ctxt));
                 break;
             case 2:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTRUM);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(spectrumVisualSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new SpectrumVisuals(ctxt));
                 break;
             case 3:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTROGRAM);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(spectrogramVisualSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new SpectrogramVisuals(ctxt));
                 break;
             case 4:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.CIRCLE);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(circleVisualSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new CircleVisuals(ctxt));
                 break;
             case 5:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.ALBUM_ART);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(albumArtSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new AlbumArtVisuals(ctxt));
                 break;
             case 6:
                 visualizationSettings.setActiveVisualization(VisualizationSettings.BALLS);
-                visual_setting_container.removeAllViews();
-                visual_setting_container.addView(ballsVisualSettings.getSettingsView(li, visual_setting_container, null));
+                vm.setActiveRenderer(new BallsVisuals(ctxt));
                 break;
 
         }
+
+        vm.getActiveRenderer().putSettings(vm.getActiveRenderer().loadSettings());
+
+
+        //We use the context from the parent view, since the ctxt variable (ApplicationContext) does not have the matching style.
+        visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettings(),parent.getContext(),null));
+
+
+
         visualizationSettings.save();
-        notifyUI(visualizationSettings);
+
     }
 
     @Override
@@ -174,25 +136,4 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     }
 
-    public BaseSetting getSetting(int type){
-        switch (type){
-            case BaseSetting.SPECTRUM:
-                return spectrumVisualSettings;
-            case BaseSetting.VU:
-                return vuMeterSettings;
-            case BaseSetting.WAVEFORM:
-                return waveformVisualSettings;
-            case BaseSetting.SPECTROGRAM:
-                return spectrogramVisualSettings;
-            case BaseSetting.VISUALIZATION:
-                return visualizationSettings;
-            case BaseSetting.CIRCLE:
-                return circleVisualSettings;
-            case BaseSetting.ALBUM_ART:
-                return albumArtSettings;
-            case BaseSetting.BALLS:
-                return ballsVisualSettings;
-        }
-        return null;
-    }
 }

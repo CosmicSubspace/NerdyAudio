@@ -1,36 +1,75 @@
 package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
+import android.content.Context;
+
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.FFTException;
-import com.thirtyseventhpercentile.nerdyaudio.exceptions.InvalidParameterException;
 import com.meapsoft.FFT;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
+import com.thirtyseventhpercentile.nerdyaudio.settings.BooleanElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SpinnerElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chan on 3/9/2016.
  */
 public abstract class FftRenderer extends BaseRenderer {
-    public FftRenderer(float density) {
-        super(density);
-        fft = new FFT(fftSize);
+    public FftRenderer(Context ctxt) {
+        super(ctxt);
+        fft = new FFT(4096);
+
+        maxFreq=new FloatSliderElement("Maximum Frequency",20,10000,10000,1000);
+        minFreq=new FloatSliderElement("Minimum Frequency",20,10000,20,1000);
+
+        ArrayList<String> spinnerEntries=new ArrayList<>();
+        ArrayList<Integer> mappedValues=new ArrayList<>();
+
+        spinnerEntries.add("256"); mappedValues.add(256);
+        spinnerEntries.add("512"); mappedValues.add(512);
+        spinnerEntries.add("1024"); mappedValues.add(1024);
+        spinnerEntries.add("2048"); mappedValues.add(2048);
+        spinnerEntries.add("4096"); mappedValues.add(4096);
+        spinnerEntries.add("8192"); mappedValues.add(8192);
+
+        fftSize=new SpinnerElement<>("FFT Size",spinnerEntries,mappedValues,4);
+
+        logScale=new BooleanElement("Log Scale",false);
     }
 
-    int fftSize = 2048;
+    FloatSliderElement  maxFreq,minFreq;
+    SpinnerElement<Integer> fftSize;
+    BooleanElement logScale;
+
+    @Override
+    public List<SettingElement> getSettings() {
+        List<SettingElement> res=new ArrayList<>();
+        res.add(maxFreq);
+        res.add(minFreq);
+        res.add(fftSize);
+        res.add(logScale);
+        return res;
+    }
+
+
     FFT fft;
 
+    /*
+    int fftSize = 2048;
     private boolean logScale=false;
     private float maxFreq=5000, minFreq=20;
-    private double startLog=Math.log(20), endLog=Math.log(5000);
+    */
+
+
 
     double[] x,y;
 
-    public void setFFTSize(int samples) {
-        this.fftSize = samples;
-        fft = new FFT(samples);
-    }
     public float freqToBin(float frequency){
         int sr=ap.getSampleRate();
-        float frqPerBin=sr/(float)this.fftSize;
+        float frqPerBin=sr/(float)this.fftSize.getValue();
         return (float)(frequency/frqPerBin);
     }
     public float getMagnitudeBin(int bin){
@@ -47,19 +86,13 @@ public abstract class FftRenderer extends BaseRenderer {
         float floorFactor=(ceilBin-bin)*(getMagnitudeBin(floorBin));
         return ceilFactor+floorFactor;
     }
-    public void setLogScale(boolean logScale){
-        this.logScale=logScale;
-    }
-    public void setFrequencyRange(float min, float max) throws InvalidParameterException {
-        this.maxFreq=max;
-        this.minFreq=min;
-        this.startLog=Math.log(min);
-        this.endLog=Math.log(max);
-        if (maxFreq<=minFreq) throw new InvalidParameterException("Min is larger than Max.");
-    }
     private float ratioToFrequency(float ratio){
-        if (logScale){
-            return (float)Math.exp(startLog+(endLog-startLog)*ratio);
+        float minFreq=this.minFreq.getFloatValue();
+        float maxFreq=this.maxFreq.getFloatValue();
+        if (maxFreq<minFreq) maxFreq=minFreq+100;
+        if (logScale.getValue()){
+            //TODO performance here.
+            return (float)Math.exp(Math.log(minFreq)+(Math.log(maxFreq)-Math.log(minFreq))*ratio);
         }else{
             return minFreq+(maxFreq-minFreq)*ratio;
         }
@@ -95,6 +128,12 @@ public abstract class FftRenderer extends BaseRenderer {
     }
 
     public void updateFFT(long currentFrame) throws BufferNotPresentException {
+
+        int fftSize=this.fftSize.getValue();
+        if (fftSize!=fft.getFftSize()){
+            fft=new FFT(fftSize);
+        }
+
 
         float[] pcmL = getLSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
         float[] pcmR = getRSamples(currentFrame - fftSize / 2 + 1, currentFrame + fftSize / 2);
