@@ -49,7 +49,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     transient Spinner visSpinner;
     transient FrameLayout visual_setting_container;
 
-    VisualizationSettings visualizationSettings;
+
 
     VisualizationManager vm;
 
@@ -57,9 +57,6 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     Context ctxt;
 
     private SidebarSettings(Context c) {
-        visualizationSettings = new VisualizationSettings(this, c);
-
-
         vm = VisualizationManager.getInstance();
         this.ctxt = c;
     }
@@ -68,7 +65,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         View v = inflater.inflate(R.layout.drawer, container, false);
 
         visSpinner = (Spinner) v.findViewById(R.id.visuals_selector);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.visuals_spinner_element, VisualizationSettings.visualizations);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.visuals_spinner_element,visualizations);
         //adapter.setDropDownViewResource(R.layout.visuals_spinner_element);
         visSpinner.setAdapter(adapter);
         visSpinner.setOnItemSelectedListener(this);
@@ -76,7 +73,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
         return v;
     }
-
+    public static final String[] visualizations = new String[]{"Loudness Graph", "Waveform", "Spectrum", "Spectrogram", "Circle", "Album Art", "Ball Physics"};
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -84,33 +81,24 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         visual_setting_container.removeAllViews();
         switch (position) {
             case 0:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.VU);
                 vm.setActiveRenderer(new LoudnessGraphVisuals(ctxt));
-
-
                 break;
             case 1:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.WAVEFORM);
                 vm.setActiveRenderer(new WaveformVisuals(ctxt));
                 break;
             case 2:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTRUM);
                 vm.setActiveRenderer(new SpectrumVisuals(ctxt));
                 break;
             case 3:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.SPECTROGRAM);
                 vm.setActiveRenderer(new SpectrogramVisuals(ctxt));
                 break;
             case 4:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.CIRCLE);
                 vm.setActiveRenderer(new CircleVisuals(ctxt));
                 break;
             case 5:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.ALBUM_ART);
                 vm.setActiveRenderer(new AlbumArtVisuals(ctxt));
                 break;
             case 6:
-                visualizationSettings.setActiveVisualization(VisualizationSettings.BALLS);
                 vm.setActiveRenderer(new BallsVisuals(ctxt));
                 break;
 
@@ -122,8 +110,6 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         //We use the context from the parent view, since the ctxt variable (ApplicationContext) does not have the matching style.
         visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettings(), parent.getContext(), null));
 
-
-        visualizationSettings.save();
 
     }
 

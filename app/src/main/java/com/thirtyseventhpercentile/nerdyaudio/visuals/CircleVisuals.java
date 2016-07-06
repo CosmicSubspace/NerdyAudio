@@ -11,7 +11,6 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
-import com.thirtyseventhpercentile.nerdyaudio.settings.CircleVisualSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
@@ -27,7 +26,6 @@ import java.util.List;
 public class CircleVisuals extends FftRenderer {
     Paint pt;
 
-    CircleVisualSettings newSettings = null;
     /*
         int bars = 100;
 
