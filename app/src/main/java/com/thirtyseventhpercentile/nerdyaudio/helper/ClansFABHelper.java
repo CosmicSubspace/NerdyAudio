@@ -12,7 +12,7 @@ import com.github.clans.fab.FloatingActionMenu;
  * Created by Chan on 3/1/2016.
  */
 public class ClansFABHelper {
-    public static void setScalingAnimation(final FloatingActionMenu fam, final int openedDrawable, final int closedDrawable){
+    public static void setScalingAnimation(final FloatingActionMenu fam, final int openedDrawable, final int closedDrawable) {
         AnimatorSet set = new AnimatorSet();
 
         ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(fam.getMenuIconView(), "scaleX", 1.0f, 0.2f);

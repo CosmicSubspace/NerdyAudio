@@ -14,36 +14,37 @@ public class VisualizationSettings implements Serializable {
 
     private static final String PREF_IDENTIFIER = "com.thirtyseventhpercentile.audiofornerds.settings.VisualizationSettings";
     Context c;
-    public VisualizationSettings(SidebarSettings sbs, Context c){
-        this.c=c;
+
+    public VisualizationSettings(SidebarSettings sbs, Context c) {
+        this.c = c;
 
         load();
 
     }
 
 
-
     protected void save() {
-        SharedPreferences.Editor editor=c.getSharedPreferences(PREF_IDENTIFIER,Context.MODE_PRIVATE).edit();
-        editor.putInt("activeVisualization",activeVisualization);
+        SharedPreferences.Editor editor = c.getSharedPreferences(PREF_IDENTIFIER, Context.MODE_PRIVATE).edit();
+        editor.putInt("activeVisualization", activeVisualization);
         editor.apply();
     }
 
 
     protected void load() {
-        SharedPreferences pref=c.getSharedPreferences(PREF_IDENTIFIER,Context.MODE_PRIVATE);
+        SharedPreferences pref = c.getSharedPreferences(PREF_IDENTIFIER, Context.MODE_PRIVATE);
         setActiveVisualization(pref.getInt("activeVisualization", activeVisualization));
 
     }
 
-    public static final String[] visualizations=new String[]{"Loudness Graph","Waveform","Spectrum","Spectrogram","Circle","Album Art","Ball Physics"};
-    int activeVisualization =0;
+    public static final String[] visualizations = new String[]{"Loudness Graph", "Waveform", "Spectrum", "Spectrogram", "Circle", "Album Art", "Ball Physics"};
+    int activeVisualization = 0;
 
-    public int getActiveVisualization(){
+    public int getActiveVisualization() {
         return activeVisualization;
     }
-    public void setActiveVisualization(int type){
-        this.activeVisualization =type;
+
+    public void setActiveVisualization(int type) {
+        this.activeVisualization = type;
     }
 
 }

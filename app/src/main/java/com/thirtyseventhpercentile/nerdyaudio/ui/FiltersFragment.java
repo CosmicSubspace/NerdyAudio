@@ -26,19 +26,20 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import java.util.ArrayList;
 
 
-public class FiltersFragment extends Fragment implements View.OnClickListener, FilterManager.FilterListChangeListener{
-    private static final String LOG_TAG="CS_AFN";
+public class FiltersFragment extends Fragment implements View.OnClickListener, FilterManager.FilterListChangeListener {
+    private static final String LOG_TAG = "CS_AFN";
     LinearLayout lv;
     FloatingActionMenu fam;
-    FloatingActionButton[] fabs=new FloatingActionButton[3];
+    FloatingActionButton[] fabs = new FloatingActionButton[3];
     FilterManager fm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fm=FilterManager.getInstance();
+        fm = FilterManager.getInstance();
         fm.addFilterListChangeListener(this);
-        View v=inflater.inflate(R.layout.tab_frag_filters, container, false);
-        lv=(LinearLayout)v.findViewById(R.id.filters_tab_filters);
-        fam =(FloatingActionMenu)v.findViewById(R.id.filters_tab_fab);
+        View v = inflater.inflate(R.layout.tab_frag_filters, container, false);
+        lv = (LinearLayout) v.findViewById(R.id.filters_tab_filters);
+        fam = (FloatingActionMenu) v.findViewById(R.id.filters_tab_fab);
         fam.setClosedOnTouchOutside(true);
         ClansFABHelper.setScalingAnimation(fam, R.drawable.ic_close_white_24dp, R.drawable.ic_add_white_24dp);
 
@@ -56,18 +57,19 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
         v.post(new Runnable() {
             @Override
             public void run() {
-                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(false);
+                if (PlayControlsView.getInstance() != null)
+                    PlayControlsView.getInstance().expand(false);
             }
         });
 
         return v;
     }
 
-    public void updateUI(){
+    public void updateUI() {
         lv.removeAllViews();
-        ArrayList<BaseFilter> filters=fm.getFilters();
-        for (int i=0;i<filters.size();i++){
-            lv.addView(filters.get(i).getView(getLayoutInflater(null),lv));
+        ArrayList<BaseFilter> filters = fm.getFilters();
+        for (int i = 0; i < filters.size(); i++) {
+            lv.addView(filters.get(i).getView(getLayoutInflater(null), lv));
         }
     }
 
@@ -79,25 +81,25 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
 
     @Override
     public void onClick(View view) {
-        int id=view.getId();
-        if (id==R.id.filters_tab_fab_sub_1){
-            BaseFilter newFilter=new VolumeFilter(FilterManager.getInstance());
+        int id = view.getId();
+        if (id == R.id.filters_tab_fab_sub_1) {
+            BaseFilter newFilter = new VolumeFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
             lv.addView(newFilter.getView(getLayoutInflater(null), lv));
-        }else if (id==R.id.filters_tab_fab_sub_2){
-            BaseFilter newFilter=new AutoGainFilter(FilterManager.getInstance());
+        } else if (id == R.id.filters_tab_fab_sub_2) {
+            BaseFilter newFilter = new AutoGainFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
-            View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
+            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
             lv.addView(vvvvv);
-        }else if (id==R.id.filters_tab_fab_sub_3){
-            BaseFilter newFilter=new IirLowPassFilter(FilterManager.getInstance());
+        } else if (id == R.id.filters_tab_fab_sub_3) {
+            BaseFilter newFilter = new IirLowPassFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
-            View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
+            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
             lv.addView(vvvvv);
-        }else if (id==R.id.filters_tab_fab_sub_4){
-            BaseFilter newFilter=new IirHighPassFilter(FilterManager.getInstance());
+        } else if (id == R.id.filters_tab_fab_sub_4) {
+            BaseFilter newFilter = new IirHighPassFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
-            View vvvvv=newFilter.getView(getLayoutInflater(null),lv);
+            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
             lv.addView(vvvvv);
         }
     }

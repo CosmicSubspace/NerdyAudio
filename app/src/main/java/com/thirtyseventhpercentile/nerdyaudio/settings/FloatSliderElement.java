@@ -9,29 +9,31 @@ import java.io.Serializable;
  */
 //Extension of the SliderElement to support float values.
 public class FloatSliderElement extends SliderElement implements Serializable {
-    public final static long serialVersionUID=10L;
+    public final static long serialVersionUID = 10L;
 
     transient IntFloatMapper ifm;
 
-    public FloatSliderElement(String name, float min, float max, float current, int divisions){
-        super(name,0,divisions,0);
-        ifm=new IntFloatMapper(0,divisions,min,max);
+    public FloatSliderElement(String name, float min, float max, float current, int divisions) {
+        super(name, 0, divisions, 0);
+        ifm = new IntFloatMapper(0, divisions, min, max);
         setValue(ifm.fromFloat(current));
     }
 
-    public float getFloatValue(){
+    public float getFloatValue() {
         return ifm.fromInt(getValue());
     }
-    public float getNewFloatValue(){
+
+    public float getNewFloatValue() {
         return ifm.fromInt(getNewValue());
     }
 
     @Override
-    public String getStringRepr(){
+    public String getStringRepr() {
         return String.format(java.util.Locale.US, "%.2f", getFloatValue());
     }
+
     @Override
-    public String getNewStringRepr(){
+    public String getNewStringRepr() {
         return String.format(java.util.Locale.US, "%.2f", getNewFloatValue());
     }
 /*

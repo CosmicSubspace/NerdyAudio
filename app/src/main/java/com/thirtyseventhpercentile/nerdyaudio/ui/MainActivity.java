@@ -77,9 +77,6 @@ import java.util.Date;
 //TODO : Replace assertioons with exceptions.
 
 
-
-
-
 /**
  * Other Libraries:
  * Clans FAB [Apache]
@@ -89,8 +86,8 @@ import java.util.Date;
  * Dragsortrecycler [Apache]
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerLayout.DrawerListener{
-    public final String LOG_TAG="CS_AFN";
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerLayout.DrawerListener {
+    public final String LOG_TAG = "CS_AFN";
     Waveform wf;
     PlayControlsView wfv;
     AudioPlayer ap;
@@ -116,38 +113,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final Thread.UncaughtExceptionHandler orig=Thread.getDefaultUncaughtExceptionHandler();
-        final Context c=getApplicationContext();
-        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
-        {
+        final Thread.UncaughtExceptionHandler orig = Thread.getDefaultUncaughtExceptionHandler();
+        final Context c = getApplicationContext();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException (Thread thread, Throwable e)
-            {
-                Log2.log(0,this,"UncaughtException logged:",ErrorLogger.logToString(e));
+            public void uncaughtException(Thread thread, Throwable e) {
+                Log2.log(0, this, "UncaughtException logged:", ErrorLogger.logToString(e));
                 //Toast.makeText(c, ErrorLogger.logToString(e), Toast.LENGTH_SHORT).show();
                 FileWriter f;
                 try {
                     f = new FileWriter(
-                            new File(Environment.getExternalStorageDirectory()+"/AFN_exceptions.txt")
-                            ,true);
-                    f.write("\n\n\n"+ DateFormat.getDateTimeInstance().format(new Date())+"\n");
+                            new File(Environment.getExternalStorageDirectory() + "/AFN_exceptions.txt")
+                            , true);
+                    f.write("\n\n\n" + DateFormat.getDateTimeInstance().format(new Date()) + "\n");
                     f.write(ErrorLogger.logToString(e));
                     f.flush();
                     f.close();
-                }catch(IOException e1){
+                } catch (IOException e1) {
                     ErrorLogger.log(e1);
                 } //Double exception?
 
                 Log2.dumpLogsAsync();
-                
-                orig.uncaughtException(thread,e);
+
+                orig.uncaughtException(thread, e);
             }
         });
 
 
         requestPermission();
 
-        Log2.log(1,this, "MainActivity Created!");
+        Log2.log(1, this, "MainActivity Created!");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -156,21 +151,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         sf = getPreferences(Context.MODE_PRIVATE);
 
-        String[] files=fileList();
-        for (String i:files){
-            Log2.log(1,this,"File: "+i);
+        String[] files = fileList();
+        for (String i : files) {
+            Log2.log(1, this, "File: " + i);
         }
 
 
-        qm=QueueManager.getInstance();
-        ap=AudioPlayer.getInstance();
-        vb=VisualizationBuffer.getInstance();
-        fm=FileManager.getInstance();
-        wf=Waveform.getInstance();
-        sbs=SidebarSettings.instantiate(getApplicationContext());
-        vm=VisualizationManager.getInstance();
+        qm = QueueManager.getInstance();
+        ap = AudioPlayer.getInstance();
+        vb = VisualizationBuffer.getInstance();
+        fm = FileManager.getInstance();
+        wf = Waveform.getInstance();
+        sbs = SidebarSettings.instantiate(getApplicationContext());
+        vm = VisualizationManager.getInstance();
 
-        volCtrl=new VolumeControls(getApplicationContext(),qm);
+        volCtrl = new VolumeControls(getApplicationContext(), qm);
 
         //ap.setBufferFeedListener(vb);
 
@@ -207,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        getSupportFragmentManager().beginTransaction().replace(R.id.tab_area,new LibraryFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.tab_area, new LibraryFragment()).commit();
 
-        wfv=(PlayControlsView)findViewById(R.id.waveform);
+        wfv = (PlayControlsView) findViewById(R.id.waveform);
         wfv.setSpacing(0);
         wfv.setTimestampVisibility(true);
         wfv.setTimestampSize(16);
@@ -222,25 +217,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qm.addQueueListener(wfv);
         qm.addProgressStringListener(wfv);
 
-        vv=(VisualizationView)findViewById(R.id.visualization);
+        vv = (VisualizationView) findViewById(R.id.visualization);
 
-        dl=(DrawerLayout)findViewById(R.id.drawer_layout);
+        dl = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         dl.setDrawerListener(this);
 
-        settingBtn=(RelativeLayout)findViewById(R.id.settings_btn);
+        settingBtn = (RelativeLayout) findViewById(R.id.settings_btn);
         settingBtn.setOnClickListener(this);
 
         //statusText=(TextView)findViewById(R.id.status);
 
-        sideContainer=(ScrollView)findViewById(R.id.drawer_scroll);
-        sideContainer.addView(sbs.getView(getLayoutInflater(),sideContainer,null));
+        sideContainer = (ScrollView) findViewById(R.id.drawer_scroll);
+        sideContainer.addView(sbs.getView(getLayoutInflater(), sideContainer, null));
 
     }
 
-    private static final int PERM_REQ_INTENT=217;
+    private static final int PERM_REQ_INTENT = 217;
 
-    private void requestPermission(){
+    private void requestPermission() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
@@ -281,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Log2.log(3,this,"Ext. Storage permission denied.");
+                    Log2.log(3, this, "Ext. Storage permission denied.");
                     Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                     Toast.makeText(this, "You won't be able to play music...", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
@@ -296,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -307,35 +301,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id==R.id.db_5){
-            for (int i=0;i<fm.getMusics().size();i++) {
+        if (id == R.id.db_5) {
+            for (int i = 0; i < fm.getMusics().size(); i++) {
                 qm.addMusic(fm.getMusics().get(i));
             }
             //qm.prepareWaveform();
 
-        }else if (id==R.id.db_3){
+        } else if (id == R.id.db_3) {
             qm.parseQueueFromFile(new File("storage/sdcard0/PlaylistBackup/R1.txt"));
-        }else if (id==R.id.db_4){
-            qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3",this));
-        }else if (id==R.id.db_1){
-            MixNode<TestMixable> mn=new MixNode<TestMixable>("T");
-            MixNode<TestMixable> mn1=new MixNode<TestMixable>("T1",new TestMixable(0));
-            MixNode<TestMixable> mn2=new MixNode<TestMixable>("T2",new TestMixable(10));
+        } else if (id == R.id.db_4) {
+            qm.addMusic(new MusicInformation("storage/extSdCard/00_Personal_DATA/1_Music/AC24/M_5PM.mp3", this));
+        } else if (id == R.id.db_1) {
+            MixNode<TestMixable> mn = new MixNode<TestMixable>("T");
+            MixNode<TestMixable> mn1 = new MixNode<TestMixable>("T1", new TestMixable(0));
+            MixNode<TestMixable> mn2 = new MixNode<TestMixable>("T2", new TestMixable(10));
             mn.addNode(mn1);
             mn.addNode(mn2);
 
             for (int i = 0; i < 100; i++) {
-                mn1.getInfluence().set(i/100.0f);
-                mn2.getInfluence().set(1.0f-i/100.0f);
-                Log2.log(2,this,mn.getValue(0).value);
+                mn1.getInfluence().set(i / 100.0f);
+                mn2.getInfluence().set(1.0f - i / 100.0f);
+                Log2.log(2, this, mn.getValue(0).value);
             }
-        }else if(id==R.id.db_6){
-            Log2.log(2,this, "Starting Service....");
+        } else if (id == R.id.db_6) {
+            Log2.log(2, this, "Starting Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.START_SERVICE);
             startService(itt);
-        }else if (id==R.id.db_7){
-            Log2.log(2,this, "Stopping Service....");
+        } else if (id == R.id.db_7) {
+            Log2.log(2, this, "Stopping Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.STOP_SERVICE);
             startService(itt);
@@ -345,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         //Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
 
@@ -356,9 +350,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         mHandler.removeCallbacks(mUpdateClockTask);
         mHandler.postDelayed(mUpdateClockTask, 100);
-        if (wfv!=null) wfv.refreshPlaying();
+        if (wfv != null) wfv.refreshPlaying();
 
-        Log2.log(2,this, "Stopping Service....");
+        Log2.log(2, this, "Stopping Service....");
         Intent itt = new Intent(this, BackgroundMusicService.class);
         itt.setAction(BackgroundMusicService.STOP_SERVICE);
         startService(itt);
@@ -371,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vm.saveSettings();
 
         if (ap.isPlaying()) {
-            Log2.log(2,this, "Starting Service....");
+            Log2.log(2, this, "Starting Service....");
             Intent itt = new Intent(this, BackgroundMusicService.class);
             itt.setAction(BackgroundMusicService.START_SERVICE);
             startService(itt);
@@ -380,21 +374,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Log2.dumpLogsAsync();
 
         super.onStop();
     }
 
     @Override
-    public void onDestroy(){
-        Log2.log(2,this,"I'm dyingggggggggg");
+    public void onDestroy() {
+        Log2.log(2, this, "I'm dyingggggggggg");
         super.onDestroy();
     }
 
     @Override
     public void onClick(View view) {
-        int id=view.getId();
+        int id = view.getId();
         /*
         if (id==R.id.controls_play){
             if (ap!=null){
@@ -416,21 +410,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if (id==R.id.controls_rewind){
             qm.playPreviousFile();
         }*/
-        if (id==R.id.settings_btn){
+        if (id == R.id.settings_btn) {
             dl.openDrawer(Gravity.RIGHT);
         }
     }
-    public void updateStatusString(){
+
+    public void updateStatusString() {
         //statusText.setText(qm.getStatusString());
     }
+
     private Runnable mUpdateClockTask = new Runnable() {
         public void run() {
             updateStatusString();
             mHandler.postDelayed(mUpdateClockTask, 1000);
         }
     };
-
-
 
 
     @Override

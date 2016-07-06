@@ -12,9 +12,11 @@ public interface QueueListener {
 
     //Playback has stopped/started.
     void playbackStarted();
+
     void playbackStopped();
 
     //Next/Prev song. newSong() will be called after these callbacks.
     void nextSong();
+
     void previousSong();
 }

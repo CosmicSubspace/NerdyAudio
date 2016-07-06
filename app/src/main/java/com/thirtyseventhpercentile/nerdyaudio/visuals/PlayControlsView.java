@@ -144,7 +144,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     MixNode<PropertySet> filePathInactive;
 
     static PlayControlsView inst;
-    public static PlayControlsView getInstance(){
+
+    public static PlayControlsView getInstance() {
         return inst;
     }
 
@@ -177,12 +178,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
         prepareLayout();
 
-        inst=this;
+        inst = this;
 
         refreshPlaying();
     }
 
-    public void refreshPlaying(){
+    public void refreshPlaying() {
         parseMusicInformation(qm.getCurrentlyPlaying());
     }
 
@@ -229,7 +230,6 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         buttonFollowerUser.getInfluence().set(0.0f);
 
 
-
         buttonFollowerYExpanded = new MixNode<PropertySet>("YExpanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density));
         buttonFollowerYExpanded.getInfluence().set(0.0f);
         buttonFollowerYNotExpanded = new MixNode<PropertySet>("YNotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight) * density));
@@ -246,13 +246,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         playBtnRestPosition.addNode(playBtnRestSide);
         playBtnRestPosition.addNode(playBtnRestCenter);
 
-        playBtnShape=new MixNode<PointsCompound>("Play Btn Shape");
-        playBtnShapeNormal=new MixNode<PointsCompound>("Play Btn Normal",PrimitivePaths.play(buttonsSize / 2.0f * density));
-        playBtnShapeDiamond=new MixNode<PointsCompound>("Play Btn Diamond",PrimitivePaths.playDiamond(buttonsSize / 2.0f * density*0.3f));
-        playBtnShapeExpanded=
+        playBtnShape = new MixNode<PointsCompound>("Play Btn Shape");
+        playBtnShapeNormal = new MixNode<PointsCompound>("Play Btn Normal", PrimitivePaths.play(buttonsSize / 2.0f * density));
+        playBtnShapeDiamond = new MixNode<PointsCompound>("Play Btn Diamond", PrimitivePaths.playDiamond(buttonsSize / 2.0f * density * 0.3f));
+        playBtnShapeExpanded =
                 new MixNode<PointsCompound>("Play Btn Expanded",
-                        PrimitivePaths.playExpanded(buttonsSize / 2.0f * density*0.3f,
-                        15 * density,40 * density,30* density));
+                        PrimitivePaths.playExpanded(buttonsSize / 2.0f * density * 0.3f,
+                                15 * density, 40 * density, 30 * density));
         playBtnShapeDiamond.getInfluence().set(0.0f);
         playBtnShapeExpanded.getInfluence().set(0.0f);
         playBtnShape.getInfluence().set(1.0f);
@@ -273,9 +273,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         pauseRest.addNode(pauseRestCenter);
 
 
-        pausePointsMixed=new MixNode<PointsCompound>("Pause Shape");
-        pausePointsNormal=new MixNode<PointsCompound>("Pause Normal",PrimitivePaths.pause(buttonsSize / 2.0f * density));
-        pausePointsSquare=new MixNode<PointsCompound>("Pause Square",PrimitivePaths.pauseSquare(buttonsSize / 2.0f * density));
+        pausePointsMixed = new MixNode<PointsCompound>("Pause Shape");
+        pausePointsNormal = new MixNode<PointsCompound>("Pause Normal", PrimitivePaths.pause(buttonsSize / 2.0f * density));
+        pausePointsSquare = new MixNode<PointsCompound>("Pause Square", PrimitivePaths.pauseSquare(buttonsSize / 2.0f * density));
         pausePointsNormal.getInfluence().set(0.0f);
         pausePointsMixed.addNode(pausePointsSquare);
         pausePointsMixed.addNode(pausePointsNormal);
@@ -291,19 +291,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         pauseBtn.getMixNode().addNode(pauseRest);
 
 
-
         nextBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixNode<PropertySet>("FinalMix"));
         nextSide = new MixNode<PropertySet>("Side", new PropertySet().setValue("X", buttonsAreaIni + buttonsAreaW * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         nextCenter = new MixNode<PropertySet>("Center", new PropertySet().setValue("X", w * (5.0f / 6.0f)).setValue("Y", h - (buttonsSize / 2 + buttonMargins) * density).setValue("Scale", 1).setValue("Rotation", 0).setValue("Alpha", 1.0f));
         nextCenter.getInfluence().set(0.0f);
         nextBtn.getMixNode().addNode(nextSide);
         nextBtn.getMixNode().addNode(nextCenter);
-        nextBounce=new MixNode<PropertySet>("Next Bounce",new PropertySet().setValue("X",32*density));
+        nextBounce = new MixNode<PropertySet>("Next Bounce", new PropertySet().setValue("X", 32 * density));
         nextBounce.getBasis().setMode(PropertySet.ADDITIVE);
         nextBounce.getInfluence().set(0.0f);
         nextBtn.getMixNode().addNode(nextBounce);
-
-
 
 
         prevBtn = new AnimatableShape(PrimitivePaths.next(buttonsSize / 2.0f * density), buttonColor, new MixNode<PropertySet>("FinalMix"));
@@ -312,7 +309,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         prevCenter.getInfluence().set(0.0f);
         prevBtn.getMixNode().addNode(prevSide);
         prevBtn.getMixNode().addNode(prevCenter);
-        prevBounce=new MixNode<PropertySet>("Prev Bounce",new PropertySet().setValue("X",-32*density));
+        prevBounce = new MixNode<PropertySet>("Prev Bounce", new PropertySet().setValue("X", -32 * density));
         prevBounce.getBasis().setMode(PropertySet.ADDITIVE);
         prevBounce.getInfluence().set(0.0f);
         prevBtn.getMixNode().addNode(prevBounce);
@@ -371,7 +368,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         timestampFollow = new MixNode<PropertySet>("Follow", new PropertySet().setValue("X", 0));
         timestampNotExpanded = new MixNode<PropertySet>("NotExpanded", new PropertySet().setValue("Y", h - (normalBarHeight + 30) * density));
 
-        timestampExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize +10) * density));
+        timestampExpanded = new MixNode<PropertySet>("Expanded", new PropertySet().setValue("Y", h - (expandedBarHeight - albumArtSize + 10) * density));
         timestampExpanded.getInfluence().set(0.0f);
         timestampFollow.getInfluence().set(0.0f);
         timestampAnim.getMixNode().addNode(timestampRest);
@@ -387,7 +384,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         waveformNotExpanded = new MixNode<PropertySet>("NotExpanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - normalBarHeight * density)
                         .setValue("XSize", w).setValue("YSize", 50 * density)
-                        .setValue("YBalance",1.0f)
+                        .setValue("YBalance", 1.0f)
                         .setValue("Played-R", ColorFiddler.rF(playedColor))
                         .setValue("Played-G", ColorFiddler.gF(playedColor))
                         .setValue("Played-B", ColorFiddler.bF(playedColor))
@@ -396,11 +393,11 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                         .setValue("Remaining-G", ColorFiddler.gF(remainingColor))
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColor))
                         .setValue("Remaining-A", ColorFiddler.aF(remainingColor))
-                        .setValue("CenterBarHeight",2*density));
+                        .setValue("CenterBarHeight", 2 * density));
         waveformExpanded = new MixNode<PropertySet>("Expanded",
                 new PropertySet().setValue("X", 0).setValue("Y", h - (expandedBarHeight - albumArtSize - 20) * density)
                         .setValue("XSize", w).setValue("YSize", 40 * density)
-                        .setValue("YBalance",0.5f)
+                        .setValue("YBalance", 0.5f)
                         .setValue("Played-R", ColorFiddler.rF(playedColorEX))
                         .setValue("Played-G", ColorFiddler.gF(playedColorEX))
                         .setValue("Played-B", ColorFiddler.bF(playedColorEX))
@@ -409,9 +406,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                         .setValue("Remaining-G", ColorFiddler.gF(remainingColorEX))
                         .setValue("Remaining-B", ColorFiddler.bF(remainingColorEX))
                         .setValue("Remaining-A", ColorFiddler.aF(remainingColorEX))
-                        .setValue("CenterBarHeight",2*density));
-        waveformCenterActive=new MixNode<PropertySet>("Waveform Center Active",new PropertySet().setValue("CenterBarWidth",1.0f));
-        waveformCenterInactive=new MixNode<PropertySet>("Waveform Center Inactive",new PropertySet().setValue("CenterBarWidth",0.0f));
+                        .setValue("CenterBarHeight", 2 * density));
+        waveformCenterActive = new MixNode<PropertySet>("Waveform Center Active", new PropertySet().setValue("CenterBarWidth", 1.0f));
+        waveformCenterInactive = new MixNode<PropertySet>("Waveform Center Inactive", new PropertySet().setValue("CenterBarWidth", 0.0f));
         waveformCenterActive.getInfluence().set(0.0f);
         waveformExpanded.getInfluence().set(0.0f);
         waveform.getMixNode().addNode(waveformExpanded);
@@ -433,7 +430,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     boolean expanded = false;
 
     public void expand(boolean expand) {
-        int ease=EasingEquations.QUINTIC;
+        int ease = EasingEquations.QUINTIC;
         if (this.expanded == expand) return;
         this.expanded = expand;
         if (expand) {
@@ -460,7 +457,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
             filePathActive.getInfluence().animate(1, 1, ease);
             filePathInactive.getInfluence().animate(0, 1, ease);
-            buttonsCenter(true,ease);
+            buttonsCenter(true, ease);
         } else {
             expandedBarHeightMP.getInfluence().animate(0, 1, ease);
             normalBarHeightMP.getInfluence().animate(1, 1, ease);
@@ -485,12 +482,12 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
             filePathActive.getInfluence().animate(0, 1, ease);
             filePathInactive.getInfluence().animate(1, 1, ease);
-            if (currentMusic != null) if (currentMusic.hasArt()) buttonsCenter(false,ease);
+            if (currentMusic != null) if (currentMusic.hasArt()) buttonsCenter(false, ease);
         }
     }
 
-    private void buttonsCenter(boolean center){
-        buttonsCenter(center,EasingEquations.DEFAULT_EASE);
+    private void buttonsCenter(boolean center) {
+        buttonsCenter(center, EasingEquations.DEFAULT_EASE);
     }
 
     private void buttonsCenter(boolean center, int ease) {
@@ -526,7 +523,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     MusicInformation currentMusic;
 
     protected void parseMusicInformation(final MusicInformation mi) {
-        if (mi==null) return;
+        if (mi == null) return;
 
         currentMusic = mi;
         title = mi.getTitle();
@@ -579,22 +576,23 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
     }
 
     long currentFrameTime;
+
     @Override
     protected void onDraw(Canvas canvas) {
 
         //Log2.log(2,this,buttonFollower.getInfluence().getValue(),playBtnRestPosition.getInfluence().getValue());
 
-        currentFrameTime=System.currentTimeMillis();
+        currentFrameTime = System.currentTimeMillis();
 
         pt.setColor(menuColor);
         canvas.drawRect(0, h - barHeight.getValue(currentFrameTime).getValue("Height"), w, h, pt);
 
 
-        titleAnimatable.draw(canvas, pt,currentFrameTime);
+        titleAnimatable.draw(canvas, pt, currentFrameTime);
 
-        artistAnimatable.draw(canvas, pt,currentFrameTime);
+        artistAnimatable.draw(canvas, pt, currentFrameTime);
 
-        filePath.draw(canvas, pt,currentFrameTime);
+        filePath.draw(canvas, pt, currentFrameTime);
         if (albumArt != null) {
             pt.setAlpha(Math.round(albumArtColor.getValue(currentFrameTime).getValue("alpha")));
             canvas.drawBitmap(albumArt, null, artBoundsAnim.getRectF(currentFrameTime), pt);
@@ -603,23 +601,19 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         }
 
 
-        waveform.draw(canvas, pt,currentFrameTime);
-
-
-
-
+        waveform.draw(canvas, pt, currentFrameTime);
 
 
         pt.setColor(Color.argb(50, 0, 0, 0));
 
         pt.setColor(buttonColor);
 
-        playBtn.draw(canvas, pt,currentFrameTime);
+        playBtn.draw(canvas, pt, currentFrameTime);
 
-        pauseBtn.draw(canvas, pt,currentFrameTime);
+        pauseBtn.draw(canvas, pt, currentFrameTime);
 
-        prevBtn.draw(canvas, pt,currentFrameTime);
-        nextBtn.draw(canvas, pt,currentFrameTime);
+        prevBtn.draw(canvas, pt, currentFrameTime);
+        nextBtn.draw(canvas, pt, currentFrameTime);
 
 
         if (wf != null && ap != null && wf.isReady() && wf.getFilename().equals(ap.getSourceString())) {
@@ -629,7 +623,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                 timestampAnim.setText(wf.frameNumberToTimeStamp(ap.getMusicCurrentFrame()));
             }
 
-            timestampAnim.draw(canvas, pt,currentFrameTime);
+            timestampAnim.draw(canvas, pt, currentFrameTime);
 
             buttonFollowerProgress.getBasis().setValue("X", w * currentPosition);
         }
@@ -642,8 +636,8 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
     private void animatePlay() {
 
-        playBtnShapeDiamond.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        playBtnShapeDiamond.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+        playBtnShapeNormal.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
         playBtnRestPosition.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
@@ -651,16 +645,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         pauseVisible.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         pauseInvisible.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
-        pausePointsSquare.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        pausePointsNormal.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        pausePointsSquare.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+        pausePointsNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
-        waveformCenterActive.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        waveformCenterInactive.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        waveformCenterActive.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+        waveformCenterInactive.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
     }
 
     private void animateStop() {
-        playBtnShapeDiamond.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        playBtnShapeNormal.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        playBtnShapeDiamond.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+        playBtnShapeNormal.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
         playBtnRestPosition.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
         buttonFollower.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
@@ -668,20 +662,21 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
         pauseVisible.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
         pauseInvisible.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
-        pausePointsSquare.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
-        pausePointsNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+        pausePointsSquare.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
+        pausePointsNormal.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
-        waveformCenterActive.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-        waveformCenterInactive.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+        waveformCenterActive.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
+        waveformCenterInactive.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
     }
 
-    private void animateNext(){
+    private void animateNext() {
         nextBounce.getInfluence().set(1.0f);
-        nextBounce.getInfluence().animate(0.0f,1,EasingEquations.DEFAULT_EASE);
+        nextBounce.getInfluence().animate(0.0f, 1, EasingEquations.DEFAULT_EASE);
     }
-    private void animatePrev(){
+
+    private void animatePrev() {
         prevBounce.getInfluence().set(1.0f);
-        prevBounce.getInfluence().animate(0.0f,1,EasingEquations.DEFAULT_EASE);
+        prevBounce.getInfluence().animate(0.0f, 1, EasingEquations.DEFAULT_EASE);
     }
 
     float iniX, iniY;
@@ -696,7 +691,7 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
 
             //Play Button Drag
             if (buttonFollower.getInfluence().getValue() > 0.99f) { //if in playing mode and button is in follow state
-                if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+                if (playBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                     dragMode = true;
                     buttonFollowerUser.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
                     buttonFollowerProgress.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
@@ -705,9 +700,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                     timestampRest.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
                     //TODO not zeroing the PlayBtnShapeNormal may cause anim bugs.
-                    playBtnShapeExpanded.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+                    playBtnShapeExpanded.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
                     //playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-                    playBtnShapeDiamond.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                    playBtnShapeDiamond.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
 
                     buttonFollowerUser.getBasis().setValue("X", ev.getX());
                     timestampFollow.getBasis().setValue("X", ev.getX());
@@ -716,13 +711,13 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
             }
 
             //Other buttons
-            if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            if (prevBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (pauseBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (pauseBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
-            } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (nextBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
             } /*else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {
                 return true;
@@ -744,9 +739,9 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
                 buttonFollowerUser.getInfluence().animate(0, 0.5f, EasingEquations.DEFAULT_EASE);
                 buttonFollowerProgress.getInfluence().animate(1, 0.5f, EasingEquations.DEFAULT_EASE);
 
-                playBtnShapeExpanded.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
+                playBtnShapeExpanded.getInfluence().animate(0, 1, EasingEquations.DEFAULT_EASE);
                 //playBtnShapeNormal.getInfluence().animate(0,1,EasingEquations.DEFAULT_EASE);
-                playBtnShapeDiamond.getInfluence().animate(1,1,EasingEquations.DEFAULT_EASE);
+                playBtnShapeDiamond.getInfluence().animate(1, 1, EasingEquations.DEFAULT_EASE);
 
                 float totalTime = (float) (wf.getNumOfFrames() / (double) ap.getSampleRate());
                 ap.seekTo(totalTime * ev.getX() / w);
@@ -760,16 +755,16 @@ public class PlayControlsView extends View implements ProgressStringListener, Qu
             }
 
             //Button doing stuff.
-            if (prevBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            if (prevBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playPreviousFile();
                 return true;
-            } else if (playBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (playBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playCurrent();
                 return true;
-            } else if (pauseBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (pauseBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.pause();
                 return true;
-            } else if (nextBtn.getBounds(buttonPaddings * density,currentFrameTime).contains(ev.getX(), ev.getY())) {
+            } else if (nextBtn.getBounds(buttonPaddings * density, currentFrameTime).contains(ev.getX(), ev.getY())) {
                 qm.playNextFile();
                 return true;
             } /*else if (artBoundsAnim.getRectF(currentFrameTime).contains(ev.getX(), ev.getY())) {

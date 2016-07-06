@@ -17,14 +17,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class WaveformCalculator extends Thread implements BufferFeedListener {
-    public static final String LOG_TAG="CS_AFN";
+    public static final String LOG_TAG = "CS_AFN";
 
     File file;
     String filename;
     Context c;
     float[] data;
-    ArrayList<Long> sumData= new ArrayList<Long>();
-    float maxAmp=0.0f;
+    ArrayList<Long> sumData = new ArrayList<Long>();
+    float maxAmp = 0.0f;
     double divisionEvery;
     SampleProgressListener spl;
     WaveformReturnListener wrl;
@@ -32,80 +32,82 @@ public class WaveformCalculator extends Thread implements BufferFeedListener {
 
     int sampleRate;
     int channels;
-    double currentTimeInSeconds=0;
+    double currentTimeInSeconds = 0;
     double timePerSample;
-    int currentSample=0;
-    int currentBar=0;
+    int currentSample = 0;
+    int currentBar = 0;
 
-    public WaveformCalculator(String filename, double divisionEvery, Context ctxt){
+    public WaveformCalculator(String filename, double divisionEvery, Context ctxt) {
         super();
-        this.filename=filename;
-        this.file=new File(filename);
-        this.divisionEvery=divisionEvery;
-this.c=ctxt;
+        this.filename = filename;
+        this.file = new File(filename);
+        this.divisionEvery = divisionEvery;
+        this.c = ctxt;
     }
-    public void setSampleProgressListener(SampleProgressListener spl){
-        this.spl=spl;
-    }
-    public void setWaveformReturnListener(WaveformReturnListener wrl){
-        this.wrl=wrl;
-    }
-    @Override
-    public void run(){
 
-        SoundFile sf=new SoundFile();
+    public void setSampleProgressListener(SampleProgressListener spl) {
+        this.spl = spl;
+    }
+
+    public void setWaveformReturnListener(WaveformReturnListener wrl) {
+        this.wrl = wrl;
+    }
+
+    @Override
+    public void run() {
+
+        SoundFile sf = new SoundFile();
         try {
             sf.ReadFileMetaData(file);
 
-            sampleRate=sf.getSampleRate();
-            timePerSample=1.0/(double)sampleRate;
-            channels=sf.getChannels();
+            sampleRate = sf.getSampleRate();
+            timePerSample = 1.0 / (double) sampleRate;
+            channels = sf.getChannels();
 
-            Log2.log(1,this, "Sample rate:" + sampleRate);
-            Log2.log(1,this, "Channels:" + channels);
+            Log2.log(1, this, "Sample rate:" + sampleRate);
+            Log2.log(1, this, "Channels:" + channels);
 
 
             sf.ReadFileWithCallback(file, this);
         } catch (Exception e) {
-           ErrorLogger.log(e);
+            ErrorLogger.log(e);
         }
 
 
-        sf=null;
+        sf = null;
 
-        data=new float[sumData.size()];
-        int samplesPerBar=(int)(sampleRate*divisionEvery);
-        for (int i=0;i<sumData.size();i++){
+        data = new float[sumData.size()];
+        int samplesPerBar = (int) (sampleRate * divisionEvery);
+        for (int i = 0; i < sumData.size(); i++) {
             //data[i]=(float)Math.sqrt((double)sumData.get(i)/(double)samplesPerBar);
-            data[i]=(float)((double)sumData.get(i)/(double)samplesPerBar);
+            data[i] = (float) ((double) sumData.get(i) / (double) samplesPerBar);
         }
 
 
-
-        Waveform res=new Waveform(filename,divisionEvery);
+        Waveform res = new Waveform(filename, divisionEvery);
         res.analyze(data, maxAmp, currentSample / channels, sampleRate, channels);
         res.saveToFile(c);
-        if (wrl!=null) wrl.onReturn(res);
+        if (wrl != null) wrl.onReturn(res);
     }
 
     @Override
     public void feed(short[] buff) {
         //TODO performance improvement needed here. This loop runs millions of times when analyzing a music file.
         //Log2.log(0,this,"WaveformVisuals: Fed shorts. length="+buff.length);
-        for (int i=0; i<buff.length;i++){
-            if (i%4==0) {//TODO HASTY SPEED IMPROVEMENT
+        for (int i = 0; i < buff.length; i++) {
+            if (i % 4 == 0) {//TODO HASTY SPEED IMPROVEMENT
                 currentTimeInSeconds = currentSample * timePerSample / (double) channels; //TODO This is a hasty fix for stereo support.
                 currentBar = (int) (currentTimeInSeconds / divisionEvery);
                 if (sumData.size() <= currentBar) {
                     sumData.add(0L);
-                    Log2.log(1,this, "Adding bar. (number " + sumData.size() + ", " + currentTimeInSeconds + " seconds)");
+                    Log2.log(1, this, "Adding bar. (number " + sumData.size() + ", " + currentTimeInSeconds + " seconds)");
                 }
                 sumData.set(currentBar, sumData.get(currentBar) + Math.abs(buff[i]));
                 if (maxAmp < buff[i]) maxAmp = buff[i];
             }
             currentSample++;
         }
-        if (spl!=null) spl.report(currentSample);
+        if (spl != null) spl.report(currentSample);
     }
     /*
     @Override

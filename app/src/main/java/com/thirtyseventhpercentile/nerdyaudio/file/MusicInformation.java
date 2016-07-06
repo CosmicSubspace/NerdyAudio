@@ -13,34 +13,39 @@ import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 import java.io.File;
 import java.util.Comparator;
 
-public class MusicInformation implements MusicListDisplayable{
-    static class AlbumComparator implements Comparator<MusicInformation>{
+public class MusicInformation implements MusicListDisplayable {
+    static class AlbumComparator implements Comparator<MusicInformation> {
         @Override
-        public int compare(MusicInformation a, MusicInformation b){
+        public int compare(MusicInformation a, MusicInformation b) {
             return a.album.compareToIgnoreCase(b.album);
         }
+
         @Override
-        public boolean equals(Object o){
+        public boolean equals(Object o) {
             return this.equals(o);
         }
     }
-    static class TitleComparator implements Comparator<MusicInformation>{
+
+    static class TitleComparator implements Comparator<MusicInformation> {
         @Override
-        public int compare(MusicInformation a, MusicInformation b){
+        public int compare(MusicInformation a, MusicInformation b) {
             return a.title.compareToIgnoreCase(b.title);
         }
+
         @Override
-        public boolean equals(Object o){
+        public boolean equals(Object o) {
             return this.equals(o);
         }
     }
-    static class ArtistComparator implements Comparator<MusicInformation>{
+
+    static class ArtistComparator implements Comparator<MusicInformation> {
         @Override
-        public int compare(MusicInformation a, MusicInformation b){
+        public int compare(MusicInformation a, MusicInformation b) {
             return a.artist.compareToIgnoreCase(b.artist);
         }
+
         @Override
-        public boolean equals(Object o){
+        public boolean equals(Object o) {
             return this.equals(o);
         }
     }
@@ -77,6 +82,7 @@ public class MusicInformation implements MusicListDisplayable{
     public boolean hasArt() {
         return hasArt;
     }
+
     public String getAlbum() {
         return album;
     }
@@ -87,7 +93,6 @@ public class MusicInformation implements MusicListDisplayable{
     }
 
 
-
     public int getStatus() {
         if (isReady) {
             if (isPlaying) {
@@ -95,7 +100,7 @@ public class MusicInformation implements MusicListDisplayable{
             } else {
                 return READY;
             }
-        } else if (isCaching){
+        } else if (isCaching) {
             if (isPlaying) {
                 return PLAYING_WHILE_CACHING;
             } else {
@@ -114,35 +119,35 @@ public class MusicInformation implements MusicListDisplayable{
     public static final int READY = 135;
     public static final int PLAYING = 619;
     public static final int PLAYING_WITHOUT_DATA = 713;
-    public static final int CACHING=123;
-    public static final int PLAYING_WHILE_CACHING=691;
+    public static final int CACHING = 123;
+    public static final int PLAYING_WHILE_CACHING = 691;
 
     String filepath;
     String title;
     String artist;
 
 
-
     String album;
     String folderName;
     boolean hasArt;
-    boolean isReady = false, isPlaying = false, isCaching=false;
+    boolean isReady = false, isPlaying = false, isCaching = false;
 
-    public MusicInformation(MusicInformation mi){
-        this.filepath=mi.filepath;
-        this.title=mi.title;
-        this.artist=mi.artist;
-        this.hasArt=mi.hasArt;
-        this.isReady=mi.isReady;
+    public MusicInformation(MusicInformation mi) {
+        this.filepath = mi.filepath;
+        this.title = mi.title;
+        this.artist = mi.artist;
+        this.hasArt = mi.hasArt;
+        this.isReady = mi.isReady;
     }
+
     public MusicInformation(String source, Context c) {
         this.filepath = source;
 
-        String[] split=source.split("\\/");
+        String[] split = source.split("\\/");
         try {
             this.folderName = split[split.length - 2];
-        }catch (ArrayIndexOutOfBoundsException e){
-            this.folderName="(No Folder?)";
+        } catch (ArrayIndexOutOfBoundsException e) {
+            this.folderName = "(No Folder?)";
         }
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -155,7 +160,7 @@ public class MusicInformation implements MusicListDisplayable{
         if (artist == null || artist.equals("")) {
             artist = "(No Artist Data)";
         }
-        album=mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         if (album == null || album.equals("")) {
             album = "(No Album Data)";
         }
@@ -173,26 +178,32 @@ public class MusicInformation implements MusicListDisplayable{
     }
 
     public MusicInformation updateReadyness(Context c) {
-        if (Waveform.checkExistance(filepath, 1, c)) isReady=true;
-        else isReady=false;
+        if (Waveform.checkExistance(filepath, 1, c)) isReady = true;
+        else isReady = false;
         return this;
     }
-    public void setReady(boolean ready){
-        this.isReady=ready;
+
+    public void setReady(boolean ready) {
+        this.isReady = ready;
     }
-    public void setPlaying(boolean playing){
-        this.isPlaying=playing;
+
+    public void setPlaying(boolean playing) {
+        this.isPlaying = playing;
     }
-    public void setCaching(boolean caching){
-        this.isCaching=caching;
+
+    public void setCaching(boolean caching) {
+        this.isCaching = caching;
     }
-    public boolean isReady(){
+
+    public boolean isReady() {
         return this.isReady;
     }
-    public boolean isPlaying(){
+
+    public boolean isPlaying() {
         return this.isPlaying;
     }
-    public boolean isCaching(){
+
+    public boolean isCaching() {
         return this.isCaching;
     }
 }

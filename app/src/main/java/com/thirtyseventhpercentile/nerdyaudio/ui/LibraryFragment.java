@@ -25,16 +25,16 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import java.io.File;
 
 
-public class LibraryFragment extends Fragment implements View.OnClickListener{
+public class LibraryFragment extends Fragment implements View.OnClickListener {
 
-    public static final String LOG_TAG="CS_AFN";
+    public static final String LOG_TAG = "CS_AFN";
 
     RecyclerView mRecyclerView;
     MusicListAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
-    TextView currentDir,currentGrouping,currentSorting, scanning;
-    View dirBtn,groupingBtn,sortBtn;
+    TextView currentDir, currentGrouping, currentSorting, scanning;
+    View dirBtn, groupingBtn, sortBtn;
 
     PopupMenu groupingPopup, sortingPopup;
 
@@ -43,7 +43,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        fm=FileManager.getInstance();
+        fm = FileManager.getInstance();
 
         View v = inflater.inflate(R.layout.tab_frag_library, container, false);
 
@@ -71,9 +71,9 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         sortBtn = v.findViewById(R.id.library_tab_sort_btn);
         sortBtn.setOnClickListener(this);
 
-        currentDir=(TextView)v.findViewById(R.id.library_tab_current_directory);
-        currentGrouping=(TextView)v.findViewById(R.id.library_tab_current_grouping);
-        currentSorting=(TextView)v.findViewById(R.id.library_tab_current_sort);
+        currentDir = (TextView) v.findViewById(R.id.library_tab_current_directory);
+        currentGrouping = (TextView) v.findViewById(R.id.library_tab_current_grouping);
+        currentSorting = (TextView) v.findViewById(R.id.library_tab_current_sort);
 
 
         groupingPopup = new PopupMenu(getContext(), groupingBtn);
@@ -138,9 +138,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         });
 
 
-
-
-        scanning=(TextView)v.findViewById(R.id.library_tab_scanning);
+        scanning = (TextView) v.findViewById(R.id.library_tab_scanning);
 
         //TODO make file browser inside the tab, not on a popup thing.
 
@@ -151,22 +149,25 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
         v.post(new Runnable() {
             @Override
             public void run() {
-                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(false);
+                if (PlayControlsView.getInstance() != null)
+                    PlayControlsView.getInstance().expand(false);
             }
         });
 
         return v;
     }
 
-    private void updateUI(){
+    private void updateUI() {
         mAdapter.updateMusicList();
         currentDir.setText(fm.getCurrentDirectoryPath());
     }
-    private void scanUI(){
+
+    private void scanUI() {
         scanning.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
-    private void scanCompleteUI(){
+
+    private void scanCompleteUI() {
         scanning.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -188,10 +189,12 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
                     });
                 }
             });
-        }else*/ if (id==R.id.tab_library_dir){
-            new FileChooser(getActivity(),fm.getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
-                @Override public void fileSelected(final File file) {
-                    Log2.log(1,this,"File chosen:"+file.getAbsolutePath());
+        }else*/
+        if (id == R.id.tab_library_dir) {
+            new FileChooser(getActivity(), fm.getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
+                @Override
+                public void fileSelected(final File file) {
+                    Log2.log(1, this, "File chosen:" + file.getAbsolutePath());
                     fm.setDirectory(file);
                     scanUI();
                     fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
@@ -207,10 +210,11 @@ public class LibraryFragment extends Fragment implements View.OnClickListener{
                             });
                         }
                     }, getContext());
-                }}).showDialog();
-        }else if (id==R.id.library_tab_group_btn){
+                }
+            }).showDialog();
+        } else if (id == R.id.library_tab_group_btn) {
             groupingPopup.show();
-        }else if (id==R.id.library_tab_sort_btn){
+        } else if (id == R.id.library_tab_sort_btn) {
             sortingPopup.show();
         }
     }

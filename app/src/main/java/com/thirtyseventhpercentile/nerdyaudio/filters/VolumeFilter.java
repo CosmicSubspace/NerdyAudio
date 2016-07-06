@@ -12,19 +12,21 @@ import android.widget.TextView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 
-public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     SeekBar sb;
     TextView valueText, warningText;
-    float multiplier=1.0f;
-    int progress=100;
-    public VolumeFilter(FilterManager fm){
+    float multiplier = 1.0f;
+    int progress = 100;
+
+    public VolumeFilter(FilterManager fm) {
         super(fm);
     }
+
     @Override
     public void filter(float[] data) { //We use the existing array so that GC won't have to suffer from all those arrays.
         for (int i = 0; i < data.length; i++) {
-            data[i]=data[i]*multiplier;
+            data[i] = data[i] * multiplier;
         }
     }
 
@@ -37,15 +39,14 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
     @Override
     public View getContentView(LayoutInflater inflater, ViewGroup container) {
         View v = inflater.inflate(R.layout.filter_volume, container, false);
-        sb=(SeekBar) v.findViewById(R.id.filter_volume_seekbar);
+        sb = (SeekBar) v.findViewById(R.id.filter_volume_seekbar);
         sb.setMax(200);
         sb.setOnSeekBarChangeListener(this);
 
-        valueText=(TextView) v.findViewById(R.id.filter_volume_value);
-        warningText=(TextView)v.findViewById(R.id.filter_volume_warning);
+        valueText = (TextView) v.findViewById(R.id.filter_volume_value);
+        warningText = (TextView) v.findViewById(R.id.filter_volume_warning);
 
         sb.setProgress(progress);
-
 
 
         return v;
@@ -54,10 +55,10 @@ public class VolumeFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        progress=i;
-        multiplier=progress/100.0f;
-        valueText.setText(progress+"%");
-        if (progress>100) warningText.setVisibility(View.VISIBLE);
+        progress = i;
+        multiplier = progress / 100.0f;
+        valueText.setText(progress + "%");
+        if (progress > 100) warningText.setVisibility(View.VISIBLE);
         else warningText.setVisibility(View.GONE);
 
     }

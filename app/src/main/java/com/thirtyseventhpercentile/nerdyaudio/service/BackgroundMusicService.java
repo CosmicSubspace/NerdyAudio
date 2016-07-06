@@ -54,7 +54,7 @@ public class BackgroundMusicService extends Service implements QueueListener {
         qm = QueueManager.getInstance();
         qm.addQueueListener(this);
         //lbm=LocalBroadcastManager.getInstance(this);
-        Log2.log(1,this, "Service Created.");
+        Log2.log(1, this, "Service Created.");
 
         nb = new NotificationCompat.Builder(getApplicationContext());
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -70,10 +70,10 @@ public class BackgroundMusicService extends Service implements QueueListener {
 
     @Override
     public void onDestroy() {
-        Log2.log(1,this, "Canceling notification...");
+        Log2.log(1, this, "Canceling notification...");
 
         nm.cancel(notificationID);
-        Log2.log(2,this, "Service Destroyed.");
+        Log2.log(2, this, "Service Destroyed.");
 
         super.onDestroy();
     }
@@ -81,7 +81,7 @@ public class BackgroundMusicService extends Service implements QueueListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log2.log(1,this, "Service Starting");
+        Log2.log(1, this, "Service Starting");
         if (intent.getAction() == null) {
             //Do nothing.
         } else if (intent.getAction().equals(START_SERVICE)) {

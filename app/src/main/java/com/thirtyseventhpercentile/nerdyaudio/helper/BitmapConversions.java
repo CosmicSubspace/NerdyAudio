@@ -30,18 +30,19 @@ public class BitmapConversions {
 
         return inSampleSize;
     }
+
     public static Bitmap decodeSampledBitmapFromResource(byte[] imageBytes, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(imageBytes, 0,imageBytes.length, options);
+        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeByteArray(imageBytes, 0,imageBytes.length, options);
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
     }
 }

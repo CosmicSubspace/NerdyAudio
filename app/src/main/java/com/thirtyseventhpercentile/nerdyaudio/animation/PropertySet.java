@@ -9,7 +9,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import java.util.HashMap;
 
 
-
 public class PropertySet implements Mixable {
     private static final String LOG_TAG = "CS_AFN";
 
@@ -34,9 +33,9 @@ public class PropertySet implements Mixable {
                     influences.put(key, influences.get(key) + influence);
                     res.setValue(key, res.getValue(key, 0) + thing.getValue(key) * influence);
                 } else if (thing.mode == ADDITIVE) {
-                    additive.setValue(key,additive.getValue(key,0)+thing.getValue(key)*influence);
-                }else{
-                    Log2.log(4,this,"MODE ERROR");
+                    additive.setValue(key, additive.getValue(key, 0) + thing.getValue(key) * influence);
+                } else {
+                    Log2.log(4, this, "MODE ERROR");
                 }
             }
         }
@@ -46,8 +45,8 @@ public class PropertySet implements Mixable {
             for (Object k : res.getIter()) {
                 String key = (String) k;
                 if (influences.get(key) < 0.0001f)
-                    Log2.log(3,this, "Influence sum of " + key + " is near zero. Expect Animation errors.");
-                res.setValue(key, res.getValue(key) / influences.get(key) + additive.getValue(key,0));
+                    Log2.log(3, this, "Influence sum of " + key + " is near zero. Expect Animation errors.");
+                res.setValue(key, res.getValue(key) / influences.get(key) + additive.getValue(key, 0));
             }
             return res;
         }
@@ -86,8 +85,8 @@ public class PropertySet implements Mixable {
     public PropertySet() {
     }
 
-    public void setMode(int mode){
-        this.mode=mode;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     /*

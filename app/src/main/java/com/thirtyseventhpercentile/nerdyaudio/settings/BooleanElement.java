@@ -6,35 +6,36 @@ import java.io.Serializable;
  * Created by Chan on 7/6/2016.
  */
 public class BooleanElement extends SettingElement implements Serializable {
-    public final static long serialVersionUID=10L;
-
+    public final static long serialVersionUID = 10L;
 
 
     public BooleanElement(String name, boolean current) {
         super(name, BOOLEAN);
-        value=current;
-        newValue=current;
+        value = current;
+        newValue = current;
     }
 
     boolean value, newValue;
 
-    public boolean getValue(){
+    public boolean getValue() {
         return value;
     }
-    public void setValue(boolean val){
-        this.newValue=val;
+
+    public void setValue(boolean val) {
+        this.newValue = val;
     }
-    public boolean getNewValue(){
+
+    public boolean getNewValue() {
         return newValue;
     }
 
     @Override
     public void applyValue() {
-        this.value=this.newValue;
+        this.value = this.newValue;
     }
 
     @Override
     public void fromElement(SettingElement e) {
-        this.newValue=((BooleanElement)e).getValue();
+        this.newValue = ((BooleanElement) e).getValue();
     }
 }

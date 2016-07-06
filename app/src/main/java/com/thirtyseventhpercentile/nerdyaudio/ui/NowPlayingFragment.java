@@ -17,7 +17,7 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 
 
-public class NowPlayingFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class NowPlayingFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     public static final String LOG_TAG = "CS_AFN";
 
     VisualizationView vv;
@@ -30,18 +30,18 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
 
 
         vv = (VisualizationView) v.findViewById(R.id.visualization);
-        if (vv == null) Log2.log(4,this, "VisualizationView is null!");
-        else if (vv.getRenderThread() == null) Log2.log(4,this, "Renderer is null!");
+        if (vv == null) Log2.log(4, this, "VisualizationView is null!");
+        else if (vv.getRenderThread() == null) Log2.log(4, this, "Renderer is null!");
         else {
             //vv.getRenderThread().setMaxFPS(60);
         }
 
 
-
         v.post(new Runnable() {
             @Override
             public void run() {
-                if (PlayControlsView.getInstance()!=null) PlayControlsView.getInstance().expand(true);
+                if (PlayControlsView.getInstance() != null)
+                    PlayControlsView.getInstance().expand(true);
             }
         });
 
@@ -63,7 +63,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        Log2.log(2,this, "Adapter > Nothing selected.");
+        Log2.log(2, this, "Adapter > Nothing selected.");
     }
 
 

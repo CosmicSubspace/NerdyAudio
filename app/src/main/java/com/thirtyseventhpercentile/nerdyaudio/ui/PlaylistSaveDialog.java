@@ -18,7 +18,7 @@ import java.util.List;
 
 public class PlaylistSaveDialog {
 
-    public final static String LOG_TAG="CS_AFN";
+    public final static String LOG_TAG = "CS_AFN";
 
 
     EditText description, name;
@@ -27,31 +27,31 @@ public class PlaylistSaveDialog {
     String title;
     List<MusicInformation> queue;
 
-    public PlaylistSaveDialog(Context c, List<MusicInformation> queue){
-        this.c=c;
-        title="";
-        this.queue=queue;
+    public PlaylistSaveDialog(Context c, List<MusicInformation> queue) {
+        this.c = c;
+        title = "";
+        this.queue = queue;
     }
 
-    public PlaylistSaveDialog setTitle(String s){
-        this.title=s;
+    public PlaylistSaveDialog setTitle(String s) {
+        this.title = s;
         return this;
     }
 
-    public PlaylistSaveDialog setOnReturnListener(PlaylistInformationReturnListener pirl){
-        this.pirl=pirl;
+    public PlaylistSaveDialog setOnReturnListener(PlaylistInformationReturnListener pirl) {
+        this.pirl = pirl;
         return this;
     }
 
-    public void init(){
+    public void init() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
 
-        LayoutInflater inflater = (LayoutInflater) c.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view;
 
-        view=inflater.inflate(R.layout.playlist_save_dialog, null);
+        view = inflater.inflate(R.layout.playlist_save_dialog, null);
 
         builder.setView(view);
 
@@ -63,11 +63,12 @@ public class PlaylistSaveDialog {
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (pirl!=null) pirl.onReturn(name.getText().toString(),description.getText().toString());
+                        if (pirl != null)
+                            pirl.onReturn(name.getText().toString(), description.getText().toString());
 
                         try {
-                            new Playlist(name.getText().toString(),description.getText().toString(), queue).save(c);
-                        }catch (Exception e){
+                            new Playlist(name.getText().toString(), description.getText().toString(), queue).save(c);
+                        } catch (Exception e) {
                             ErrorLogger.log(e);
                             Toast.makeText(c, "Save Failed!", Toast.LENGTH_SHORT).show();
                         }

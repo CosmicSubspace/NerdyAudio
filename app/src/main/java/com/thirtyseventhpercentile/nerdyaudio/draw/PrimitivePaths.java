@@ -34,9 +34,9 @@ public class PrimitivePaths {
         PointsCompound.Builder builder = new PointsCompound.Builder();
         builder.addPoint(0, radius); //Pointy
         builder.addPoint(radius, 0); //Right
-        builder.addPoint(radius/2.0f, -radius/2.0f); //Right-Bottom
+        builder.addPoint(radius / 2.0f, -radius / 2.0f); //Right-Bottom
         builder.addPoint(0, -radius); //Bottom
-        builder.addPoint(-radius/2.0f, -radius/2.0f); //Left-bottom
+        builder.addPoint(-radius / 2.0f, -radius / 2.0f); //Left-bottom
         builder.addPoint(-radius, 0); //Left
         return builder.build();
     }
@@ -44,11 +44,11 @@ public class PrimitivePaths {
     public static PointsCompound playExpanded(float radius, float move, float textAreaX, float textAreaY) {
         PointsCompound.Builder builder = new PointsCompound.Builder();
         builder.addPoint(0, 0); //Pointy
-        builder.addPoint(textAreaX/2.0f, -move); //Right
-        builder.addPoint(textAreaX/2.0f, -move-textAreaY); //Right-Bottom
-        builder.addPoint(0, -move-textAreaY); //Bottom
-        builder.addPoint(-textAreaX/2.0f, -move-textAreaY); //Left-bottom
-        builder.addPoint(-textAreaX/2.0f, -move); //Left
+        builder.addPoint(textAreaX / 2.0f, -move); //Right
+        builder.addPoint(textAreaX / 2.0f, -move - textAreaY); //Right-Bottom
+        builder.addPoint(0, -move - textAreaY); //Bottom
+        builder.addPoint(-textAreaX / 2.0f, -move - textAreaY); //Left-bottom
+        builder.addPoint(-textAreaX / 2.0f, -move); //Left
         return builder.build();
     }
 

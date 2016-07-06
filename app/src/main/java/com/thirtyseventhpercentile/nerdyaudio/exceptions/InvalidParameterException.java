@@ -6,7 +6,7 @@ package com.thirtyseventhpercentile.nerdyaudio.exceptions;
 
 
 public class InvalidParameterException extends Exception {
-    public InvalidParameterException(String s){
+    public InvalidParameterException(String s) {
         super(s);
     }
 }

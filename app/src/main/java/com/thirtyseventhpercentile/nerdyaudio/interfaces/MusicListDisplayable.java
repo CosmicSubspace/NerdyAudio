@@ -5,13 +5,13 @@ package com.thirtyseventhpercentile.nerdyaudio.interfaces;
  */
 public interface MusicListDisplayable {
 
-   boolean expanded();
+    boolean expanded();
 
 
-   boolean isAGroup() ;
+    boolean isAGroup();
 
-   String getTitle();
+    String getTitle();
 
 
-   String getSubTitle();
+    String getSubTitle();
 }

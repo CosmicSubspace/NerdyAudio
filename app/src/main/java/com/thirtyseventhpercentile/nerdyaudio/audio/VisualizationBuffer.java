@@ -14,26 +14,26 @@ import java.util.ArrayList;
 
 
 public class VisualizationBuffer implements FloatFeedListener {
-    public static final int RIGHT_CHANNEL=53214;
-    public static final int LEFT_CHANNEL=65965;
+    public static final int RIGHT_CHANNEL = 53214;
+    public static final int LEFT_CHANNEL = 65965;
     public static final String LOG_TAG = "CS_AFN";
     ArrayList<float[]> bufferR, bufferL;
     long firstBufferStartingFrame = 0;
-    long lastFrameNumber=0;
+    long lastFrameNumber = 0;
     int numChannels = 2;
 
-    boolean active=false;
+    boolean active = false;
 
-    long maximumBufferSize=48000*10*2; //10 seconds.... is this too long? or too short?
+    long maximumBufferSize = 48000 * 10 * 2; //10 seconds.... is this too long? or too short?
 
 
-    FloatArrayRecycler far=new FloatArrayRecycler();
+    FloatArrayRecycler far = new FloatArrayRecycler();
 
 
     static VisualizationBuffer inst;
 
-    public static VisualizationBuffer getInstance(){
-        if (inst==null) inst=new VisualizationBuffer();
+    public static VisualizationBuffer getInstance() {
+        if (inst == null) inst = new VisualizationBuffer();
         return inst;
     }
 
@@ -43,56 +43,57 @@ public class VisualizationBuffer implements FloatFeedListener {
         //this.bufferSize = bufferSize;
     }
 
-    public synchronized void reset(){
+    public synchronized void reset() {
         bufferR.clear();
         bufferL.clear();
-        firstBufferStartingFrame=0;
-        lastFrameNumber=0;
+        firstBufferStartingFrame = 0;
+        lastFrameNumber = 0;
     }
 
-    public void setNumChannels(int n){
+    public void setNumChannels(int n) {
         this.numChannels = n;
     }
-    public void setMaximumBufferSize(long s){
-        this.maximumBufferSize=s;
+
+    public void setMaximumBufferSize(long s) {
+        this.maximumBufferSize = s;
     }
 
 
     @Override
     public synchronized void feed(float[] buff) {
 
-        if (!active){
-            firstBufferStartingFrame+=buff.length/2;
-            lastFrameNumber+=buff.length/2;
+        if (!active) {
+            firstBufferStartingFrame += buff.length / 2;
+            lastFrameNumber += buff.length / 2;
             return;
         }
 
         float[] right = far.request(buff.length / 2);
 
         for (int i = 0; i < right.length; i++) {
-            right[i] = buff[i *2+1];
+            right[i] = buff[i * 2 + 1];
         }
         bufferR.add(right);
-        float[] left = far.request(buff.length/2);
+        float[] left = far.request(buff.length / 2);
         for (int i = 0; i < left.length; i++) {
-            left[i] = buff[i *2];
+            left[i] = buff[i * 2];
         }
         bufferL.add(left);
-        lastFrameNumber+=left.length;
+        lastFrameNumber += left.length;
 
-        deleteBefore(lastFrameNumber-maximumBufferSize);
+        deleteBefore(lastFrameNumber - maximumBufferSize);
     }
 
     public synchronized float[] getFrames(long startFrame, long endFrame, int channel) throws BufferNotPresentException {
-        if (!active) Log2.log(4,this,"Frames requested while not active!");
+        if (!active) Log2.log(4, this, "Frames requested while not active!");
 
-        Log2.log(0,this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
-        Log2.log(0,this, "Requested: " + startFrame + " | End Num:" + endFrame);
+        Log2.log(0, this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
+        Log2.log(0, this, "Requested: " + startFrame + " | End Num:" + endFrame);
 
         checkRange(startFrame);
         checkRange(endFrame);
 
-        assert bufferL.size()==bufferR.size();
+        assert bufferL.size() == bufferR.size();
 
         float[] res = new float[(int) (endFrame - startFrame + 1)];
         long currentIndex = startFrame;
@@ -101,18 +102,20 @@ public class VisualizationBuffer implements FloatFeedListener {
         for (int i = 0; i < res.length; i++) {
             for (; ; ) {
                 try {
-                    if (channel==RIGHT_CHANNEL) res[i] = bufferR.get(currentBuffer)[(int) (currentIndex - currentBufferStartingFrame)];
-                    else if (channel==LEFT_CHANNEL) res[i] = bufferL.get(currentBuffer)[(int) (currentIndex - currentBufferStartingFrame)];
+                    if (channel == RIGHT_CHANNEL)
+                        res[i] = bufferR.get(currentBuffer)[(int) (currentIndex - currentBufferStartingFrame)];
+                    else if (channel == LEFT_CHANNEL)
+                        res[i] = bufferL.get(currentBuffer)[(int) (currentIndex - currentBufferStartingFrame)];
                     else return null;
                     break;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    Log2.log(0,this, "AIOOB");
+                    Log2.log(0, this, "AIOOB");
                     currentBuffer++;
                     currentBufferStartingFrame = getNthBufferInitialFrameNumber(currentBuffer);
-                } catch (IndexOutOfBoundsException e){ //TODO this exception is caught at random points. Fix that.
-                    Log2.log(4,this,"Index Out Of Bounds Exception in VisualizationBuffer.");
-                    Log2.log(4,this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
-                    Log2.log(4,this, "Requested: " + startFrame + " | End Num:" + endFrame);
+                } catch (IndexOutOfBoundsException e) { //TODO this exception is caught at random points. Fix that.
+                    Log2.log(4, this, "Index Out Of Bounds Exception in VisualizationBuffer.");
+                    Log2.log(4, this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
+                    Log2.log(4, this, "Requested: " + startFrame + " | End Num:" + endFrame);
                     ErrorLogger.log(e);
                     break;
                 }
@@ -122,7 +125,6 @@ public class VisualizationBuffer implements FloatFeedListener {
         }
         return res;
     }
-
 
 
     private long getNthBufferInitialFrameNumber(int index) {
@@ -142,50 +144,52 @@ public class VisualizationBuffer implements FloatFeedListener {
         else if (num < firstBufferStartingFrame)
             throw new BufferNotPresentException("Buffer out of bounds!\nPresent buffers: " + firstBufferStartingFrame + " ~ " + lastFrameNumber + "\nRequested: " + num);
     }
-/*
-    private long getLastFrameNumber() {
-        long res = firstBufferStartingFrame;
-        for (int i = 0; i < bufferR.size(); i++) {
-            res += bufferR.get(i).length; //Should add one, but java's zero-index.
+
+    /*
+        private long getLastFrameNumber() {
+            long res = firstBufferStartingFrame;
+            for (int i = 0; i < bufferR.size(); i++) {
+                res += bufferR.get(i).length; //Should add one, but java's zero-index.
+            }
+            return res;
         }
-        return res;
-    }
-*/
+    */
     public synchronized void deleteBefore(long frameNumber) {
-        Log2.log(0,this, "Deletion request for frames less than " + frameNumber);
+        Log2.log(0, this, "Deletion request for frames less than " + frameNumber);
 
-        if (bufferR.size()<1) return;
+        if (bufferR.size() < 1) return;
 
-        while ((getNthBufferInitialFrameNumber(0) + bufferR.get(0).length ) <= frameNumber) {
-            Log2.log(0,this, "Deleting buffer");
-            Log2.log(0,this, "First Buffer Starting Frame: " + firstBufferStartingFrame);
+        while ((getNthBufferInitialFrameNumber(0) + bufferR.get(0).length) <= frameNumber) {
+            Log2.log(0, this, "Deleting buffer");
+            Log2.log(0, this, "First Buffer Starting Frame: " + firstBufferStartingFrame);
             firstBufferStartingFrame += bufferR.get(0).length;
             //lastFrameNumber-=bufferR.get(0).length;
             //Log2.log(2,this, "(Changed) Buffer Information: current buffers number: " + buffers.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + getLastFrameNumber());
             far.recycle(bufferR.remove(0));
             far.recycle(bufferL.remove(0));
 
-            if (bufferR.size()<1) return;
+            if (bufferR.size() < 1) return;
             //deleteBefore(frameNumber); //If there is a delete, do it again recursively until there are no buffers to delete.
         }
     }
 
-    public synchronized void clearBuffer(){
+    public synchronized void clearBuffer() {
         //deleteBefore(Long.MAX_VALUE);
 
-        while (bufferR.size()>0){
+        while (bufferR.size() > 0) {
             firstBufferStartingFrame += bufferR.get(0).length;
             far.recycle(bufferR.remove(0));
             far.recycle(bufferL.remove(0));
         }
     }
 
-    public synchronized void deactivate(){
+    public synchronized void deactivate() {
         clearBuffer();
-        this.active=false;
+        this.active = false;
     }
-    public synchronized void activate(){
-        this.active=true;
+
+    public synchronized void activate() {
+        this.active = true;
     }
 }
 

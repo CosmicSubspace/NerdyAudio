@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Chan on 3/24/2016.
  */
 public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
-    RectF bounds=new RectF();
+    RectF bounds = new RectF();
     Bitmap art;
     Paint pt;
 
@@ -39,14 +39,14 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
     public AlbumArtVisuals(Context ctxt) {
         super(ctxt);
         QueueManager.getInstance().addQueueListener(this);
-        pt=new Paint();
+        pt = new Paint();
         newSong(QueueManager.getInstance().getCurrentlyPlaying());
     }
 
 
-
-    public void recalculateBounds(){
-        if (art!=null) bounds=SimpleMaths.fit(new RectF(0,0,art.getWidth(),art.getHeight()),new RectF(0,0,w,h));
+    public void recalculateBounds() {
+        if (art != null)
+            bounds = SimpleMaths.fit(new RectF(0, 0, art.getWidth(), art.getHeight()), new RectF(0, 0, w, h));
     }
 
 
@@ -64,9 +64,9 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
         //We're not using any samples, but clear the buffer anyway.
         //TODO art does not draw sometimes...?
         deleteBefore(getCurrentFrame());
-        if (art!=null) {
-            Log2.log(1,this,"we gonn draw shit.",art,bounds,pt);
-            c.drawBitmap(art,null,bounds,pt);
+        if (art != null) {
+            Log2.log(1, this, "we gonn draw shit.", art, bounds, pt);
+            c.drawBitmap(art, null, bounds, pt);
         }
         //Log2.log(1,this,"Drawing finished.");
     }
@@ -74,8 +74,8 @@ public class AlbumArtVisuals extends BaseRenderer implements QueueListener {
     @Override
     public void newSong(MusicInformation mi) {
         //Log2.log(2,this,"New Song!");
-        if (mi!=null && mi.hasArt()) {
-            Log2.log(2,this,"New song has art.");
+        if (mi != null && mi.hasArt()) {
+            Log2.log(2, this, "New song has art.");
             art = BitmapConversions.decodeSampledBitmapFromResource(mi.getArtByteArray(), w, h);
             recalculateBounds();
         }

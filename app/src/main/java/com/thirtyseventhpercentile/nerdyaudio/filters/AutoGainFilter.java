@@ -12,16 +12,17 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 
 public class AutoGainFilter extends BaseFilter {
-    private static final String LOG_TAG="CS_AFN";
+    private static final String LOG_TAG = "CS_AFN";
     Waveform wf;
-    public AutoGainFilter(FilterManager fm){
+
+    public AutoGainFilter(FilterManager fm) {
         super(fm);
-        wf=Waveform.getInstance();
+        wf = Waveform.getInstance();
     }
 
-    private float getGain(){
+    private float getGain() {
         //Log2.log(1,this,"Peak:"+wf.getPeak());
-        return 32767.0f/wf.getPeak();
+        return 32767.0f / wf.getPeak();
     }
 
     @Override

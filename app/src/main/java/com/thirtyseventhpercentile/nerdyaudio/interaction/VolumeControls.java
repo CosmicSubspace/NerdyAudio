@@ -18,9 +18,9 @@ public class VolumeControls {
     QueueManager qm;
 
     ArrayList<TimedKeyEvent> interaction = new ArrayList<>();
-    TimedKeyEvent lastEvent=new TimedKeyEvent();
+    TimedKeyEvent lastEvent = new TimedKeyEvent();
 
-    int interactionTimeout=300;
+    int interactionTimeout = 300;
 
     //TODO make this more generic by making a UserInputListener or something.
     public VolumeControls(Context c, QueueManager qm) {
@@ -41,7 +41,7 @@ public class VolumeControls {
     }
 
 
-    private Handler interactionFinalizerHandler =new Handler();
+    private Handler interactionFinalizerHandler = new Handler();
     private Runnable interactionFinalizerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -52,25 +52,25 @@ public class VolumeControls {
 
     private void endInteraction() {
         //Log2.log(2, this, getEvent(0), getEvent(1));
-        int finalEvent=getInteractionSize()-1;
-        if (finalEvent==0){ //1-event interaction: Press and hold.
-            if (getEvent(0).type==TimedKeyEvent.UP_PRESS){
+        int finalEvent = getInteractionSize() - 1;
+        if (finalEvent == 0) { //1-event interaction: Press and hold.
+            if (getEvent(0).type == TimedKeyEvent.UP_PRESS) {
                 qm.playNextFile();
-            }else if (getEvent(0).type==TimedKeyEvent.DOWN_PRESS){
+            } else if (getEvent(0).type == TimedKeyEvent.DOWN_PRESS) {
                 qm.playPreviousFile();
-            }else{
-                Log2.log(3,this,"endInteraction > Something is off. 2");
+            } else {
+                Log2.log(3, this, "endInteraction > Something is off. 2");
             }
-        }else if (finalEvent==1){//2-event interaction: Short press, or double press and hold.
-            if (getEvent(1).type==TimedKeyEvent.UP_RELEASE && getEvent(0).type==TimedKeyEvent.UP_PRESS){ //Short up press
+        } else if (finalEvent == 1) {//2-event interaction: Short press, or double press and hold.
+            if (getEvent(1).type == TimedKeyEvent.UP_RELEASE && getEvent(0).type == TimedKeyEvent.UP_PRESS) { //Short up press
                 incrementVolume();
-            }else if (getEvent(1).type==TimedKeyEvent.DOWN_RELEASE && getEvent(0).type==TimedKeyEvent.DOWN_PRESS){ //Short up press
+            } else if (getEvent(1).type == TimedKeyEvent.DOWN_RELEASE && getEvent(0).type == TimedKeyEvent.DOWN_PRESS) { //Short up press
                 decrementVolume();
-            }else if ((getEvent(0).type==TimedKeyEvent.UP_PRESS && getEvent(1).type==TimedKeyEvent.DOWN_PRESS)
-                    ||(getEvent(1).type==TimedKeyEvent.UP_PRESS && getEvent(0).type==TimedKeyEvent.DOWN_PRESS)) {//Both press and hold
+            } else if ((getEvent(0).type == TimedKeyEvent.UP_PRESS && getEvent(1).type == TimedKeyEvent.DOWN_PRESS)
+                    || (getEvent(1).type == TimedKeyEvent.UP_PRESS && getEvent(0).type == TimedKeyEvent.DOWN_PRESS)) {//Both press and hold
                 qm.togglePlay();
-            }else{
-                Log2.log(3,this,"endInteraction > Something is off. 1");
+            } else {
+                Log2.log(3, this, "endInteraction > Something is off. 1");
             }
         }
 
@@ -79,13 +79,13 @@ public class VolumeControls {
 
 
     private void addEvent(TimedKeyEvent tke) {
-        if (tke.isSameType(lastEvent) ){
+        if (tke.isSameType(lastEvent)) {
             //Log2.log(2,this,"Same Event. passing.",tke,getEvent(getInteractionSize()-1));
             return;
-        }else{
-            lastEvent=tke;
+        } else {
+            lastEvent = tke;
         }
-        Log2.log(1,this,"Processing event.",tke);
+        Log2.log(1, this, "Processing event.", tke);
 
         interactionFinalizerHandler.removeCallbacks(interactionFinalizerRunnable);
 
@@ -93,7 +93,7 @@ public class VolumeControls {
 
         interaction.add(tke);
 
-        if (tke.isRelease()){ //Temporary.
+        if (tke.isRelease()) { //Temporary.
             interactionFinalizerHandler.removeCallbacks(interactionFinalizerRunnable);
             interactionFinalizerRunnable.run();
         }
@@ -101,18 +101,17 @@ public class VolumeControls {
     }
 
 
-
     private TimedKeyEvent getEvent(int index) {
-        if (index<0 || index >= interaction.size()) return new TimedKeyEvent(); //I'm lazy.
+        if (index < 0 || index >= interaction.size()) return new TimedKeyEvent(); //I'm lazy.
         return interaction.get(index);
     }
 
 
-    private int getInteractionSize(){
+    private int getInteractionSize() {
         return interaction.size();
     }
 
-    private void clearEvents(){
+    private void clearEvents() {
         interaction.clear();
     }
 
@@ -170,11 +169,13 @@ class TimedKeyEvent {
         if (tke.type == this.type) return true;
         else return false;
     }
-    public boolean isRelease(){
-        return type==DOWN_RELEASE || type==UP_RELEASE;
+
+    public boolean isRelease() {
+        return type == DOWN_RELEASE || type == UP_RELEASE;
     }
-    public boolean isPress(){
-        return type==DOWN_PRESS || type==UP_PRESS;
+
+    public boolean isPress() {
+        return type == DOWN_PRESS || type == UP_PRESS;
     }
 
     @Override

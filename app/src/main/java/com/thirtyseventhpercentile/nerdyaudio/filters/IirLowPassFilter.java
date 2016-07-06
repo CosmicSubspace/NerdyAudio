@@ -14,17 +14,18 @@ import com.thirtyseventhpercentile.nerdyaudio.R;
 
 public class IirLowPassFilter extends BaseFilter implements SeekBar.OnSeekBarChangeListener {
 
-    float ratio=0.7f;
-    float current=0.0f;
+    float ratio = 0.7f;
+    float current = 0.0f;
 
-    public IirLowPassFilter(FilterManager fm){
+    public IirLowPassFilter(FilterManager fm) {
         super(fm);
     }
+
     @Override
     public void filter(float[] data) {
         for (int i = 0; i < data.length; i++) {
-            current=current*ratio+data[i]*(1.0f-ratio);
-            data[i]=current;
+            current = current * ratio + data[i] * (1.0f - ratio);
+            data[i] = current;
         }
     }
 
@@ -35,17 +36,17 @@ public class IirLowPassFilter extends BaseFilter implements SeekBar.OnSeekBarCha
 
     SeekBar sb;
     TextView valueText;
+
     @Override
     public View getContentView(LayoutInflater inflater, ViewGroup container) {
         View v = inflater.inflate(R.layout.filter_iirlowpass, container, false);
-        sb=(SeekBar) v.findViewById(R.id.filter_lowpass_seekbar);
+        sb = (SeekBar) v.findViewById(R.id.filter_lowpass_seekbar);
         sb.setMax(100);
         sb.setOnSeekBarChangeListener(this);
 
-        valueText =(TextView) v.findViewById(R.id.filter_lowpass_value);
+        valueText = (TextView) v.findViewById(R.id.filter_lowpass_value);
 
-        sb.setProgress((int)(ratio*100));
-
+        sb.setProgress((int) (ratio * 100));
 
 
         return v;
@@ -54,8 +55,8 @@ public class IirLowPassFilter extends BaseFilter implements SeekBar.OnSeekBarCha
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        ratio=i/100.0f;
-        valueText.setText(""+ratio);
+        ratio = i / 100.0f;
+        valueText.setText("" + ratio);
 
     }
 

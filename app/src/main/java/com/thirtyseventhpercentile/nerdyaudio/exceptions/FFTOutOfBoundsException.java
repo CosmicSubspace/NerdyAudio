@@ -5,8 +5,8 @@
 package com.thirtyseventhpercentile.nerdyaudio.exceptions;
 
 
-public class FFTOutOfBoundsException extends Exception{
-    public FFTOutOfBoundsException(String s){
+public class FFTOutOfBoundsException extends Exception {
+    public FFTOutOfBoundsException(String s) {
         super(s);
     }
 }

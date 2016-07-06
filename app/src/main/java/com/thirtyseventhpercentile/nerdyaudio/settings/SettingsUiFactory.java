@@ -24,54 +24,53 @@ import java.util.List;
 public class SettingsUiFactory {
 
     @SuppressWarnings("ResourceType")
-    public static ViewGroup generateSettings(List<SettingElement> elements, Context ctxt, final NewSettingsUpdateListener sul){
-        LinearLayout root=new LinearLayout(ctxt);
+    public static ViewGroup generateSettings(List<SettingElement> elements, Context ctxt, final NewSettingsUpdateListener sul) {
+        LinearLayout root = new LinearLayout(ctxt);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT));
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         //LinearLayout.LayoutParams rootParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         //root.setLayoutParams(rootParams);
 
 
-
-        for(int i=0;i<elements.size();i++){
-            Log2.log(2,SettingsUiFactory.class,"Element",i);
-            RelativeLayout elementRoot=new RelativeLayout(ctxt);
-            LinearLayout.LayoutParams elementRootParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        for (int i = 0; i < elements.size(); i++) {
+            Log2.log(2, SettingsUiFactory.class, "Element", i);
+            RelativeLayout elementRoot = new RelativeLayout(ctxt);
+            LinearLayout.LayoutParams elementRootParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             elementRoot.setLayoutParams(elementRootParams);
 
-            TextView title= new TextView(ctxt);
-            title.setId(i*10+1);
-            RelativeLayout.LayoutParams titleParams=new RelativeLayout.LayoutParams(
+            TextView title = new TextView(ctxt);
+            title.setId(i * 10 + 1);
+            RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            titleParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-            titleParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+            titleParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+            titleParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             title.setLayoutParams(titleParams);
             title.setText(elements.get(i).getName());
             elementRoot.addView(title);
 
 
-            if (elements.get(i).getType()==SettingElement.SLIDER){
-                final SliderElement sliderElement=(SliderElement) elements.get(i);
+            if (elements.get(i).getType() == SettingElement.SLIDER) {
+                final SliderElement sliderElement = (SliderElement) elements.get(i);
 
-                SeekBar slider=new SeekBar(ctxt);
-                slider.setId(i*10+2);
+                SeekBar slider = new SeekBar(ctxt);
+                slider.setId(i * 10 + 2);
                 slider.setMax(sliderElement.getSeekbarMax());
 
-                final TextView valueDisplay=new TextView(ctxt);
-                valueDisplay.setId(i*10+3);
+                final TextView valueDisplay = new TextView(ctxt);
+                valueDisplay.setId(i * 10 + 3);
 
 
-                RelativeLayout.LayoutParams sliderParams=new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-                sliderParams.addRule(RelativeLayout.BELOW,title.getId());
-                sliderParams.addRule(RelativeLayout.LEFT_OF,valueDisplay.getId());
+                RelativeLayout.LayoutParams sliderParams = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                sliderParams.addRule(RelativeLayout.BELOW, title.getId());
+                sliderParams.addRule(RelativeLayout.LEFT_OF, valueDisplay.getId());
                 slider.setLayoutParams(sliderParams);
 
-                RelativeLayout.LayoutParams valueParams=new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams valueParams = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 valueParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                valueParams.addRule(RelativeLayout.ALIGN_BOTTOM,slider.getId());
+                valueParams.addRule(RelativeLayout.ALIGN_BOTTOM, slider.getId());
                 valueDisplay.setLayoutParams(valueParams);
 
 
@@ -81,7 +80,7 @@ public class SettingsUiFactory {
                         //Log2.log(2,this,"Changing sliderElement.",i);
                         sliderElement.setValue(i);
                         valueDisplay.setText(sliderElement.getNewStringRepr());
-                        if (sul!=null) sul.settingsChanged(sliderElement);
+                        if (sul != null) sul.settingsChanged(sliderElement);
                     }
 
                     @Override
@@ -98,14 +97,14 @@ public class SettingsUiFactory {
                 slider.setProgress(sliderElement.getValueProgress());
                 elementRoot.addView(slider);
                 elementRoot.addView(valueDisplay);
-            }else if (elements.get(i).getType()==SettingElement.BOOLEAN){
-                final BooleanElement sliderElement=(BooleanElement) elements.get(i);
+            } else if (elements.get(i).getType() == SettingElement.BOOLEAN) {
+                final BooleanElement sliderElement = (BooleanElement) elements.get(i);
 
-                Switch toggle=new Switch(ctxt);
-                toggle.setId(i*10+2);
+                Switch toggle = new Switch(ctxt);
+                toggle.setId(i * 10 + 2);
 
-                RelativeLayout.LayoutParams switchParams=new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams switchParams = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 switchParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 toggle.setLayoutParams(switchParams);
 
@@ -119,13 +118,13 @@ public class SettingsUiFactory {
 
                 elementRoot.addView(toggle);
 
-            }else if (elements.get(i).getType()==SettingElement.SPINNER){
-                final SpinnerElement spinnerElement=(SpinnerElement) elements.get(i);
+            } else if (elements.get(i).getType() == SettingElement.SPINNER) {
+                final SpinnerElement spinnerElement = (SpinnerElement) elements.get(i);
 
-                final Spinner spinner=new Spinner(ctxt);
+                final Spinner spinner = new Spinner(ctxt);
 
-                RelativeLayout.LayoutParams switchParams=new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams switchParams = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 switchParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 spinner.setLayoutParams(switchParams);
 
@@ -150,8 +149,8 @@ public class SettingsUiFactory {
 
                 elementRoot.addView(spinner);
 
-            }else{
-                Log2.log(3,SettingsUiFactory.class,"Unknown element type!");
+            } else {
+                Log2.log(3, SettingsUiFactory.class, "Unknown element type!");
             }
 
             root.addView(elementRoot);

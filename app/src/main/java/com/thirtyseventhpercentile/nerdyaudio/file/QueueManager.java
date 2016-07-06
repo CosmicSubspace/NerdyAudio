@@ -110,7 +110,6 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
 
-
     public void addMusicInformationUpdateListener(QueueElementUpdateListener miul) {
         this.miul.add(miul);
     }
@@ -169,7 +168,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     private void newPlay() { //plays the CurrentlyPlaying.
         if (queue.size() == 0) return;
-        Log2.log(1,this, "Playing file.");
+        Log2.log(1, this, "Playing file.");
         if (currentlyPlaying == null) { //first newPlay
             setCurrentMusicIndex(0);
         }
@@ -198,7 +197,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
-    public void playCurrent(){
+    public void playCurrent() {
         if (ap != null) {
             if (ap.isPaused()) {
                 ap.playAudio();
@@ -217,7 +216,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void playNextFile() {
-        Log2.log(1,this, "Playing next file.");
+        Log2.log(1, this, "Playing next file.");
         nextFile();
         notifyNext();
         newPlay();
@@ -225,14 +224,14 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void playPreviousFile() {
-        Log2.log(1,this, "Playing Previous file.");
+        Log2.log(1, this, "Playing Previous file.");
         previousFile();
         notifyPrevious();
         newPlay();
         notifyPlay();
     }
 
-    public void pause(){
+    public void pause() {
         if (ap != null) {
             if (ap.isPlaying()) {
                 ap.pause();
@@ -241,7 +240,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         notifyStop();
     }
 
-    public void togglePlay(){
+    public void togglePlay() {
         if (ap != null) {
             if (ap.isPlaying()) {
                 pause();
@@ -283,7 +282,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
 
     @Override
     public void onComplete(String s) {
-        Log2.log(1,this, "Playback Finished: " + s);
+        Log2.log(1, this, "Playback Finished: " + s);
         playNextFile();
     }
 
@@ -292,7 +291,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             //Songs that are in front of the currently playing gets priority.
             for (int i = currentlyPlayingIndex(); i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
-                    Log2.log(2,this, "Starting Calculation of: " + queue.get(i).getFilepath());
+                    Log2.log(2, this, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
@@ -303,7 +302,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             //But the ones in the back should be calculated too.
             for (int i = 0; i < queue.size(); i++) {
                 if (!queue.get(i).isReady()) {
-                    Log2.log(2,this, "Starting Calculation of: " + queue.get(i).getFilepath());
+                    Log2.log(2, this, "Starting Calculation of: " + queue.get(i).getFilepath());
                     currentlyCaching = queue.get(i);
                     currentlyCaching.setCaching(true);
                     notifyMusicInformationUpdateListeners(i);
@@ -314,7 +313,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         }
     }
 
-    public MusicInformation getCurrentlyPlaying(){
+    public MusicInformation getCurrentlyPlaying() {
         return currentlyPlaying;
     }
 
@@ -346,17 +345,18 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         Collections.sort(queue, new MusicInformation.ArtistComparator());
     }
 
-    public void removeAll(){
+    public void removeAll() {
         queue.clear();
     }
-    public void removeDuplicates(){
-        ArrayList<Integer> toBeRemoved=new ArrayList<>();
+
+    public void removeDuplicates() {
+        ArrayList<Integer> toBeRemoved = new ArrayList<>();
         for (int i = 0; i < queue.size(); i++) {
-            int j=i+1;
-            while (j<queue.size()) {
-                if (queue.get(i).getFilepath().equals(queue.get(j).getFilepath())){
+            int j = i + 1;
+            while (j < queue.size()) {
+                if (queue.get(i).getFilepath().equals(queue.get(j).getFilepath())) {
                     queue.remove(j);
-                }else j++;
+                } else j++;
             }
         }
 
@@ -445,7 +445,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             }
 
             for (String music : base.files) {
-                boolean valid=true;
+                boolean valid = true;
                 for (Playlist playlist : playlists) {
                     boolean match = false;
                     for (int i = 0; i < playlist.files.length; i++) {
@@ -454,8 +454,8 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                             break;
                         }
                     }
-                    if (!match){
-                        valid=false;
+                    if (!match) {
+                        valid = false;
                     }
                 }
                 if (valid) queue.add(new MusicInformation(music, c));

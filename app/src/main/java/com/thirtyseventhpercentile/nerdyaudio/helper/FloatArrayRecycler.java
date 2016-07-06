@@ -8,36 +8,37 @@ import java.util.ArrayList;
 
 public class FloatArrayRecycler { //I want to use generic types here but i dunno
 
-    public FloatArrayRecycler(){
+    public FloatArrayRecycler() {
 
     }
 
-    private static final String LOG_TAG="CS_AFN";
+    private static final String LOG_TAG = "CS_AFN";
 
-    int maxSize=100;
+    int maxSize = 100;
     int arraySize;
-    ArrayList<float[]> arrays=new ArrayList<>();
+    ArrayList<float[]> arrays = new ArrayList<>();
 
-    public synchronized void setArraySize(int size){
-        this.arraySize=size;
+    public synchronized void setArraySize(int size) {
+        this.arraySize = size;
         arrays.clear();
     }
-    public synchronized void recycle(float[] obj){
-        if (obj.length!=arraySize) setArraySize(obj.length);
 
-        if (arrays.size()>maxSize) {
-            Log2.log(2,this, "FloatArrayRecycler full!");
+    public synchronized void recycle(float[] obj) {
+        if (obj.length != arraySize) setArraySize(obj.length);
+
+        if (arrays.size() > maxSize) {
+            Log2.log(2, this, "FloatArrayRecycler full!");
             return;
         }
         arrays.add(obj);
     }
-    public synchronized float[] request(int size){
-        if (size!=arraySize) setArraySize(size);
+
+    public synchronized float[] request(int size) {
+        if (size != arraySize) setArraySize(size);
 
 
-        if (arrays.size()>0){
+        if (arrays.size() > 0) {
             return arrays.remove(0);
-        }
-        else return new float[arraySize];
+        } else return new float[arraySize];
     }
 }

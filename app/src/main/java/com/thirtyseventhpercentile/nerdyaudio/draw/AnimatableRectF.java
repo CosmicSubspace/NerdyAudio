@@ -10,25 +10,27 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 /**
  * Created by Chan on 2/26/2016.
  */
-public class AnimatableRectF extends Animatable{
+public class AnimatableRectF extends Animatable {
     /**
      * Required Properties:
      * Y+
      * Y-
      * X+
      * X-
-     *
      */
-    public AnimatableRectF(MixNode<PropertySet> properties){
+    public AnimatableRectF(MixNode<PropertySet> properties) {
         super(properties);
     }
+
     PropertySet current;
-    public RectF getRectF(long time){
-        current=mixedProperties.getValue(time);
-        return new RectF(current.getValue("X-"),current.getValue("Y-"),current.getValue("X+"),current.getValue("Y+"));
+
+    public RectF getRectF(long time) {
+        current = mixedProperties.getValue(time);
+        return new RectF(current.getValue("X-"), current.getValue("Y-"), current.getValue("X+"), current.getValue("Y+"));
     }
+
     @Override
-    public void draw(Canvas c, Paint pt, long currentTime){
+    public void draw(Canvas c, Paint pt, long currentTime) {
         throw new UnsupportedOperationException();
     }
 }

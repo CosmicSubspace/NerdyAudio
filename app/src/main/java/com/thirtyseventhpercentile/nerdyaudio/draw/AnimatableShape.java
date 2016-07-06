@@ -14,7 +14,7 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
-public class AnimatableShape extends Animatable{
+public class AnimatableShape extends Animatable {
 
     PointsCompound path;
     MixNode<PointsCompound> shape;
@@ -32,49 +32,49 @@ public class AnimatableShape extends Animatable{
     alpha
      */
 
-    public AnimatableShape(MixNode<PointsCompound> animatedShape, int color, MixNode<PropertySet> basisSet){
+    public AnimatableShape(MixNode<PointsCompound> animatedShape, int color, MixNode<PropertySet> basisSet) {
         super(basisSet);
 
-        this.shape=animatedShape;
-        this.color=color;
+        this.shape = animatedShape;
+        this.color = color;
 
     }
 
-    public AnimatableShape(PointsCompound path, int color, MixNode<PropertySet> basisSet){
+    public AnimatableShape(PointsCompound path, int color, MixNode<PropertySet> basisSet) {
         super(basisSet);
 
-        this.path =path;
-        this.color=color;
+        this.path = path;
+        this.color = color;
     }
 
-    private PointsCompound getPointsCompound(long currentTime){
-        PropertySet ps= mixedProperties.getValue(currentTime);
+    private PointsCompound getPointsCompound(long currentTime) {
+        PropertySet ps = mixedProperties.getValue(currentTime);
 
-        mat=new Matrix();
+        mat = new Matrix();
         mat.preTranslate(ps.getValue("X"), ps.getValue("Y"));
         mat.preRotate(ps.getValue("Rotation"));
         mat.preScale(ps.getValue("Scale"), ps.getValue("Scale"));
 
-        if (path!=null) return path.transform(mat);
-        else if (shape!=null) return shape.getValue(currentTime).transform(mat);
+        if (path != null) return path.transform(mat);
+        else if (shape != null) return shape.getValue(currentTime).transform(mat);
         else {
-            Log2.log(4,this,"Path and Shape are all null! wtf?");
+            Log2.log(4, this, "Path and Shape are all null! wtf?");
             return null;
         }
     }
 
-    public RectF getBounds(float padding,long currentTime){
+    public RectF getBounds(float padding, long currentTime) {
         return getPointsCompound(currentTime).getBounds(padding);
     }
 
     @Override
-    public void draw(Canvas c, Paint pt, long currentTime){
-        PropertySet ps= mixedProperties.getValue(currentTime);
+    public void draw(Canvas c, Paint pt, long currentTime) {
+        PropertySet ps = mixedProperties.getValue(currentTime);
 
         pt.setColor(color);
         pt.setAlpha(Math.round(255 * ps.getValue("Alpha")));
         //Log2.log(2,this,path);
-        c.drawPath(getPointsCompound(currentTime).toPath(),pt);
+        c.drawPath(getPointsCompound(currentTime).toPath(), pt);
         pt.setAlpha(255);
     }
 

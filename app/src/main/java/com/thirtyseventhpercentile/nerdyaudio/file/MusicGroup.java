@@ -7,35 +7,35 @@ import java.util.ArrayList;
 /**
  * Created by Chan on 5/24/2016.
  */
-public class MusicGroup implements MusicListDisplayable{
+public class MusicGroup implements MusicListDisplayable {
     ArrayList<MusicInformation> elements;
 
-    boolean expanded=false;
+    boolean expanded = false;
     String identity;
 
-    public MusicGroup(String identity, ArrayList<MusicInformation> elements){
-        this.elements=elements;
-        this.identity =identity;
+    public MusicGroup(String identity, ArrayList<MusicInformation> elements) {
+        this.elements = elements;
+        this.identity = identity;
     }
 
-    public MusicGroup(String identity){
-        this.elements=new ArrayList<>();
-        this.identity=identity;
+    public MusicGroup(String identity) {
+        this.elements = new ArrayList<>();
+        this.identity = identity;
     }
 
-    public void toggleExpand(){
-        expanded=!expanded;
+    public void toggleExpand() {
+        expanded = !expanded;
     }
 
-    public ArrayList<MusicInformation> getElements(){
+    public ArrayList<MusicInformation> getElements() {
         return elements;
     }
 
-    public String getIdentity(){
+    public String getIdentity() {
         return identity;
     }
 
-    public void addMusic(MusicInformation mi){
+    public void addMusic(MusicInformation mi) {
         elements.add(mi);
     }
 
@@ -56,6 +56,6 @@ public class MusicGroup implements MusicListDisplayable{
 
     @Override
     public String getSubTitle() {
-        return "("+elements.size()+" songs.)";
+        return "(" + elements.size() + " songs.)";
     }
 }

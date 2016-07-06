@@ -20,7 +20,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 
-
 //TODO I don't think Singleton is the way to do this...
 //TODO seperate this calss into a manager and a non-singleton class.
 public class Waveform implements Serializable {
@@ -50,10 +49,10 @@ public class Waveform implements Serializable {
     }
 
     public static boolean checkExistance(String filename, double barEvery, Context c) {
-        try{
+        try {
             c.openFileInput(getUniqueID(filename, barEvery));
             return true;
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             return false;
         }
     }
@@ -66,7 +65,7 @@ public class Waveform implements Serializable {
     }
 
     public static Waveform getWaveform(String filename, double barEvery, Context c) throws IOException, ClassNotFoundException {
-        Log2.log(2,Waveform.class, "Loading from file.");
+        Log2.log(2, Waveform.class, "Loading from file.");
 
         FileInputStream fis = c.openFileInput(getUniqueID(filename, barEvery));
         ObjectInputStream is = new ObjectInputStream(fis);
@@ -86,7 +85,7 @@ public class Waveform implements Serializable {
         //TODO Hash this or something
         String res;
         res = filename.replace("/", "") + barEvery;
-        Log2.log(1,Waveform.class, "Generating Unique ID: " + res);
+        Log2.log(1, Waveform.class, "Generating Unique ID: " + res);
         return res;
     }
 
@@ -112,7 +111,7 @@ public class Waveform implements Serializable {
     }
 
     private void copy(Waveform w) {
-        Log2.log(1,this, "Copying to instance...");
+        Log2.log(1, this, "Copying to instance...");
         this.filename = w.filename;
         this.data = w.data;
         this.peak = w.peak;
@@ -177,12 +176,12 @@ public class Waveform implements Serializable {
 
         // this.saveToFile(c);
 
-        Log2.log(1,this, getDebugData());
+        Log2.log(1, this, getDebugData());
     }
 
 
     public void saveToFile(Context c) {
-        Log2.log(2,this, "Saving...");
+        Log2.log(2, this, "Saving...");
         try {
             String name = getUniqueID(filename, barEvery);
             FileOutputStream fos = c.openFileOutput(name, Context.MODE_PRIVATE);
@@ -190,7 +189,7 @@ public class Waveform implements Serializable {
             os.writeObject(this);
             os.close();
             fos.close();
-            Log2.log(2,this, "WaveformVisuals saved to " + name);
+            Log2.log(2, this, "WaveformVisuals saved to " + name);
         } catch (Exception e) {
             ErrorLogger.log(e);
         }
@@ -198,10 +197,10 @@ public class Waveform implements Serializable {
 
 
     public void loadFromFile(String filename, double barEvery, Context c) {
-        Log2.log(2,this, "Loading...");
+        Log2.log(2, this, "Loading...");
         try {
             copy(Waveform.getWaveform(filename, barEvery, c));
-        }catch(Exception e){
+        } catch (Exception e) {
             ErrorLogger.log(e);
         }
     }

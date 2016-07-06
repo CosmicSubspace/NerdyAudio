@@ -18,7 +18,7 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 
 
-public class AnimatableText extends Animatable{
+public class AnimatableText extends Animatable {
     /*
     Required Properties:
     x
@@ -38,7 +38,7 @@ public class AnimatableText extends Animatable{
 
     public void setText(String text) {
         this.text = text;
-        timeOffset=System.currentTimeMillis();
+        timeOffset = System.currentTimeMillis();
     }
 
     public int getColor() {
@@ -67,24 +67,25 @@ public class AnimatableText extends Animatable{
         this.drawBG = draw;
     }
 
-    public void enableMarquee(float maxWidth, float fadeSize){
-        this.marquee=true;
-        this.maxWidth=maxWidth;
-        this.fadeSize=fadeSize;
-    }
-    public void disableMarquee(){
-        this.marquee=false;
+    public void enableMarquee(float maxWidth, float fadeSize) {
+        this.marquee = true;
+        this.maxWidth = maxWidth;
+        this.fadeSize = fadeSize;
     }
 
-    public void setVisibility(boolean isVisible){
-        this.visible=isVisible;
+    public void disableMarquee() {
+        this.marquee = false;
+    }
+
+    public void setVisibility(boolean isVisible) {
+        this.visible = isVisible;
     }
 
     //Instance Variables
     String text;
     int color, transpColor;
     int bgColor;
-    boolean drawBG=false, marquee=false,visible=true;
+    boolean drawBG = false, marquee = false, visible = true;
 
     float textSize, fadeSize, maxWidth;
 
@@ -94,7 +95,7 @@ public class AnimatableText extends Animatable{
     float textHeight, textWidth;
     PropertySet current;
     RectF bounds;
-    float marqueeProgress=0;
+    float marqueeProgress = 0;
 
     public static final int ALIGN_BOTTOM_LEFT_CORNER = 5673;
     public static final int ALIGN_CENTER = 984526;
@@ -113,16 +114,16 @@ public class AnimatableText extends Animatable{
     }
 
     //timekeeping values / constants
-    float marqueeDuration=10;
-    float waitDuration=3;
-    float rewindDuration=2;
+    float marqueeDuration = 10;
+    float waitDuration = 3;
+    float rewindDuration = 2;
     float evalTime;
-    long timeOffset=0;
+    long timeOffset = 0;
+
     public void draw(Canvas c, Paint pt, long currentTime) {
         if (!visible) return;
         //TODO : Perf Improvements.
         current = mixedProperties.getValue(currentTime);
-
 
 
         pt.setTextSize(textSize);
@@ -135,7 +136,6 @@ public class AnimatableText extends Animatable{
 
         textHeight = fm.descent - fm.ascent;
         textWidth = pt.measureText(text);
-
 
 
         //Log2.log(2,this,current.getValue("X"), current.getValue("Y"));
@@ -151,7 +151,7 @@ public class AnimatableText extends Animatable{
 
         pt.setColor(color);
 
-        if (marquee&& textWidth>maxWidth) {
+        if (marquee && textWidth > maxWidth) {
             if (align == ALIGN_BOTTOM_LEFT_CORNER) {
                 pt.setShader(getMask(current.getValue("X"), current.getValue("X") + maxWidth, fadeSize, color));
             } else if (align == ALIGN_CENTER) {
@@ -160,23 +160,27 @@ public class AnimatableText extends Animatable{
 
         }
 
-        if (marquee&& textWidth>maxWidth) {
-            evalTime=((currentTime-timeOffset)%((long)((marqueeDuration+rewindDuration+waitDuration)*1000)))/1000.0f;
+        if (marquee && textWidth > maxWidth) {
+            evalTime = ((currentTime - timeOffset) % ((long) ((marqueeDuration + rewindDuration + waitDuration) * 1000))) / 1000.0f;
             //Log2.log(2,this,evalTime,(marqueeDuration+rewindDuration+waitDuration)*1000,marqueeDuration+rewindDuration+waitDuration);
-            if (evalTime<waitDuration){
-                marqueeProgress=0;
-            }else if (evalTime<(waitDuration+marqueeDuration)){
-                marqueeProgress=(float)EasingEquations.ease1D(0,marqueeDuration,evalTime-waitDuration,0,1,EasingEquations.QUADRATIC);
-            }else marqueeProgress= (float)EasingEquations.ease1D(0,rewindDuration,evalTime-waitDuration-marqueeDuration,1,0,EasingEquations.QUINTIC);
+            if (evalTime < waitDuration) {
+                marqueeProgress = 0;
+            } else if (evalTime < (waitDuration + marqueeDuration)) {
+                marqueeProgress = (float) EasingEquations.ease1D(0, marqueeDuration, evalTime - waitDuration, 0, 1, EasingEquations.QUADRATIC);
+            } else
+                marqueeProgress = (float) EasingEquations.ease1D(0, rewindDuration, evalTime - waitDuration - marqueeDuration, 1, 0, EasingEquations.QUINTIC);
         }
 
         //pt.setShader(new RadialGradient(0, 0, 1, color, color, Shader.TileMode.CLAMP));
         if (align == ALIGN_BOTTOM_LEFT_CORNER) {
-            if (marquee && textWidth>maxWidth) c.drawText(text, current.getValue("X")-marqueeProgress*(textWidth-maxWidth+fadeSize*2)+fadeSize, current.getValue("Y") - fm.ascent, pt);
+            if (marquee && textWidth > maxWidth)
+                c.drawText(text, current.getValue("X") - marqueeProgress * (textWidth - maxWidth + fadeSize * 2) + fadeSize, current.getValue("Y") - fm.ascent, pt);
             else c.drawText(text, current.getValue("X"), current.getValue("Y") - fm.ascent, pt);
         } else if (align == ALIGN_CENTER) {
-            if (marquee && textWidth>maxWidth) c.drawText(text, current.getValue("X")-marqueeProgress*(textWidth-maxWidth+fadeSize*2)+fadeSize, current.getValue("Y") - fm.ascent - textHeight / 2, pt);
-            else c.drawText(text, current.getValue("X"), current.getValue("Y") - fm.ascent - textHeight / 2, pt);
+            if (marquee && textWidth > maxWidth)
+                c.drawText(text, current.getValue("X") - marqueeProgress * (textWidth - maxWidth + fadeSize * 2) + fadeSize, current.getValue("Y") - fm.ascent - textHeight / 2, pt);
+            else
+                c.drawText(text, current.getValue("X"), current.getValue("Y") - fm.ascent - textHeight / 2, pt);
         }
 
         pt.setShader(null);

@@ -5,5 +5,6 @@ package com.thirtyseventhpercentile.nerdyaudio.animation;
  */
 public interface Mixer<T> {
     void addMix(T thing, float influence) throws UnMixableException;
+
     T mix();
 }

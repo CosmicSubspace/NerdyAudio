@@ -17,47 +17,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class FileLister extends Thread{
-    private final static String LOG_TAG="CS_AFN";
+public class FileLister extends Thread {
+    private final static String LOG_TAG = "CS_AFN";
     String path;
-    ArrayList<MusicInformation> musics=new ArrayList<>();
+    ArrayList<MusicInformation> musics = new ArrayList<>();
     FileListReturnListener flrl;
     ProgressStringListener psl;
     Context c;
-    public FileLister(String path, ProgressStringListener psl , FileListReturnListener flrl, Context c){
-        this.path=path;
-        this.flrl=flrl;
-        this.psl=psl;
-        this.c=c;
+
+    public FileLister(String path, ProgressStringListener psl, FileListReturnListener flrl, Context c) {
+        this.path = path;
+        this.flrl = flrl;
+        this.psl = psl;
+        this.c = c;
     }
-    public void run(){
+
+    public void run() {
         discover(path);
-        if (flrl!=null) flrl.onReturn(musics);
+        if (flrl != null) flrl.onReturn(musics);
     }
-    public void discover(String path){
-        File root = new File( path );
+
+    public void discover(String path) {
+        File root = new File(path);
         File[] list = root.listFiles();
 
         if (list == null) return;
 
-        for ( File f : list ) {
-            if ( f.isDirectory() ) {
+        for (File f : list) {
+            if (f.isDirectory()) {
                 discover(f.getAbsolutePath());
-                if (psl!=null) psl.report("Scanned Directory:" + f.getAbsolutePath());
-            }
-            else {
+                if (psl != null) psl.report("Scanned Directory:" + f.getAbsolutePath());
+            } else {
                 try {
                     if (checkFileValidity(f.getAbsolutePath()))
                         musics.add(new MusicInformation(f.getCanonicalPath(), c));
-                }catch(IOException e){
-                    Log2.log(4,this, "Error while parsing canonical path.");
+                } catch (IOException e) {
+                    Log2.log(4, this, "Error while parsing canonical path.");
                     ErrorLogger.log(e);
 
                 }
             }
         }
     }
-    public boolean checkFileValidity(String s){
+
+    public boolean checkFileValidity(String s) {
         String[] components = s.split("\\.");
         if (components.length < 2) {
             return false;

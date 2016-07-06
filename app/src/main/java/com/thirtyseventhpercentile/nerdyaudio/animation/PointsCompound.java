@@ -39,7 +39,7 @@ public class PointsCompound implements Mixable {
                    cuts[i]= thing.cutsArray[i];
                 }
                 */
-                System.arraycopy( thing.cutsArray, 0, cuts, 0, thing.cutsArray.length );
+                System.arraycopy(thing.cutsArray, 0, cuts, 0, thing.cutsArray.length);
 
                 initialized = true;
             }

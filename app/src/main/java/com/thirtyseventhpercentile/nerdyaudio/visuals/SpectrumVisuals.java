@@ -18,7 +18,7 @@ import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
 import java.util.List;
 
 
-public class SpectrumVisuals extends FftRenderer{
+public class SpectrumVisuals extends FftRenderer {
     Paint pt;
 
     /*
@@ -27,14 +27,14 @@ public class SpectrumVisuals extends FftRenderer{
     float barHeightMultiplier=1.0f;
     */
 
-    SliderElement bars=new SliderElement("Number of Bars",1,500,100);
-    FloatSliderElement spacing=new FloatSliderElement("Spacing",0,1,0,100);
-    FloatSliderElement barHeightMultiplier=new FloatSliderElement("Bar Height",0,10,2,100);
+    SliderElement bars = new SliderElement("Number of Bars", 1, 500, 100);
+    FloatSliderElement spacing = new FloatSliderElement("Spacing", 0, 1, 0, 100);
+    FloatSliderElement barHeightMultiplier = new FloatSliderElement("Bar Height", 0, 10, 2, 100);
 
 
     @Override
     public List<SettingElement> getSettings() {
-        List<SettingElement> res=super.getSettings();
+        List<SettingElement> res = super.getSettings();
         res.add(bars);
         res.add(spacing);
         res.add(barHeightMultiplier);
@@ -56,13 +56,13 @@ public class SpectrumVisuals extends FftRenderer{
 
     @Override
     public void drawVisuals(Canvas c, int w, int h) {
-        int bars=this.bars.getValue();
+        int bars = this.bars.getValue();
         float spacing = this.spacing.getFloatValue();
-        float barHeightMultiplier=this.barHeightMultiplier.getFloatValue();
-            long currentFrame = getCurrentFrame();
-            try {
-                updateFFT(currentFrame);
-                //Log2.log(1,this, "FFT size: " + canvasX.length);
+        float barHeightMultiplier = this.barHeightMultiplier.getFloatValue();
+        long currentFrame = getCurrentFrame();
+        try {
+            updateFFT(currentFrame);
+            //Log2.log(1,this, "FFT size: " + canvasX.length);
 /*
                     for (int i=0;i<canvasX.length;i++){
                         debugStr=debugStr+canvasX[i]+",";
@@ -70,20 +70,20 @@ public class SpectrumVisuals extends FftRenderer{
 
                     Log2.log(1,this,"Calculated Real FFT: "+debugStr);*/
 
-                pt.setColor(Color.BLACK);
-                float magnitude;
-                //Log2.log(1,this,"BetweenBars: "+betweenBars);
-                float betweenBars=w/(float)bars;
-                for (int i = 0; i < bars; i++) {
-                    c.drawRect(i * betweenBars, h - barHeightMultiplier*getMagnitudeRatio(i / (float)bars), (i + 1 - spacing) * betweenBars, h, pt);
-                }
-
-                //c.drawRect(0,0,300,300,pt);
-
-
-            } catch (BufferNotPresentException e) {
-                Log2.log(1,this, "Buffer not present! Requested around " + getCurrentFrame());
+            pt.setColor(Color.BLACK);
+            float magnitude;
+            //Log2.log(1,this,"BetweenBars: "+betweenBars);
+            float betweenBars = w / (float) bars;
+            for (int i = 0; i < bars; i++) {
+                c.drawRect(i * betweenBars, h - barHeightMultiplier * getMagnitudeRatio(i / (float) bars), (i + 1 - spacing) * betweenBars, h, pt);
             }
+
+            //c.drawRect(0,0,300,300,pt);
+
+
+        } catch (BufferNotPresentException e) {
+            Log2.log(1, this, "Buffer not present! Requested around " + getCurrentFrame());
+        }
 
 
     }

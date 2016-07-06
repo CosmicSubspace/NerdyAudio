@@ -18,15 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoudnessGraphVisuals extends BaseRenderer{
+public class LoudnessGraphVisuals extends BaseRenderer {
 
     SliderElement range = new SliderElement("Range", 1, 2048, 1024);
     SliderElement historySize = new SliderElement("History Size", 1, 64, 32);
 
     @Override
     public List<SettingElement> getSettings() {
-        Log2.log(2,this,range,historySize);
-        List<SettingElement> res=new ArrayList<>();
+        Log2.log(2, this, range, historySize);
+        List<SettingElement> res = new ArrayList<>();
         res.add(range);
         res.add(historySize);
 
@@ -52,7 +52,7 @@ public class LoudnessGraphVisuals extends BaseRenderer{
         super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         initArrays();
-        Log2.log(2,this,"Constructing",range,historySize);
+        Log2.log(2, this, "Constructing", range, historySize);
     }
 
     private void initArrays() {

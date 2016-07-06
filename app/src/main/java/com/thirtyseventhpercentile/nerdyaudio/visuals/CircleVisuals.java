@@ -28,21 +28,21 @@ public class CircleVisuals extends FftRenderer {
     Paint pt;
 
     CircleVisualSettings newSettings = null;
-/*
-    int bars = 100;
+    /*
+        int bars = 100;
 
-    float sensitivity = 1, bassSensitivity = 1;
+        float sensitivity = 1, bassSensitivity = 1;
 
-    */
-    SliderElement bars=new SliderElement("Number of vertices",3,500,100);
-    FloatSliderElement sensitivity=new FloatSliderElement("Sensitivity",0,3,1,100);
-    FloatSliderElement bassSensitivity=new FloatSliderElement("Bass Sensitivity",0,3,1,100);
+        */
+    SliderElement bars = new SliderElement("Number of vertices", 3, 500, 100);
+    FloatSliderElement sensitivity = new FloatSliderElement("Sensitivity", 0, 3, 1, 100);
+    FloatSliderElement bassSensitivity = new FloatSliderElement("Bass Sensitivity", 0, 3, 1, 100);
     int repeats = 2;
     float overlap = 0.2f;
 
     @Override
     public List<SettingElement> getSettings() {
-        List<SettingElement> res=super.getSettings();
+        List<SettingElement> res = super.getSettings();
         res.add(bars);
         res.add(sensitivity);
         res.add(bassSensitivity);
@@ -87,11 +87,11 @@ public class CircleVisuals extends FftRenderer {
 
     private Path getPath() {
         PointsCompound.Builder builder = new PointsCompound.Builder();
-        int bars=this.bars.getValue();
+        int bars = this.bars.getValue();
 
 
-        if( radiuses==null || (radiuses.length != bars)){
-            radiuses=new float[bars];
+        if (radiuses == null || (radiuses.length != bars)) {
+            radiuses = new float[bars];
         }
 
 
@@ -105,13 +105,13 @@ public class CircleVisuals extends FftRenderer {
 
         for (int rpt = 0; rpt < repeats; rpt++) {
 
-            for (int i = 0; i < bars + overlap*bars ; i++) { //Loop for all bars plus overlap.
+            for (int i = 0; i < bars + overlap * bars; i++) { //Loop for all bars plus overlap.
                 //Loop here and do stuff.
-                currentRadiusIndex = (i+(int)(offsetPerRepeat*bars*rpt))%bars; //Index to put data in
-                currentCircleRatio=i/(float)bars; //How far into the circle we are.
+                currentRadiusIndex = (i + (int) (offsetPerRepeat * bars * rpt)) % bars; //Index to put data in
+                currentCircleRatio = i / (float) bars; //How far into the circle we are.
 
 
-                if (currentCircleRatio<1.0f) { //Ramp up.
+                if (currentCircleRatio < 1.0f) { //Ramp up.
                     influence = SimpleMaths.linearMapClamped(currentCircleRatio, 0, overlap, 0, 1.0f);
                 } else { //Ramp down.
                     influence = SimpleMaths.linearMapClamped(currentCircleRatio, 1, 1 + overlap, 1.0f, 0);

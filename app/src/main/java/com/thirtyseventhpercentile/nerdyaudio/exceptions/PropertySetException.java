@@ -4,8 +4,8 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.exceptions;
 
-public class PropertySetException extends Exception{
-    public PropertySetException(String s){
+public class PropertySetException extends Exception {
+    public PropertySetException(String s) {
         super(s);
     }
 }

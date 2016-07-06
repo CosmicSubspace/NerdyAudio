@@ -17,15 +17,14 @@ import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import java.io.File;
 
 
-
 public class AudioPlayer {
-    public final String LOG_TAG="CS_AFN";
+    public final String LOG_TAG = "CS_AFN";
 
     protected int mSampleRate;
     protected int mChannels;
     protected int mNumSamples;  // Number of samples per channel.
     protected int bufferSize;
-    protected long seekOffsetus=0;
+    protected long seekOffsetus = 0;
 
     protected AudioTrack mAudioTrack;
     protected PlayThread mPlayThread;
@@ -37,19 +36,22 @@ public class AudioPlayer {
 
     static AudioPlayer inst;
 
-    public String getSourceString(){
+    public String getSourceString() {
         return sourceString;
     }
 
-    public static AudioPlayer getInstance(){
-        if (inst==null) inst=new AudioPlayer();
+    public static AudioPlayer getInstance() {
+        if (inst == null) inst = new AudioPlayer();
         return inst;
     }
-    protected AudioPlayer(){
 
-    };
+    protected AudioPlayer() {
 
-    public int getSampleRate(){
+    }
+
+    ;
+
+    public int getSampleRate() {
         return mSampleRate;
     }
 
@@ -57,12 +59,15 @@ public class AudioPlayer {
     /*public synchronized void setBufferFeedListener(BufferFeedListener bfl){
         this.bfl=bfl;
     }*/
-    public synchronized void setCompletionListener(CompletionListener cl){this.cl=cl;}
-    public synchronized void getInfoFromFile(){
-        SoundFile sf=new SoundFile();
+    public synchronized void setCompletionListener(CompletionListener cl) {
+        this.cl = cl;
+    }
+
+    public synchronized void getInfoFromFile() {
+        SoundFile sf = new SoundFile();
         try {
             sf.ReadFileMetaData(source);
-            mSampleRate =sf.getSampleRate();
+            mSampleRate = sf.getSampleRate();
             mChannels = sf.getChannels();
             mNumSamples = sf.getNumSamples();
 
@@ -79,11 +84,13 @@ public class AudioPlayer {
         }
 
     }
-    public synchronized void setFileStr(String fileStr){
-        source=new File(fileStr);
-        sourceString=fileStr;
+
+    public synchronized void setFileStr(String fileStr) {
+        source = new File(fileStr);
+        sourceString = fileStr;
     }
-    public synchronized void initializeAudio(){
+
+    public synchronized void initializeAudio() {
         mAudioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
                 mSampleRate,
@@ -95,23 +102,20 @@ public class AudioPlayer {
     }
 
 
-
-
-
     public synchronized boolean isPlaying() {
-        if (mAudioTrack!=null) return mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;
+        if (mAudioTrack != null) return mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;
         else return false;
     }
 
     public synchronized boolean isPaused() {
-        if (mAudioTrack!=null) return mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PAUSED;
+        if (mAudioTrack != null) return mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PAUSED;
         else return false;
     }
 
-    public synchronized void seekTo(float time){
+    public synchronized void seekTo(float time) {
         //TODO : This is a hasty fix for a NullPointerException. It is unclear why mPlayThread's sf returns null sometimes.
-        int i=0;
-        while(i<5) {
+        int i = 0;
+        while (i < 5) {
             try {
                 Log2.log(1, this, mPlayThread, mPlayThread.sf);
                 seekOffsetus = mPlayThread.sf.requestSeek(Math.round(((double) time) * 1000 * 1000)); //TODO because we seek to the _nearest_ frame, there could be a time shift.
@@ -121,78 +125,79 @@ public class AudioPlayer {
                 Log2.log(1, this, "NullPointerException in seekTo. Retrying.");
                 try {
                     Thread.sleep(1);
-                }catch (Exception e1){}
+                } catch (Exception e1) {
+                }
                 i++;
             }
         }
     }
 
 
-    public synchronized long getCurrentFrame(){ //Frame no. without taking seeks into account.
-        if (mAudioTrack!=null){
-            if (isPlaying()||isPaused()) return mAudioTrack.getPlaybackHeadPosition();
+    public synchronized long getCurrentFrame() { //Frame no. without taking seeks into account.
+        if (mAudioTrack != null) {
+            if (isPlaying() || isPaused()) return mAudioTrack.getPlaybackHeadPosition();
             else return 0;
-        }
-        else return 0;
+        } else return 0;
     }
-    public synchronized long getMusicCurrentFrame(){
-        return getCurrentFrame()-Math.round(seekOffsetus/1000000.0*getSampleRate());
+
+    public synchronized long getMusicCurrentFrame() {
+        return getCurrentFrame() - Math.round(seekOffsetus / 1000000.0 * getSampleRate());
     }
 
     public synchronized void playAudio() {
-        Log2.log(1,this, "PlayAudio called.");
-        Log2.log(1,this, "mAudioTrack is null:"+(mAudioTrack==null));
+        Log2.log(1, this, "PlayAudio called.");
+        Log2.log(1, this, "mAudioTrack is null:" + (mAudioTrack == null));
         if (isPlaying()) {
-            Log2.log(1,this,"isPlaying");
+            Log2.log(1, this, "isPlaying");
             return;
         }
-        if (isPaused()){
-            Log2.log(1,this,"isPaused");
+        if (isPaused()) {
+            Log2.log(1, this, "isPaused");
             mAudioTrack.play();
             return;
         }
-        Log2.log(1,this,"Normal Startup");
+        Log2.log(1, this, "Normal Startup");
 
         getInfoFromFile();
         initializeAudio();
 
-        seekOffsetus=0;
+        seekOffsetus = 0;
 
         mKeepPlaying = true;
         mAudioTrack.flush();
         mAudioTrack.play();
         // Setting thread feeding the audio samples to the audio hardware.
         // (Assumes mChannels = 1 or 2).
-        mPlayThread = new PlayThread (this, FilterManager.getInstance()) ;
+        mPlayThread = new PlayThread(this, FilterManager.getInstance());
         mPlayThread.start();
     }
 
 
-
     public synchronized void pause() {
-        Log2.log(2,this, "Ckecking if able to pause...");
+        Log2.log(2, this, "Ckecking if able to pause...");
         if (isPlaying()) {
             mAudioTrack.pause();
-            Log2.log(2,this, "Pausing...");
+            Log2.log(2, this, "Pausing...");
             // mAudioTrack.write() should block if it cannot write.
         }
     }
 
     public synchronized void stop() {
-        Log2.log(2,this, "Ckecking if able to stop...");
-        if (mAudioTrack!=null){
-        if (isPlaying() || isPaused()) {
-            Log2.log(2,this,"Stopping...");
-            mKeepPlaying = false;
-            mAudioTrack.pause();  // pause() stops the playback immediately.
-            mAudioTrack.stop();   // Unblock mAudioTrack.write() to avoid deadlocks.
-            mAudioTrack.flush();  // just in case...
-        }
+        Log2.log(2, this, "Ckecking if able to stop...");
+        if (mAudioTrack != null) {
+            if (isPlaying() || isPaused()) {
+                Log2.log(2, this, "Stopping...");
+                mKeepPlaying = false;
+                mAudioTrack.pause();  // pause() stops the playback immediately.
+                mAudioTrack.stop();   // Unblock mAudioTrack.write() to avoid deadlocks.
+                mAudioTrack.flush();  // just in case...
+            }
         }
     }
-    public synchronized void killThread(){
-        if (mPlayThread!=null) mPlayThread.stahp(); //TODO Better way to do this.
-        mPlayThread=null;
+
+    public synchronized void killThread() {
+        if (mPlayThread != null) mPlayThread.stahp(); //TODO Better way to do this.
+        mPlayThread = null;
         /*
         if (mPlayThread != null) {
             try {
@@ -205,7 +210,7 @@ public class AudioPlayer {
 
     public synchronized void release() {
         stop();
-        if (mAudioTrack!=null) mAudioTrack.release();
+        if (mAudioTrack != null) mAudioTrack.release();
     }
 
 

@@ -31,14 +31,14 @@ import java.io.Serializable;
 public class SidebarSettings implements AdapterView.OnItemSelectedListener, Serializable {
     transient private static SidebarSettings inst; //TODO am I overusing Singleton?
 
-    public static SidebarSettings instantiate(Context c){
-        inst=new SidebarSettings(c); //TODO something tells me this is not the way of doing things.
+    public static SidebarSettings instantiate(Context c) {
+        inst = new SidebarSettings(c); //TODO something tells me this is not the way of doing things.
         return inst;
     }
 
     public static SidebarSettings getInstance() {
         if (inst == null) {
-            Log2.log(4,SidebarSettings.class,"getInstance() called before instantiate() was called. Expect a NullPopinterException soon.");
+            Log2.log(4, SidebarSettings.class, "getInstance() called before instantiate() was called. Expect a NullPopinterException soon.");
         }
         return inst;
     }
@@ -54,14 +54,14 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
     VisualizationManager vm;
 
 
-
     Context ctxt;
+
     private SidebarSettings(Context c) {
-        visualizationSettings = new VisualizationSettings(this,c);
+        visualizationSettings = new VisualizationSettings(this, c);
 
 
-        vm=VisualizationManager.getInstance();
-        this.ctxt=c;
+        vm = VisualizationManager.getInstance();
+        this.ctxt = c;
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +76,6 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
         return v;
     }
-
 
 
     @Override
@@ -121,8 +120,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
 
         //We use the context from the parent view, since the ctxt variable (ApplicationContext) does not have the matching style.
-        visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettings(),parent.getContext(),null));
-
+        visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettings(), parent.getContext(), null));
 
 
         visualizationSettings.save();

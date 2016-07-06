@@ -12,14 +12,14 @@ import android.view.SurfaceHolder;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
 
-public class VisualsRenderThread extends Thread{
-    public static final String LOG_TAG="CS_AFN";
+public class VisualsRenderThread extends Thread {
+    public static final String LOG_TAG = "CS_AFN";
 
     Paint pt;
 
-    int w,h;
-    long lastDrawn=0, currentDrawn=1;
-    float fps=0;
+    int w, h;
+    long lastDrawn = 0, currentDrawn = 1;
+    float fps = 0;
     //float maxFPS=60.0f;
 
     //BaseRenderer renderer;
@@ -27,27 +27,31 @@ public class VisualsRenderThread extends Thread{
 
     SurfaceHolder sf;
 
-    boolean active=true;
+    boolean active = true;
 
     Canvas c;
-    public VisualsRenderThread(){
+
+    public VisualsRenderThread() {
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
-        vm=VisualizationManager.getInstance();
+        vm = VisualizationManager.getInstance();
     }
-    public void setSurfaceHolder(SurfaceHolder sf){ //is this valid?
-        this.sf=sf;
+
+    public void setSurfaceHolder(SurfaceHolder sf) { //is this valid?
+        this.sf = sf;
     }
-    public void stopRender(){
-        active=false;
+
+    public void stopRender() {
+        active = false;
     }
-/*
-    public void setRenderer(BaseRenderer r){
-        if (this.renderer!=null) this.renderer.release();
-        this.renderer=r;
-    }*/
-    public void setSize(int w,int h){
-        this.w=w;
-        this.h=h;
+
+    /*
+        public void setRenderer(BaseRenderer r){
+            if (this.renderer!=null) this.renderer.release();
+            this.renderer=r;
+        }*/
+    public void setSize(int w, int h) {
+        this.w = w;
+        this.h = h;
     }
     /*
     public void setMaxFPS(float maxFPS){
@@ -60,29 +64,30 @@ public class VisualsRenderThread extends Thread{
     }
     */
 
-    long lastTime=0, currentTime;
-    int framesDrawn=0;
+    long lastTime = 0, currentTime;
+    int framesDrawn = 0;
+
     @Override
-    public void run(){
+    public void run() {
         while (active) {
             framesDrawn++;
-            currentTime= System.currentTimeMillis();
-            if (lastTime+1000<currentTime){ //1 sec has elapsed. Update FPS.
-                fps=framesDrawn;
-                lastTime=currentTime;
-                framesDrawn=0;
+            currentTime = System.currentTimeMillis();
+            if (lastTime + 1000 < currentTime) { //1 sec has elapsed. Update FPS.
+                fps = framesDrawn;
+                lastTime = currentTime;
+                framesDrawn = 0;
             }
 
             c = sf.lockCanvas();
 
-            if (c==null) {
-                Log2.log(2,this,"VisualsRenderThread: lockCanvas() returned null. breaking loop.");
+            if (c == null) {
+                Log2.log(2, this, "VisualsRenderThread: lockCanvas() returned null. breaking loop.");
                 break;
             }
 
             c.drawColor(Color.WHITE);
 
-            if (vm.getActiveRenderer()!=null) vm.getActiveRenderer().draw(c,w,h);
+            if (vm.getActiveRenderer() != null) vm.getActiveRenderer().draw(c, w, h);
 
             /*
             //Log2.log(1,this,"DB: "+lastDrawn+" | "+minDelay+" | "+System.currentTimeMillis());
@@ -107,7 +112,7 @@ public class VisualsRenderThread extends Thread{
 
             pt.setStyle(Paint.Style.FILL);
             pt.setColor(Color.WHITE);
-            c.drawText("FPS: "+(int)fps, 10, 40, pt);
+            c.drawText("FPS: " + (int) fps, 10, 40, pt);
 
 
             sf.unlockCanvasAndPost(c);

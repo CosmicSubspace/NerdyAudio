@@ -83,7 +83,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log2.log(2,this, "Clicked");
+                Log2.log(2, this, "Clicked");
                 if (!currentMusic.isAGroup()) { //Is a single music.
                     QueueManager.getInstance().addMusic(new MusicInformation(((MusicInformation) currentMusic)));
                 } else { //It's a group -- Expand and update list.

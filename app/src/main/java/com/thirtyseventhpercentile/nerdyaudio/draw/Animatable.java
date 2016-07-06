@@ -11,11 +11,14 @@ import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
  */
 public abstract class Animatable {
     MixNode<PropertySet> mixedProperties;
-    public Animatable(MixNode<PropertySet> basis){
-        this.mixedProperties=basis;
+
+    public Animatable(MixNode<PropertySet> basis) {
+        this.mixedProperties = basis;
     }
-    public MixNode<PropertySet> getMixNode(){
+
+    public MixNode<PropertySet> getMixNode() {
         return this.mixedProperties;
     }
+
     public abstract void draw(Canvas c, Paint pt, long currentTime);
 }
