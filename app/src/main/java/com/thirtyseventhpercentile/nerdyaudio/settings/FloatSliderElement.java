@@ -2,7 +2,6 @@ package com.thirtyseventhpercentile.nerdyaudio.settings;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.IntFloatMapper;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 /**

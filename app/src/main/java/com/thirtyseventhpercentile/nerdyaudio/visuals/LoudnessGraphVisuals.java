@@ -11,10 +11,8 @@ import android.graphics.Paint;
 
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
-
 
 import java.util.ArrayList;
 import java.util.List;

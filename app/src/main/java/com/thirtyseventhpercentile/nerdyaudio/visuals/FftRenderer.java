@@ -2,9 +2,9 @@ package com.thirtyseventhpercentile.nerdyaudio.visuals;
 
 import android.content.Context;
 
+import com.meapsoft.FFT;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.FFTException;
-import com.meapsoft.FFT;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.settings.BooleanElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;

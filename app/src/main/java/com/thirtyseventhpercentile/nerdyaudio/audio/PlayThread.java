@@ -6,10 +6,10 @@ package com.thirtyseventhpercentile.nerdyaudio.audio;
 
 import android.util.Log;
 
+import com.ringdroid.soundfile.SoundFile;
 import com.thirtyseventhpercentile.nerdyaudio.filters.FilterManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
-import com.ringdroid.soundfile.SoundFile;
 
 
 class PlayThread extends Thread{

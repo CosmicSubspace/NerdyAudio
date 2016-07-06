@@ -7,11 +7,8 @@ package com.thirtyseventhpercentile.nerdyaudio.visuals;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
 

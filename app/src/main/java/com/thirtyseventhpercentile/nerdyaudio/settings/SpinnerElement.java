@@ -5,8 +5,6 @@ import android.widget.ArrayAdapter;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
 
 /**
  * Created by Chan on 7/6/2016.

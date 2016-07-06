@@ -12,16 +12,10 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
-import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.NewSettingsUpdateListener;
 
-
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
 import java.util.List;
 
 /**

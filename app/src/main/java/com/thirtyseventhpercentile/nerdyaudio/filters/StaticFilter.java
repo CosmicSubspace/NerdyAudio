@@ -1,7 +1,6 @@
 package com.thirtyseventhpercentile.nerdyaudio.filters;
 
 import android.graphics.Color;
-import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;

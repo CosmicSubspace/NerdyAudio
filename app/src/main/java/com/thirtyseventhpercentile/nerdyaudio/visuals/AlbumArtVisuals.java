@@ -12,7 +12,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
-import com.thirtyseventhpercentile.nerdyaudio.settings.AlbumArtSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
 
 import java.util.ArrayList;

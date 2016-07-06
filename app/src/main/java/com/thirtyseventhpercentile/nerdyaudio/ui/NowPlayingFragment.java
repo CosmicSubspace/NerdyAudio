@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 

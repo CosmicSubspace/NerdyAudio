@@ -4,9 +4,7 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.ui;
 
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 

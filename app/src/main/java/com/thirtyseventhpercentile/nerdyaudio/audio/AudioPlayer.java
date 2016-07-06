@@ -7,14 +7,12 @@ package com.thirtyseventhpercentile.nerdyaudio.audio;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.util.Log;
 
+import com.ringdroid.soundfile.SoundFile;
 import com.thirtyseventhpercentile.nerdyaudio.filters.FilterManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
-import com.ringdroid.soundfile.SoundFile;
 
 import java.io.File;
 

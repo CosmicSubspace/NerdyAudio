@@ -1,6 +1,5 @@
 package com.thirtyseventhpercentile.nerdyaudio.helper;
 
-import android.graphics.Rect;
 import android.graphics.RectF;
 
 /**

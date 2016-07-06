@@ -6,12 +6,10 @@ package com.thirtyseventhpercentile.nerdyaudio.file;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.FileListReturnListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.MusicListDisplayable;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 
 import java.io.File;

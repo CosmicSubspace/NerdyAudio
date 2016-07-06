@@ -9,7 +9,6 @@ import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentExcepti
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.helper.SimpleMaths;
-import com.thirtyseventhpercentile.nerdyaudio.settings.BallsVisualSettings;
 import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;

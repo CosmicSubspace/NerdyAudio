@@ -4,8 +4,6 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.audio;
 
-import android.util.Log;
-
 import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentException;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.FloatArrayRecycler;

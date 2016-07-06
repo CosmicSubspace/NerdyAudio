@@ -5,7 +5,6 @@
 package com.thirtyseventhpercentile.nerdyaudio.audio;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;

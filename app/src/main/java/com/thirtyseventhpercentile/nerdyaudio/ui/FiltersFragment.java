@@ -5,14 +5,14 @@
 package com.thirtyseventhpercentile.nerdyaudio.ui;
 
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.filters.AutoGainFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.BaseFilter;
@@ -21,8 +21,6 @@ import com.thirtyseventhpercentile.nerdyaudio.filters.IirHighPassFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.IirLowPassFilter;
 import com.thirtyseventhpercentile.nerdyaudio.filters.VolumeFilter;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ClansFABHelper;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 import java.util.ArrayList;

@@ -17,23 +17,23 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
+import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PointsCompound;
-import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableRectF;
-import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableShape;
-import com.thirtyseventhpercentile.nerdyaudio.animation.EasingEquations;
-import com.thirtyseventhpercentile.nerdyaudio.draw.PrimitivePaths;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
+import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableRectF;
+import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableShape;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableText;
 import com.thirtyseventhpercentile.nerdyaudio.draw.AnimatableWaveform;
+import com.thirtyseventhpercentile.nerdyaudio.draw.PrimitivePaths;
 import com.thirtyseventhpercentile.nerdyaudio.file.MusicInformation;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.BitmapConversions;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ColorFiddler;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
 
 //TODO : Enlarge time when scrubbing.
 

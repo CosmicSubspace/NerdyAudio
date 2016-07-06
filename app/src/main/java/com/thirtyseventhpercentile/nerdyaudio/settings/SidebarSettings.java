@@ -16,7 +16,6 @@ import android.widget.Spinner;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-
 import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.BallsVisuals;
@@ -27,7 +26,6 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.WaveformVisuals;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 
 public class SidebarSettings implements AdapterView.OnItemSelectedListener, Serializable {

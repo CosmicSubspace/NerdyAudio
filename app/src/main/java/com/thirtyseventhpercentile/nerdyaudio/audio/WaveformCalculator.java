@@ -5,14 +5,13 @@
 package com.thirtyseventhpercentile.nerdyaudio.audio;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.ringdroid.soundfile.SoundFile;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
-import com.ringdroid.soundfile.SoundFile;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
 
 import java.io.File;
 import java.util.ArrayList;

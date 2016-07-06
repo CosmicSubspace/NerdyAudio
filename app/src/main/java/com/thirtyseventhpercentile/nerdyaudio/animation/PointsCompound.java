@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class PointsCompound implements Mixable {

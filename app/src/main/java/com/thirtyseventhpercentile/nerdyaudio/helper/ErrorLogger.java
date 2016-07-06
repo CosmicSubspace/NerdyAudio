@@ -6,10 +6,6 @@ package com.thirtyseventhpercentile.nerdyaudio.helper;
 
 import android.util.Log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.security.acl.LastOwnerException;
-
 
 public class ErrorLogger {
     public static final int e=-1;

@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.thirtyseventhpercentile.nerdyaudio.animation.MixNode;
-import com.thirtyseventhpercentile.nerdyaudio.animation.MixedProperties;
 import com.thirtyseventhpercentile.nerdyaudio.animation.PropertySet;
 
 /**

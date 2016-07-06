@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.emtronics.dragsortrecycler.DragSortRecycler;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.file.QueueManager;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ClansFABHelper;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueElementUpdateListener;
-import com.emtronics.dragsortrecycler.DragSortRecycler;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 
 

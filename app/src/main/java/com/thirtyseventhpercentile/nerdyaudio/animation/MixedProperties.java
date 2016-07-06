@@ -4,8 +4,6 @@
 
 package com.thirtyseventhpercentile.nerdyaudio.animation;
 
-import android.util.Log;
-
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 
 import java.util.ArrayList;

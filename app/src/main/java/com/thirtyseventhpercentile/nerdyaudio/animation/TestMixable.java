@@ -1,7 +1,5 @@
 package com.thirtyseventhpercentile.nerdyaudio.animation;
 
-import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-
 /**
  * Created by Chan on 4/9/2016.
  */

@@ -5,7 +5,6 @@
 package com.thirtyseventhpercentile.nerdyaudio.file;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.thirtyseventhpercentile.nerdyaudio.audio.AudioPlayer;
 import com.thirtyseventhpercentile.nerdyaudio.audio.VisualizationBuffer;
@@ -13,12 +12,11 @@ import com.thirtyseventhpercentile.nerdyaudio.audio.Waveform;
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.CompletionListener;
+import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueElementUpdateListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.QueueListener;
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.ProgressStringListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.SampleProgressListener;
 import com.thirtyseventhpercentile.nerdyaudio.interfaces.WaveformReturnListener;
-import com.thirtyseventhpercentile.nerdyaudio.ui.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.File;

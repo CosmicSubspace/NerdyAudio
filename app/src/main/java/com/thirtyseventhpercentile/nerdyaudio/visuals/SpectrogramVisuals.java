@@ -15,7 +15,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.settings.FloatSliderElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SliderElement;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SpectrogramVisualSettings;
 
 import java.nio.IntBuffer;
 import java.util.List;
