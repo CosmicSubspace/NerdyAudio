@@ -181,7 +181,7 @@ public class Waveform implements Serializable {
 
 
     public void saveToFile(Context c) {
-        Log2.log(2, this, "Saving...");
+        //Log2.log(2, this, "Saving...");
         try {
             String name = getUniqueID(filename, barEvery);
             FileOutputStream fos = c.openFileOutput(name, Context.MODE_PRIVATE);

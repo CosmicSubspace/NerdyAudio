@@ -42,7 +42,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.interaction.VolumeControls;
 import com.thirtyseventhpercentile.nerdyaudio.service.BackgroundMusicService;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.VisualizationView;
 
@@ -450,9 +449,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (!volCtrl.event(event)) {
-            return super.dispatchKeyEvent(event);
-        } else return true;
+        if (sbs.getVolumeControlsEnabled() && volCtrl.event(event)) { //enabled AND consumed.
+            return true;
+        } else return super.dispatchKeyEvent(event);
     }
 
 }

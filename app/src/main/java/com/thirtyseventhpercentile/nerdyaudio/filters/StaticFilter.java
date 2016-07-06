@@ -54,8 +54,8 @@ public class StaticFilter extends BaseFilter {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
         View v = super.getView(inflater, container);
-        Log2.log(2, this, v.findViewById(R.id.filter_close));
-        Log2.log(2, this, v);
+        //Log2.log(2, this, v.findViewById(R.id.filter_close));
+        //Log2.log(2, this, v);
         v.findViewById(R.id.filter_close).setVisibility(View.GONE);
         //v.setBackgroundColor(Color.rgb(180,180,180));
         ((CardView) v.findViewById(R.id.filter_card)).setCardBackgroundColor(Color.rgb(180, 180, 180));

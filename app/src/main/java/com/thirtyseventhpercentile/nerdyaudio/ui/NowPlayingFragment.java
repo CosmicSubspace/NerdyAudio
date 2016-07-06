@@ -63,7 +63,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        Log2.log(2, this, "Adapter > Nothing selected.");
+        //Log2.log(2, this, "Adapter > Nothing selected.");
     }
 
 

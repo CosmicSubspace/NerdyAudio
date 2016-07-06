@@ -2,21 +2,24 @@
 //Include the license text thingy if you're gonna use this.
 //Copyright (c) 2016 Chansol Yang
 
-package com.thirtyseventhpercentile.nerdyaudio.settings;
+package com.thirtyseventhpercentile.nerdyaudio.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.thirtyseventhpercentile.nerdyaudio.R;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
-import com.thirtyseventhpercentile.nerdyaudio.ui.VisualizationManager;
+import com.thirtyseventhpercentile.nerdyaudio.settings.SettingsUiFactory;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.AlbumArtVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.BallsVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.CircleVisuals;
@@ -25,10 +28,8 @@ import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrogramVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.SpectrumVisuals;
 import com.thirtyseventhpercentile.nerdyaudio.visuals.WaveformVisuals;
 
-import java.io.Serializable;
 
-
-public class SidebarSettings implements AdapterView.OnItemSelectedListener, Serializable {
+public class SidebarSettings implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
     transient private static SidebarSettings inst; //TODO am I overusing Singleton?
 
     public static SidebarSettings instantiate(Context c) {
@@ -46,19 +47,41 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     private static final String LOG_TAG = "CS_AFN";
 
-    transient Spinner visSpinner;
-    transient FrameLayout visual_setting_container;
-
-
+    Spinner visSpinner;
+    FrameLayout visual_setting_container;
+    Switch volumeControlsToggle;
 
     VisualizationManager vm;
-
-
     Context ctxt;
+
+    int visualizationSpinnerSelection;
+    boolean volumeControlsEnabled;
+
+    public boolean getVolumeControlsEnabled(){return volumeControlsEnabled;}
+
+    public static String PREF_IDENTIFIER="com.thirtyseventhpercentile.nerdyaudio.ui.SidebarSettings";
+    public void save() {
+        Log2.log(1,this,"Saving settings",visualizationSpinnerSelection, volumeControlsEnabled);
+        SharedPreferences.Editor editor = ctxt.getSharedPreferences(PREF_IDENTIFIER, Context.MODE_PRIVATE).edit();
+        editor.putInt("visualizationSpinnerSelection",visualizationSpinnerSelection);
+        editor.putBoolean("volumeControlsEnabled", volumeControlsEnabled);
+        editor.apply();
+    }
+
+
+    protected void load() {
+
+        SharedPreferences pref = ctxt.getSharedPreferences(PREF_IDENTIFIER, Context.MODE_PRIVATE);
+        visualizationSpinnerSelection=pref.getInt("visualizationSpinnerSelection", -1);
+        volumeControlsEnabled =pref.getBoolean("volumeControlsEnabled", false);
+        Log2.log(1,this,"Loading settings.",visualizationSpinnerSelection, volumeControlsEnabled);
+    }
 
     private SidebarSettings(Context c) {
         vm = VisualizationManager.getInstance();
         this.ctxt = c;
+        //TODO I/O in UI thread.
+        load();
     }
 
     public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,8 +91,15 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.visuals_spinner_element,visualizations);
         //adapter.setDropDownViewResource(R.layout.visuals_spinner_element);
         visSpinner.setAdapter(adapter);
-        visSpinner.setOnItemSelectedListener(this);
+
         visual_setting_container = (FrameLayout) v.findViewById(R.id.visuals_setting_container);
+        volumeControlsToggle=(Switch) v.findViewById(R.id.vbc_toggle);
+
+        volumeControlsToggle.setOnCheckedChangeListener(SidebarSettings.this);
+        visSpinner.setOnItemSelectedListener(SidebarSettings.this);
+
+        visSpinner.setSelection(visualizationSpinnerSelection);
+        volumeControlsToggle.setChecked(volumeControlsEnabled);
 
         return v;
     }
@@ -77,8 +107,11 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        LayoutInflater li = LayoutInflater.from(parent.getContext());
+        //Log2.log(2,this,"Spinner Selected",position);
         visual_setting_container.removeAllViews();
+
+        visualizationSpinnerSelection=position;
+
         switch (position) {
             case 0:
                 vm.setActiveRenderer(new LoudnessGraphVisuals(ctxt));
@@ -109,8 +142,7 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
         //We use the context from the parent view, since the ctxt variable (ApplicationContext) does not have the matching style.
         visual_setting_container.addView(SettingsUiFactory.generateSettings(vm.getActiveRenderer().getSettings(), parent.getContext(), null));
-
-
+        save();
     }
 
     @Override
@@ -118,4 +150,13 @@ public class SidebarSettings implements AdapterView.OnItemSelectedListener, Seri
 
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId()==R.id.vbc_toggle){
+            volumeControlsEnabled =isChecked;
+            save();
+        }else{
+            Log2.log(3,this,"More buttons???");
+        }
+    }
 }

@@ -174,7 +174,7 @@ public class AudioPlayer {
 
 
     public synchronized void pause() {
-        Log2.log(2, this, "Ckecking if able to pause...");
+        Log2.log(1, this, "Ckecking if able to pause...");
         if (isPlaying()) {
             mAudioTrack.pause();
             Log2.log(2, this, "Pausing...");
@@ -183,7 +183,7 @@ public class AudioPlayer {
     }
 
     public synchronized void stop() {
-        Log2.log(2, this, "Ckecking if able to stop...");
+        Log2.log(1, this, "Ckecking if able to stop...");
         if (mAudioTrack != null) {
             if (isPlaying() || isPaused()) {
                 Log2.log(2, this, "Stopping...");

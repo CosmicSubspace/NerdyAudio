@@ -25,7 +25,7 @@ public class LoudnessGraphVisuals extends BaseRenderer {
 
     @Override
     public List<SettingElement> getSettings() {
-        Log2.log(2, this, range, historySize);
+        //Log2.log(2, this, range, historySize);
         List<SettingElement> res = new ArrayList<>();
         res.add(range);
         res.add(historySize);
@@ -52,7 +52,7 @@ public class LoudnessGraphVisuals extends BaseRenderer {
         super(ctxt);
         pt = new Paint(Paint.ANTI_ALIAS_FLAG);
         initArrays();
-        Log2.log(2, this, "Constructing", range, historySize);
+        //Log2.log(2, this, "Constructing", range, historySize);
     }
 
     private void initArrays() {

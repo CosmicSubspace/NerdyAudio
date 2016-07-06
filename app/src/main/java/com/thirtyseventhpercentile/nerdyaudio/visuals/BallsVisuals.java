@@ -30,7 +30,7 @@ public class BallsVisuals extends FftRenderer {
     */
 
     SliderElement iterations = new SliderElement("Simulation Iterations", 1, 100, 30);
-    FloatSliderElement sensitivity = new FloatSliderElement("Sensitivity", 0, 3, 1, 100);
+    FloatSliderElement sensitivity = new FloatSliderElement("Sensitivity", 0, 300, 100, 1000);
     FloatSliderElement bounciness = new FloatSliderElement("Bounciness", 0, 100, 10, 100);
     FloatSliderElement stickyness = new FloatSliderElement("Stickyness", 0, 1, 0.3f, 100);
     FloatSliderElement lowpass = new FloatSliderElement("Lowpass", 0, 1, 0.3f, 100);
@@ -66,7 +66,7 @@ public class BallsVisuals extends FftRenderer {
     }
 
     private void initializeSimulation() {
-        Log2.log(2, this, "Sim Init...");
+        Log2.log(0, this, "Sim Init...");
         balls.clear();
         for (int i = 0; i < 4; i++) {
             balls.add(new Ball(i * 100, 100, 0, 0, ColorFiddler.rampColor(Color.RED, Color.BLUE, i / 5.0f)));

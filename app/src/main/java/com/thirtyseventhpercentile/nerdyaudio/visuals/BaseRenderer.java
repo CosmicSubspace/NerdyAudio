@@ -13,7 +13,7 @@ import com.thirtyseventhpercentile.nerdyaudio.exceptions.BufferNotPresentExcepti
 import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import com.thirtyseventhpercentile.nerdyaudio.helper.Log2;
 import com.thirtyseventhpercentile.nerdyaudio.settings.SettingElement;
-import com.thirtyseventhpercentile.nerdyaudio.settings.SidebarSettings;
+import com.thirtyseventhpercentile.nerdyaudio.ui.SidebarSettings;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,12 +31,12 @@ public abstract class BaseRenderer {
     //Initialize all the SettingElements, using the values
     public final void putSettings(List<SettingElement> elements) {
         if (elements == null) {
-            Log2.log(2, this, "Putsettings():", "elements is null. Returning immediately.");
+            Log2.log(1, this, "Putsettings():", "elements is null. Returning immediately.");
             return;
         }
         for (SettingElement orig : getSettings()) {
             for (SettingElement other : elements) {
-                Log2.log(2, this, this.getKey(), orig, other);
+                //Log2.log(2, this, this.getKey(), orig, other);
                 if (orig.getName().equals(other.getName())) {
                     orig.fromElement(other);
                     orig.applyValue();
@@ -60,7 +60,7 @@ public abstract class BaseRenderer {
     }
 
     public void saveSettings(List<SettingElement> toSave, String key) {
-        Log2.log(2, this, "Saving settings...");
+        Log2.log(1, this, "Saving settings...");
         try {
             FileOutputStream fos = ctxt.openFileOutput("vis_save_" + key, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -87,7 +87,7 @@ public abstract class BaseRenderer {
     }
 
     public List<SettingElement> loadSettings(String key) {
-        Log2.log(2, this, "Loading settings.");
+        Log2.log(1, this, "Loading settings.");
         try {
             FileInputStream fis = ctxt.openFileInput("vis_save_" + key);
             ObjectInputStream is = new ObjectInputStream(fis);

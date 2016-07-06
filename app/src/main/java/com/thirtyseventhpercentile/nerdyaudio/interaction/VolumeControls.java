@@ -70,7 +70,8 @@ public class VolumeControls {
                     || (getEvent(1).type == TimedKeyEvent.UP_PRESS && getEvent(0).type == TimedKeyEvent.DOWN_PRESS)) {//Both press and hold
                 qm.togglePlay();
             } else {
-                Log2.log(3, this, "endInteraction > Something is off. 1");
+                //Other events, such as release-release.
+                //Ignore them.
             }
         }
 

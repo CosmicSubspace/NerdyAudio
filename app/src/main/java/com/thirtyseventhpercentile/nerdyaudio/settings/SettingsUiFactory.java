@@ -34,7 +34,7 @@ public class SettingsUiFactory {
 
 
         for (int i = 0; i < elements.size(); i++) {
-            Log2.log(2, SettingsUiFactory.class, "Element", i);
+            //Log2.log(2, SettingsUiFactory.class, "Element", i);
             RelativeLayout elementRoot = new RelativeLayout(ctxt);
             LinearLayout.LayoutParams elementRootParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             elementRoot.setLayoutParams(elementRootParams);
