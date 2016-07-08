@@ -7,23 +7,19 @@ package com.ninthavenue;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Environment;
-import android.preference.DialogPreference;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
+import com.cosmicsubspace.nerdyaudio.helper.ErrorLogger;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class FileChooser {

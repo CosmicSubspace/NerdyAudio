@@ -23,7 +23,7 @@ package com.meapsoft;
   */
 
 
-import com.thirtyseventhpercentile.nerdyaudio.exceptions.FFTException;
+import com.cosmicsubspace.nerdyaudio.exceptions.FFTException;
 
 public class FFT {
 

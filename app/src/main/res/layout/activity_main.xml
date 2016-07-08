@@ -81,7 +81,7 @@
             android:layout_below="@+id/tab_layout" />
 
 
-        <com.thirtyseventhpercentile.nerdyaudio.visuals.PlayControlsView
+        <com.cosmicsubspace.nerdyaudio.visuals.PlayControlsView
             android:id="@+id/waveform"
             android:layout_width="match_parent"
             android:layout_height="200dp"

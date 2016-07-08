@@ -1,4 +1,4 @@
-package com.thirtyseventhpercentile.nerdyaudio;
+package com.cosmicsubspace.nerdyaudio;
 
 import org.junit.Test;
 

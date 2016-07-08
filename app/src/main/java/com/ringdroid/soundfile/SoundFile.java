@@ -40,8 +40,8 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
-import com.thirtyseventhpercentile.nerdyaudio.interfaces.BufferFeedListener;
-import com.thirtyseventhpercentile.nerdyaudio.helper.ByteConversions;
+import com.cosmicsubspace.nerdyaudio.interfaces.BufferFeedListener;
+import com.cosmicsubspace.nerdyaudio.helper.ByteConversions;
 
 public class SoundFile {
     private ProgressListener mProgressListener = null;

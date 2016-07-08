@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thirtyseventhpercentile.nerdyaudio" >
+    package="com.cosmicsubspace.nerdyaudio" >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,12 +13,12 @@
         android:theme="@style/AppTheme" >
 
 
-        <activity android:name="com.thirtyseventhpercentile.nerdyaudio.ui.MainActivity" >
+        <activity android:name="com.cosmicsubspace.nerdyaudio.ui.MainActivity" >
         </activity>
 
 
         <activity
-            android:name="com.thirtyseventhpercentile.nerdyaudio.ui.SplashActivity"
+            android:name="com.cosmicsubspace.nerdyaudio.ui.SplashActivity"
             android:noHistory="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -30,7 +30,7 @@
 
 
         <service
-            android:name="com.thirtyseventhpercentile.nerdyaudio.service.BackgroundMusicService"
+            android:name="com.cosmicsubspace.nerdyaudio.service.BackgroundMusicService"
             android:exported="true"/>
     </application>
 
