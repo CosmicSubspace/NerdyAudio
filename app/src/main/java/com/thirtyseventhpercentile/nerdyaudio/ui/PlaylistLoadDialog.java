@@ -19,9 +19,6 @@ import com.thirtyseventhpercentile.nerdyaudio.helper.ErrorLogger;
 import java.util.ArrayList;
 
 public class PlaylistLoadDialog {
-
-    public final static String LOG_TAG = "CS_AFN";
-
     public static interface LoadedListener {
         void loaded();
     }
