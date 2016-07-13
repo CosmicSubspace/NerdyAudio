@@ -35,6 +35,8 @@ public class CircleVisuals extends FftRenderer {
     SliderElement bars = new SliderElement("Number of vertices", 3, 500, 100);
     FloatSliderElement sensitivity = new FloatSliderElement("Sensitivity", 0, 3, 1, 100);
     FloatSliderElement bassSensitivity = new FloatSliderElement("Bass Sensitivity", 0, 3, 1, 100);
+    FloatSliderElement baseRadius = new FloatSliderElement("Base Radius", 30, 300, 100, 1000);
+
     int repeats = 2;
     float overlap = 0.2f;
 
@@ -44,6 +46,7 @@ public class CircleVisuals extends FftRenderer {
         res.add(bars);
         res.add(sensitivity);
         res.add(bassSensitivity);
+        res.add(baseRadius);
         return res;
     }
 
@@ -121,7 +124,7 @@ public class CircleVisuals extends FftRenderer {
 
 
         //We smooth the values a little.
-        baseR = baseR * 0.5 + SimpleMaths.linearMapClamped(getMagnitudeRange(50, 150, true) * bassSensitivity.getFloatValue(), 0, 300, 100, 250) * 0.5;
+        baseR = baseR * 0.5 + (getMagnitudeRange(50, 150, true) * bassSensitivity.getFloatValue() + baseRadius.getFloatValue()) * 0.5;
         for (int i = 0; i < bars; i++) {
             //addR=getMagnitudeRatio(i/(float)bars)*sensitivity;
             addR = radiuses[i];
