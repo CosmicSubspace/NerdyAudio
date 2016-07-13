@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.cosmicsubspace.nerdyaudio.filters.StereoFilter;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.cosmicsubspace.nerdyaudio.R;
@@ -30,7 +31,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
     private static final String LOG_TAG = "CS_AFN";
     LinearLayout lv;
     FloatingActionMenu fam;
-    FloatingActionButton[] fabs = new FloatingActionButton[3];
     FilterManager fm;
 
     @Override
@@ -47,7 +47,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
         v.findViewById(R.id.filters_tab_fab_sub_2).setOnClickListener(this);
         v.findViewById(R.id.filters_tab_fab_sub_3).setOnClickListener(this);
         v.findViewById(R.id.filters_tab_fab_sub_4).setOnClickListener(this);
-
+        v.findViewById(R.id.filters_tab_fab_sub_5).setOnClickListener(this);
 
         //I don't think there will be too many filters in here, so we'll just use a linearlayout with scrollbar
         //instead of a listview.
@@ -98,6 +98,11 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
             lv.addView(vvvvv);
         } else if (id == R.id.filters_tab_fab_sub_4) {
             BaseFilter newFilter = new IirHighPassFilter(FilterManager.getInstance());
+            fm.addFilter(newFilter);
+            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
+            lv.addView(vvvvv);
+        } else if (id == R.id.filters_tab_fab_sub_5) {
+            BaseFilter newFilter = new StereoFilter(FilterManager.getInstance());
             fm.addFilter(newFilter);
             View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
             lv.addView(vvvvv);

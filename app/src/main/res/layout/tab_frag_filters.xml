@@ -101,6 +101,15 @@
             style="@style/fab_sub"
             />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/filters_tab_fab_sub_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            fab:fab_label="Stereo"
+            style="@style/fab_sub"
+            />
+
 
     </com.github.clans.fab.FloatingActionMenu>
 

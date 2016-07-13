@@ -65,7 +65,6 @@ import java.util.Date;
 //TODO : Playback device selection
 //TODO : Artwork existance check on actual play
 //TODO : Dynamic Range Compression
-//TODO : CircleVisuals base radius setting
 //TODO : Lowpass on FFT result
 //TODO : Spline interpolation on FFT result
 //TODO : Pocket Play / Cinema Mode
@@ -73,7 +72,7 @@ import java.util.Date;
 //TODO : ClashWithDash.mp3 error
 //TODO : L/R Balance Filter
 //TODO : Filters enable toggle
-//TODO : Replace assertioons with exceptions.
+//TODO : Replace assertions with exceptions.
 
 
 /**
