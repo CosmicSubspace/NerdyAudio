@@ -46,7 +46,7 @@ public class StereoFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
     }
 
     float leftMult=1.0f, rightMult=1.0f;
-    int progress;
+    int progress=50;
     boolean downmix=false;
 
     SeekBar balanceBar;

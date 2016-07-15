@@ -62,7 +62,9 @@ public class StaticFilter extends BaseFilter {
         if (type != VISUALS) {
             v.findViewById(R.id.filter_move_down).setVisibility(View.GONE);
             v.findViewById(R.id.filter_move_up).setVisibility(View.GONE);
+
         }
+        v.findViewById(R.id.filter_enable).setVisibility(View.GONE);
 
         return v;
     }

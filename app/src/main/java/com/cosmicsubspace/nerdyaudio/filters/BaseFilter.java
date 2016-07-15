@@ -16,9 +16,10 @@ import com.cosmicsubspace.nerdyaudio.R;
 abstract public class BaseFilter implements View.OnClickListener {
     FilterManager fm;
     View mainView;
-    Button closeBtn, upBtn, downBtn;
+    Button closeBtn, upBtn, downBtn, enableBtn;
     TextView title;
     FrameLayout content;
+    boolean enabled=true;
 
     public BaseFilter(FilterManager fm) {
         this.fm = fm;
@@ -39,6 +40,10 @@ abstract public class BaseFilter implements View.OnClickListener {
 
         downBtn = (Button) mainView.findViewById(R.id.filter_move_down);
         downBtn.setOnClickListener(this);
+
+        enableBtn = (Button) mainView.findViewById(R.id.filter_enable);
+        enableBtn.setOnClickListener(this);
+        updateEnabledButton();
 
         title = (TextView) mainView.findViewById(R.id.filter_title);
         title.setText(getName());
@@ -65,6 +70,18 @@ abstract public class BaseFilter implements View.OnClickListener {
         fm.moveDown(this);
     }
 
+    public void toggleEnable(){
+        enabled=!enabled;
+        updateEnabledButton();
+    }
+    public void updateEnabledButton(){
+        if (enabled) enableBtn.setBackgroundResource(R.drawable.ic_volume_up_black_36dp);
+        else enableBtn.setBackgroundResource(R.drawable.ic_volume_off_black_36dp);
+    }
+    public boolean isEnabled(){
+        return enabled;
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.filter_close) {
@@ -73,6 +90,8 @@ abstract public class BaseFilter implements View.OnClickListener {
             moveUp();
         } else if (v.getId() == R.id.filter_move_down) {
             moveDown();
+        }else if (v.getId() == R.id.filter_enable) {
+            toggleEnable();
         }
     }
 }

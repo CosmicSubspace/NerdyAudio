@@ -24,6 +24,15 @@
             <Button
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:id="@+id/filter_enable"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="false"
+                android:background="@drawable/ic_volume_up_black_36dp"
+                android:layout_toLeftOf="@+id/filter_move_up" />
+
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:id="@+id/filter_move_down"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="false"

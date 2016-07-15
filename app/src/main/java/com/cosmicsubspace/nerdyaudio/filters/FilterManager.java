@@ -66,6 +66,7 @@ public class FilterManager {
     public short[] filterAll(short[] data) {
         float[] res = shortToFloat(data); //TODO We need some crazy optimizations here.
         for (int i = 0; i < filters.size(); i++) {
+            if (!filters.get(i).isEnabled()) continue;
             filters.get(i).filter(res);
         }
         return floatToShort(res);

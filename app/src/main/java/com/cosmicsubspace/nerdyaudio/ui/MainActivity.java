@@ -59,7 +59,6 @@ import java.util.Date;
 //TODO : Better UI Colors
 //TODO : Shuffle & Repeat
 //TODO : Waveform color always accent?
-//TODO : Ball Visuals more settings
 //TODO : Playlist/state save on exit
 //TODO : Headphone Controls
 //TODO : Playback device selection
