@@ -13,22 +13,23 @@
             android:layout_alignParentTop="true" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:id="@+id/filter_stereo_reset"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="false"
-            android:layout_below="@+id/filter_stereo_mono" />
+            android:layout_below="@+id/filter_stereo_mono"
+            android:background="@drawable/ic_refresh_black_36dp" />
 
         <SeekBar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:id="@+id/filter_stereo_balance"
             android:layout_toLeftOf="@+id/filter_stereo_reset"
-            android:layout_alignTop="@+id/filter_stereo_reset"
-            android:layout_alignBottom="@+id/filter_stereo_reset"
             android:max="100"
-            android:progress="50" />
+            android:progress="50"
+            android:layout_alignBottom="@+id/filter_stereo_reset"
+            android:minHeight="36dp"
+            android:maxHeight="36dp" />
 
 </RelativeLayout>
