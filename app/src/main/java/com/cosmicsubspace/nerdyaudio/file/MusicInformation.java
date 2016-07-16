@@ -15,6 +15,9 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class MusicInformation implements MusicListDisplayable, Serializable {
+
+    static final long serialVersionUID = 1L;
+
     static class AlbumComparator implements Comparator<MusicInformation> {
         @Override
         public int compare(MusicInformation a, MusicInformation b) {
@@ -156,7 +159,7 @@ public class MusicInformation implements MusicListDisplayable, Serializable {
         if (mmr.getEmbeddedPicture() == null) hasArt = false; //TODO : this causes lag.
         else hasArt = true;
 
-        updateReadyness(c);
+        //updateReadyness(c);
     }
 
     public byte[] getArtByteArray() {
@@ -193,5 +196,9 @@ public class MusicInformation implements MusicListDisplayable, Serializable {
 
     public boolean isCaching() {
         return this.isCaching;
+    }
+
+    public boolean checkExistance(){
+        return new File(filepath).exists();
     }
 }

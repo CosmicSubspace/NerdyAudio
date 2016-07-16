@@ -5,6 +5,7 @@
 package com.cosmicsubspace.nerdyaudio.file;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.cosmicsubspace.nerdyaudio.audio.AudioPlayer;
 import com.cosmicsubspace.nerdyaudio.audio.VisualizationBuffer;
@@ -154,8 +155,13 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
     }
 
     public void addMusic(MusicInformation mi) {
-        queue.add(mi);
-        prepareWaveform();
+        mi.updateReadyness(ctxt);
+        if (mi.checkExistance()) {
+            queue.add(mi);
+            prepareWaveform();
+        }else{
+            Toast.makeText(ctxt, ""+mi.getTitle()+" not found.", Toast.LENGTH_SHORT).show();
+        }
     }
 /*
     public void addMusicWithoutWaveformPreparation(MusicInformation mi) {
@@ -416,12 +422,12 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
         if (mode == ADD) {
             for (Playlist playlist : playlists) {
                 for (String music : playlist.files) {
-                    queue.add(new MusicInformation(music, c));
+                    addMusic(new MusicInformation(music, c));
                 }
             }
         } else if (mode == SUBTRACT) {
             for (String music : playlists[0].files) {
-                queue.add(new MusicInformation(music, c));
+                addMusic(new MusicInformation(music, c));
             }
             ArrayList<MusicInformation> toBeRemoved = new ArrayList<>();
             for (int i = 1; i < playlists.length; i++) {
@@ -458,7 +464,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
                         valid = false;
                     }
                 }
-                if (valid) queue.add(new MusicInformation(music, c));
+                if (valid) addMusic(new MusicInformation(music, c));
             }
 
         }
