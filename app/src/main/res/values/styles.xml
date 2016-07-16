@@ -31,8 +31,8 @@
     </style>
 
     <style name="filter_title">
-        <item name="android:textSize">36sp</item>
-        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold|italic</item>
         <item name="android:textColor">@color/colorDarkPrimaryText</item>
     </style>
 

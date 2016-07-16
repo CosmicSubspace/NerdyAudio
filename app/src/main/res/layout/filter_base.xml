@@ -21,8 +21,6 @@
             android:id="@+id/filter_buttons"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/filter_title"
-            android:layout_alignBottom="@+id/filter_title"
             android:gravity="center">
 
             <Button
@@ -75,7 +73,10 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"/>
+            android:scrollHorizontally="true"
+            android:layout_alignTop="@+id/filter_buttons"
+            android:layout_alignBottom="@+id/filter_buttons"
+            android:gravity="center_vertical" />
 
         <FrameLayout
             android:layout_width="match_parent"
