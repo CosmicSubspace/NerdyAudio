@@ -46,7 +46,7 @@ public class Log2 {
             f.flush();
             f.close();
         } catch (IOException e1) {
-            ErrorLogger.log(e1);
+            log(e1);
         } //Double exception?
     }
 
@@ -96,5 +96,13 @@ public class Log2 {
             case 5:
                 Log.wtf(LOG_TAG, log.toString());
         }
+    }
+
+    public static void log(Exception e) {
+        log(4, ErrorLogger.class, "Error Handled:\n" + logToString(e));
+    }
+
+    public static String logToString(Throwable e) {
+        return Log.getStackTraceString(e);
     }
 }

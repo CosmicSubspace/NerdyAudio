@@ -79,9 +79,9 @@ public class MixNode<T extends Mixable> {
                 mixer.addMix(node.getBasis(), node.tempInfluence);
                 //Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
             } catch (UnMixableException e) {
-                ErrorLogger.log(e);
+                Log2.log(e);
             } catch (NullPointerException e) {
-                ErrorLogger.log(e);
+                Log2.log(e);
                 Log2.log(4, this, "NPE", this.name, mixer, node, node.getBasis());
             }
         }
@@ -102,7 +102,7 @@ public class MixNode<T extends Mixable> {
                     mixer.addMix(valTemp,node.getInfluence().getValue(time));
                     //Log2.log(2,this,valTemp,node.getInfluence().getValue(time));
                 }catch(UnMixableException e){
-                    ErrorLogger.log(e);
+                    Log2.log(e);
                 }catch(NullPointerException e){
                     Log2.log(4,this,"NPE",this.name);
                 }

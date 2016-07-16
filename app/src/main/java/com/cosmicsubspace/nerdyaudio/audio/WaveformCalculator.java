@@ -70,7 +70,7 @@ public class WaveformCalculator extends Thread implements BufferFeedListener {
 
             sf.ReadFileWithCallback(file, this);
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
 
 
@@ -122,7 +122,7 @@ public class WaveformCalculator extends Thread implements BufferFeedListener {
                 }
             });
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
 
         ShortBuffer sb=sf.getSamples();

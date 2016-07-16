@@ -12,6 +12,7 @@ import com.cosmicsubspace.nerdyaudio.R;
 import com.cosmicsubspace.nerdyaudio.file.MusicInformation;
 import com.cosmicsubspace.nerdyaudio.file.Playlist;
 import com.cosmicsubspace.nerdyaudio.helper.ErrorLogger;
+import com.cosmicsubspace.nerdyaudio.helper.Log2;
 import com.cosmicsubspace.nerdyaudio.interfaces.PlaylistInformationReturnListener;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class PlaylistSaveDialog {
                         try {
                             new Playlist(name.getText().toString(), description.getText().toString(), queue).save(c);
                         } catch (Exception e) {
-                            ErrorLogger.log(e);
+                            Log2.log(e);
                             Toast.makeText(c, "Save Failed!", Toast.LENGTH_SHORT).show();
                         }
                     }

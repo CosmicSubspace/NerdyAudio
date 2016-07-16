@@ -16,7 +16,7 @@ import com.cosmicsubspace.nerdyaudio.settings.SliderElement;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO : Sticky Balls
+
 public class BallsVisuals extends FftRenderer {
     Paint pt;
 

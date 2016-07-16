@@ -152,7 +152,7 @@ public class QueueFragment extends Fragment implements View.OnClickListener, Que
             try {
                 qm.parsePlaylist(Playlist.load(getContext(), "TEST"),QueueManager.OVERWRITE, getContext());
             }catch (Exception e) {
-                ErrorLogger.log(e);
+                Log2.log(e);
                 Toast.makeText(getContext(), "Error while Loading!", Toast.LENGTH_SHORT).show();
             }*/
         } else if (id == R.id.queue_tab_fab_sub_shuffle) {

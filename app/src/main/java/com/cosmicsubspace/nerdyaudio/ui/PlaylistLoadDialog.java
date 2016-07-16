@@ -15,6 +15,7 @@ import com.cosmicsubspace.nerdyaudio.R;
 import com.cosmicsubspace.nerdyaudio.file.Playlist;
 import com.cosmicsubspace.nerdyaudio.file.QueueManager;
 import com.cosmicsubspace.nerdyaudio.helper.ErrorLogger;
+import com.cosmicsubspace.nerdyaudio.helper.Log2;
 
 import java.util.ArrayList;
 
@@ -104,7 +105,7 @@ public class PlaylistLoadDialog {
 
                             if (ll != null) ll.loaded();
                         } catch (Exception e) {
-                            ErrorLogger.log(e);
+                            Log2.log(e);
                             Toast.makeText(c, "Save Failed!", Toast.LENGTH_SHORT).show();
                         }
                     }

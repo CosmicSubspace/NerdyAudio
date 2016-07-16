@@ -6,6 +6,7 @@ package com.cosmicsubspace.nerdyaudio.audio;
 
 import android.util.Log;
 
+import com.cosmicsubspace.nerdyaudio.helper.Log2;
 import com.ringdroid.soundfile.SoundFile;
 import com.cosmicsubspace.nerdyaudio.filters.FilterManager;
 import com.cosmicsubspace.nerdyaudio.helper.ErrorLogger;
@@ -37,7 +38,7 @@ class PlayThread extends Thread {
                         try {
                             Thread.sleep(30); //Wait and block until it is unpaused
                         } catch (Exception e) {
-                            ErrorLogger.log(e);
+                            Log2.log(e);
                         }
                     }
                     ap.mAudioTrack.write(filtered, 0, buff.length);
@@ -45,7 +46,7 @@ class PlayThread extends Thread {
                 }
             });
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
         if (stop) return;
 
@@ -58,7 +59,7 @@ class PlayThread extends Thread {
                 lastSample = ap.getCurrentFrame();
                 Thread.sleep(30); //Wait and block until it is done playing(we know it is done playing if it doesn't advance any in 30ms.)
             } catch (Exception e) {
-                ErrorLogger.log(e);
+                Log2.log(e);
             }
         }
         if (stop) return;

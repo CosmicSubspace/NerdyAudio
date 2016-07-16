@@ -11,18 +11,14 @@ import com.cosmicsubspace.nerdyaudio.audio.Waveform;
 import com.cosmicsubspace.nerdyaudio.interfaces.MusicListDisplayable;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class MusicInformation implements MusicListDisplayable {
+public class MusicInformation implements MusicListDisplayable, Serializable {
     static class AlbumComparator implements Comparator<MusicInformation> {
         @Override
         public int compare(MusicInformation a, MusicInformation b) {
             return a.album.compareToIgnoreCase(b.album);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return this.equals(o);
         }
     }
 
@@ -32,10 +28,6 @@ public class MusicInformation implements MusicListDisplayable {
             return a.title.compareToIgnoreCase(b.title);
         }
 
-        @Override
-        public boolean equals(Object o) {
-            return this.equals(o);
-        }
     }
 
     static class ArtistComparator implements Comparator<MusicInformation> {
@@ -44,10 +36,6 @@ public class MusicInformation implements MusicListDisplayable {
             return a.artist.compareToIgnoreCase(b.artist);
         }
 
-        @Override
-        public boolean equals(Object o) {
-            return this.equals(o);
-        }
     }
 
     public String getFilepath() {
@@ -115,12 +103,12 @@ public class MusicInformation implements MusicListDisplayable {
         }
     }
 
-    public static final int NOT_READY = 613;
-    public static final int READY = 135;
-    public static final int PLAYING = 619;
-    public static final int PLAYING_WITHOUT_DATA = 713;
-    public static final int CACHING = 123;
-    public static final int PLAYING_WHILE_CACHING = 691;
+    public static transient final int NOT_READY = 613;
+    public static transient final int READY = 135;
+    public static transient final int PLAYING = 619;
+    public static transient final int PLAYING_WITHOUT_DATA = 713;
+    public static transient final int CACHING = 123;
+    public static transient final int PLAYING_WHILE_CACHING = 691;
 
     String filepath;
     String title;
@@ -130,7 +118,7 @@ public class MusicInformation implements MusicListDisplayable {
     String album;
     String folderName;
     boolean hasArt;
-    boolean isReady = false, isPlaying = false, isCaching = false;
+    transient boolean isReady = false, isPlaying = false, isCaching = false;
 
     public MusicInformation(MusicInformation mi) {
         this.filepath = mi.filepath;

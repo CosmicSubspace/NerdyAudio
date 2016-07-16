@@ -97,7 +97,7 @@ public class VisualsRenderThread extends Thread {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                    ErrorLogger.log(e);
+                    Log2.log(e);
                 }
             }
             */

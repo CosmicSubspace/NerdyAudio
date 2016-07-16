@@ -68,7 +68,7 @@ public abstract class BaseRenderer {
             os.close();
             fos.close();
         } catch (IOException e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
     }
 
@@ -96,7 +96,7 @@ public abstract class BaseRenderer {
             fis.close();
             return data;
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
         return null;
     }

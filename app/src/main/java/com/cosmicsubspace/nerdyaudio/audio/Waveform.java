@@ -191,7 +191,7 @@ public class Waveform implements Serializable {
             fos.close();
             Log2.log(2, this, "WaveformVisuals saved to " + name);
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
     }
 
@@ -201,7 +201,7 @@ public class Waveform implements Serializable {
         try {
             copy(Waveform.getWaveform(filename, barEvery, c));
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
     }
 

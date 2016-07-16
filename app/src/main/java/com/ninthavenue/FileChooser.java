@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cosmicsubspace.nerdyaudio.helper.ErrorLogger;
+import com.cosmicsubspace.nerdyaudio.helper.Log2;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -96,7 +97,7 @@ public class FileChooser {
         try {
             Log.i(LOG_TAG, "Opening directory: " + path.getCanonicalPath());
         }catch(Exception e){
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
         this.currentPath = path;
         if (path.exists()) {

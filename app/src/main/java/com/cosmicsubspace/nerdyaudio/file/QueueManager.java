@@ -135,7 +135,7 @@ public class QueueManager implements CompletionListener, SampleProgressListener,
             }
             br.close();
         } catch (IOException e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
         getQueueFromFileList(files);
     }

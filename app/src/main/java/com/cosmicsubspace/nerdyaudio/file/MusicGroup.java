@@ -3,11 +3,21 @@ package com.cosmicsubspace.nerdyaudio.file;
 import com.cosmicsubspace.nerdyaudio.interfaces.MusicListDisplayable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by Chan on 5/24/2016.
  */
 public class MusicGroup implements MusicListDisplayable {
+    public static class MusicGroupNameComparator implements Comparator<MusicGroup>{
+        @Override
+
+        public int compare(MusicGroup a, MusicGroup b) {
+            return a.getIdentity().compareToIgnoreCase(b.getIdentity());
+        }
+    }
+
+
     ArrayList<MusicInformation> elements;
 
     boolean expanded = false;

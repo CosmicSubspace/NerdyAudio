@@ -21,8 +21,6 @@ import java.util.List;
  * Created by Chan on 3/24/2016.
  */
 
-//TODO : osu-like.
-
 public class CircleVisuals extends FftRenderer {
     Paint pt;
 

@@ -116,7 +116,7 @@ public class VisualizationBuffer implements FloatFeedListener {
                     Log2.log(4, this, "Index Out Of Bounds Exception in VisualizationBuffer.");
                     Log2.log(4, this, "Buffer Information: current buffers number: " + bufferR.size() + " | Start Num: " + firstBufferStartingFrame + " | End Num:" + lastFrameNumber);
                     Log2.log(4, this, "Requested: " + startFrame + " | End Num:" + endFrame);
-                    ErrorLogger.log(e);
+                    Log2.log(e);
                     break;
                 }
             }

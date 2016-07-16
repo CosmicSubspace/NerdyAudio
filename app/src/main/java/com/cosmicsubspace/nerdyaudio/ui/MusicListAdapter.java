@@ -58,6 +58,14 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
         notifyDataSetChanged();
     }
 
+    public void insertData(MusicInformation mi){
+        dataset.add(mi);
+        notifyItemInserted(dataset.size()-1);
+    }
+    public void clearMusicList(){
+        dataset.clear();
+    }
+
 
     // Create new views (invoked by the layout manager)
     @Override

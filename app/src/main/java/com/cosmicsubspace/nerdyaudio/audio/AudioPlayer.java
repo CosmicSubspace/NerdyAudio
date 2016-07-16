@@ -80,7 +80,7 @@ public class AudioPlayer {
                 bufferSize = mChannels * mSampleRate * 2;
             }
         } catch (Exception e) {
-            ErrorLogger.log(e);
+            Log2.log(e);
         }
 
     }

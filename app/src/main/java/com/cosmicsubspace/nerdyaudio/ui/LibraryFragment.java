@@ -6,6 +6,7 @@ package com.cosmicsubspace.nerdyaudio.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cosmicsubspace.nerdyaudio.file.FileLister;
+import com.cosmicsubspace.nerdyaudio.file.MusicInformation;
 import com.ninthavenue.FileChooser;
 import com.cosmicsubspace.nerdyaudio.R;
 import com.cosmicsubspace.nerdyaudio.file.FileManager;
@@ -25,7 +28,7 @@ import com.cosmicsubspace.nerdyaudio.visuals.PlayControlsView;
 import java.io.File;
 
 
-public class LibraryFragment extends Fragment implements View.OnClickListener {
+public class LibraryFragment extends Fragment implements View.OnClickListener ,SwipeRefreshLayout.OnRefreshListener{
 
     public static final String LOG_TAG = "CS_AFN";
 
@@ -35,6 +38,8 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
 
     TextView currentDir, currentGrouping, currentSorting, scanning;
     View dirBtn, groupingBtn, sortBtn;
+
+    SwipeRefreshLayout swipe;
 
     PopupMenu groupingPopup, sortingPopup;
 
@@ -46,6 +51,10 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         fm = FileManager.getInstance();
 
         View v = inflater.inflate(R.layout.tab_frag_library, container, false);
+
+        swipe=(SwipeRefreshLayout) v.findViewById(R.id.library_tab_swipe);
+        swipe.setOnRefreshListener(this);
+        swipe.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.library_tab_recyclerview);
 
@@ -104,7 +113,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
                         break;
 
                 }
-                updateUI();
+                mAdapter.updateMusicList();
                 return true;
             }
         });
@@ -132,19 +141,21 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
                         currentSorting.setText("Artist");
                         break;
                 }
-                updateUI();
+                mAdapter.updateMusicList();
                 return true;
             }
         });
 
 
-        scanning = (TextView) v.findViewById(R.id.library_tab_scanning);
+        //scanning = (TextView) v.findViewById(R.id.library_tab_scanning);
 
         //TODO make file browser inside the tab, not on a popup thing.
-
+/*
         if (fm.isScanning()) scanUI();
-        else scanCompleteUI();
-        updateUI();
+        else scanCompleteUI();*/
+        mAdapter.updateMusicList();
+        currentDir.setText(fm.getCurrentDirectoryPath());
+        swipe.setRefreshing(fm.isScanning());
 
         v.post(new Runnable() {
             @Override
@@ -154,14 +165,16 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+
+
         return v;
     }
-
+/*
     private void updateUI() {
         mAdapter.updateMusicList();
         currentDir.setText(fm.getCurrentDirectoryPath());
-    }
-
+    }*/
+/*
     private void scanUI() {
         scanning.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
@@ -170,46 +183,21 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     private void scanCompleteUI() {
         scanning.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        /*
-        if (id == R.id.tab_library_refresh) {
-            fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
-                @Override
-                public void onComplete(String s) {
-                    LibraryFragment.this.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.newData(fm.getMusics());
-
-                        }
-                    });
-                }
-            });
-        }else*/
         if (id == R.id.tab_library_dir) {
+            mAdapter.clearMusicList();
             new FileChooser(getActivity(), fm.getCurrentDirectory()).setFileListener(new FileChooser.FileSelectedListener() {
                 @Override
                 public void fileSelected(final File file) {
                     Log2.log(1, this, "File chosen:" + file.getAbsolutePath());
                     fm.setDirectory(file);
-                    scanUI();
-                    fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
-                        @Override
-                        public void onComplete(String s) {
-                            LibraryFragment.this.getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateUI();
-                                    scanCompleteUI();
-
-                                }
-                            });
-                        }
-                    }, getContext());
+                    currentDir.setText(fm.getCurrentDirectoryPath());
+                    //scanUI();
+                    refreshFiles();
                 }
             }).showDialog();
         } else if (id == R.id.library_tab_group_btn) {
@@ -219,4 +207,41 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void refreshFiles(){
+        swipe.setRefreshing(true);
+        fm.discover(fm.getCurrentDirectoryPath(), new CompletionListener() {
+            @Override
+            public void onComplete(String s) {
+                LibraryFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.updateMusicList();
+                        //scanCompleteUI();
+                        fm.saveToFileAsync(getContext());
+                        swipe.setRefreshing(false);
+                    }
+                });
+            }
+        }, new FileLister.DiscoveryListener() {
+            @Override
+            public void musicDiscovered(MusicInformation mi) {
+                try {
+                    mAdapter.insertData(mi);
+                }catch(IllegalStateException e){
+                    Log2.log(0,this,"LibraryFragment>IllegalStateException caught.");
+                }
+            }
+        }, getContext());
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshFiles();
+    }
+
+    @Override
+    public void onDetach() {
+
+        super.onDetach();
+    }
 }

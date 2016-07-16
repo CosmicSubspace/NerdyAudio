@@ -69,8 +69,6 @@ import java.util.Date;
 //TODO : Pocket Play / Cinema Mode
 //TODO : Display audio length on queue/file
 //TODO : ClashWithDash.mp3 error
-//TODO : L/R Balance Filter
-//TODO : Filters enable toggle
 //TODO : Replace assertions with exceptions.
 
 
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable e) {
-                Log2.log(0, this, "UncaughtException logged:", ErrorLogger.logToString(e));
+                Log2.log(0, this, "UncaughtException logged:", Log2.logToString(e));
                 //Toast.makeText(c, ErrorLogger.logToString(e), Toast.LENGTH_SHORT).show();
                 FileWriter f;
                 try {
@@ -123,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             new File(Environment.getExternalStorageDirectory() + "/AFN_exceptions.txt")
                             , true);
                     f.write("\n\n\n" + DateFormat.getDateTimeInstance().format(new Date()) + "\n");
-                    f.write(ErrorLogger.logToString(e));
+                    f.write(Log2.logToString(e));
                     f.flush();
                     f.close();
                 } catch (IOException e1) {
-                    ErrorLogger.log(e1);
+                    Log2.log(e1);
                 } //Double exception?
 
                 Log2.dumpLogsAsync();
@@ -167,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //ap.setBufferFeedListener(vb);
 
         qm.passContext(getApplicationContext());
+        fm.loadFromFile(this);
 
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);

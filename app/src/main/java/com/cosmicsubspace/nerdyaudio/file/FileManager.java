@@ -13,12 +13,17 @@ import com.cosmicsubspace.nerdyaudio.interfaces.FileListReturnListener;
 import com.cosmicsubspace.nerdyaudio.interfaces.ProgressStringListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class FileManager implements FileListReturnListener {
-    static final String LOG_TAG = "CS_AFN";
+public class FileManager implements FileLister.DiscoveryListener, CompletionListener {
+
+
 
     public static final int GROUPING_NONE = 1;
     public static final int GROUPING_DIRECTORY = 2;
@@ -35,6 +40,7 @@ public class FileManager implements FileListReturnListener {
 
     ProgressStringListener psl;
     CompletionListener cl;
+
     File directory;
 
     boolean scanning = false;
@@ -61,10 +67,15 @@ public class FileManager implements FileListReturnListener {
         this.psl = psl;
     }
 
-    public void discover(String path, CompletionListener cl, Context c) {
+    public void discover(String path, CompletionListener cl, FileLister.DiscoveryListener dl, Context c) {
+        musics.clear();
         if (scanning) return;
         scanning = true;
-        FileLister fl = new FileLister(path, psl, this, c);
+        FileLister fl = new FileLister(path, c);
+        fl.addCompletionListener(cl);
+        fl.addCompletionListener(this);
+        fl.addDiscoveryListener(this);
+        fl.addDiscoveryListener(dl);
         this.cl = cl;
         fl.start();
     }
@@ -112,6 +123,7 @@ public class FileManager implements FileListReturnListener {
             else if (mode == GROUPING_ALBUM) groupIdent = mi.getAlbum();
             else if (mode == GROUPING_DIRECTORY) groupIdent = mi.getFolderName();
             else if (mode == GROUPING_ARTIST) groupIdent = mi.getArtist();
+            else Log2.log(4,this,"FileManager>setGrouping: invlid mode.");
 
 
             boolean success = false;
@@ -130,6 +142,8 @@ public class FileManager implements FileListReturnListener {
             }
 
         }
+
+        Collections.sort(grouped, new MusicGroup.MusicGroupNameComparator());
     }
 
     public void setSorting(int mode) {
@@ -169,11 +183,55 @@ public class FileManager implements FileListReturnListener {
         return res;
     }
 
+
+    public static final String FILENAME="filemanager_file_list";
+    public static final String PREF_IDENT="com.cosmicsubspace.file.FileManager";
+
+    public void loadFromFile(Context c){
+        try {
+            FileInputStream fis = c.openFileInput(FILENAME);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            musics = (ArrayList<MusicInformation>) is.readObject();
+            is.close();
+            fis.close();
+
+            directory=new File(c.getSharedPreferences(PREF_IDENT,Context.MODE_PRIVATE)
+                    .getString("dir",Environment.getExternalStorageDirectory().getAbsolutePath()));
+        }catch(Exception e){
+            Log2.log(e);
+        }
+    }
+    public void saveToFileAsync(final Context c){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveToFile(c);
+            }
+        }).run();
+    }
+    public void saveToFile(Context c){
+        try {
+            FileOutputStream fos = c.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(musics);
+            os.close();
+            fos.close();
+
+            c.getSharedPreferences(PREF_IDENT,Context.MODE_PRIVATE).edit()
+                    .putString("dir",directory.getAbsolutePath()).apply();
+        }catch(Exception e){
+            Log2.log(e);
+        }
+    }
+
+
     @Override
-    public void onReturn(ArrayList<MusicInformation> musics) {
-        scanning = false;
-        this.musics = musics;
-        if (cl != null) cl.onComplete("");
-        Log2.log(1, this, "Files List Returned!");
+    public void musicDiscovered(MusicInformation mi) {
+        musics.add(mi);
+    }
+
+    @Override
+    public void onComplete(String s) {
+        scanning=false;
     }
 }
