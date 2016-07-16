@@ -11,7 +11,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/filter_layout">
+        android:id="@+id/filter_layout"
+        android:padding="4dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -19,7 +20,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/filter_buttons"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/filter_title"
+            android:layout_alignBottom="@+id/filter_title"
+            android:gravity="center">
 
             <Button
                 android:layout_width="36dp"
@@ -66,7 +70,12 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             style="@style/filter_title"
-            android:layout_toLeftOf="@+id/filter_buttons" />
+            android:layout_toLeftOf="@+id/filter_buttons"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"/>
 
         <FrameLayout
             android:layout_width="match_parent"

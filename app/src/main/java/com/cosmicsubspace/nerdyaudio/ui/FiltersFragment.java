@@ -83,29 +83,15 @@ public class FiltersFragment extends Fragment implements View.OnClickListener, F
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.filters_tab_fab_sub_1) {
-            BaseFilter newFilter = new VolumeFilter(FilterManager.getInstance());
-            fm.addFilter(newFilter);
-            lv.addView(newFilter.getView(getLayoutInflater(null), lv));
+            fm.addFilter(new VolumeFilter(FilterManager.getInstance()));
         } else if (id == R.id.filters_tab_fab_sub_2) {
-            BaseFilter newFilter = new AutoGainFilter(FilterManager.getInstance());
-            fm.addFilter(newFilter);
-            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
-            lv.addView(vvvvv);
+            fm.addFilter(new AutoGainFilter(FilterManager.getInstance()));
         } else if (id == R.id.filters_tab_fab_sub_3) {
-            BaseFilter newFilter = new IirLowPassFilter(FilterManager.getInstance());
-            fm.addFilter(newFilter);
-            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
-            lv.addView(vvvvv);
+            fm.addFilter(new IirLowPassFilter(FilterManager.getInstance()));
         } else if (id == R.id.filters_tab_fab_sub_4) {
-            BaseFilter newFilter = new IirHighPassFilter(FilterManager.getInstance());
-            fm.addFilter(newFilter);
-            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
-            lv.addView(vvvvv);
+            fm.addFilter(new IirHighPassFilter(FilterManager.getInstance()));
         } else if (id == R.id.filters_tab_fab_sub_5) {
-            BaseFilter newFilter = new StereoFilter(FilterManager.getInstance());
-            fm.addFilter(newFilter);
-            View vvvvv = newFilter.getView(getLayoutInflater(null), lv);
-            lv.addView(vvvvv);
+            fm.addFilter(new StereoFilter(FilterManager.getInstance()));
         }
     }
 

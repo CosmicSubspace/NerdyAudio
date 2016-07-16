@@ -47,6 +47,7 @@ abstract public class BaseFilter implements View.OnClickListener {
 
         title = (TextView) mainView.findViewById(R.id.filter_title);
         title.setText(getName());
+        title.setSelected(true);
 
         content = (FrameLayout) mainView.findViewById(R.id.filter_content);
         View innerContent = getContentView(inflater, content);
