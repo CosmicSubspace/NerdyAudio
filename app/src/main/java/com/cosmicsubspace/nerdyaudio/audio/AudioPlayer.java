@@ -4,6 +4,8 @@
 
 package com.cosmicsubspace.nerdyaudio.audio;
 
+import android.content.Context;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -31,7 +33,6 @@ public class AudioPlayer {
     protected File source;
     protected String sourceString;
     protected boolean mKeepPlaying;
-    //protected BufferFeedListener bfl;
     protected CompletionListener cl;
 
     static AudioPlayer inst;
@@ -48,8 +49,6 @@ public class AudioPlayer {
     protected AudioPlayer() {
 
     }
-
-    ;
 
     public int getSampleRate() {
         return mSampleRate;
@@ -91,6 +90,10 @@ public class AudioPlayer {
     }
 
     public synchronized void initializeAudio() {
+        /* requires API 23, nvm.
+        AudioManager am=(AudioManager)c.getSystemService(Context.AUDIO_SERVICE);
+        am.getDevices(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE);
+        */
         mAudioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
                 mSampleRate,
@@ -98,7 +101,6 @@ public class AudioPlayer {
                 AudioFormat.ENCODING_PCM_16BIT,
                 bufferSize,
                 AudioTrack.MODE_STREAM);
-
     }
 
 

@@ -52,7 +52,6 @@ import java.text.DateFormat;
 import java.util.Date;
 
 
-//TODO : Numerical Setting Input
 //TODO : Prettier Queue Elements
 //TODO : Better Library Browser
 //TODO : Colorize Visuals
@@ -62,7 +61,6 @@ import java.util.Date;
 //TODO : Playlist/state save on exit
 //TODO : Headphone Controls
 //TODO : Playback device selection
-//TODO : Artwork existance check on actual play
 //TODO : Dynamic Range Compression
 //TODO : Lowpass on FFT result
 //TODO : Spline interpolation on FFT result

@@ -3,6 +3,8 @@ package com.cosmicsubspace.nerdyaudio.settings;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import com.cosmicsubspace.nerdyaudio.helper.Log2;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class SpinnerElement<V> extends SettingElement implements Serializable {
     public SpinnerElement(String name, List<String> spinnerChoices, List<V> mappedValues, int current) {
         super(name, SPINNER);
 
-        assert spinnerChoices.size() == mappedValues.size();
+        if (spinnerChoices.size() != mappedValues.size()) Log2.log(4,this,"SpinnerElement Value mismatch!");
 
         this.spinnerChoices = spinnerChoices;
         this.mappedValues = mappedValues;

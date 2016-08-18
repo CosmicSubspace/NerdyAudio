@@ -42,7 +42,7 @@ public class StereoFilter extends BaseFilter implements SeekBar.OnSeekBarChangeL
 
     @Override
     public String getName() {
-        return "Auto Gain";
+        return "Stereo";
     }
 
     float leftMult=1.0f, rightMult=1.0f;
