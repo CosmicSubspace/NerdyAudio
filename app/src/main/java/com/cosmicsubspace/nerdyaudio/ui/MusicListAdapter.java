@@ -59,6 +59,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.myVi
     }
 
     public void insertData(MusicInformation mi){
+
         dataset.add(mi);
         notifyItemInserted(dataset.size()-1);
     }

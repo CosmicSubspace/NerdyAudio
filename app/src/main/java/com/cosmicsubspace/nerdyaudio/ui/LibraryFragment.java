@@ -223,9 +223,15 @@ public class LibraryFragment extends Fragment implements View.OnClickListener ,S
             }
         }, new FileLister.DiscoveryListener() {
             @Override
-            public void musicDiscovered(MusicInformation mi) {
+            public void musicDiscovered(final MusicInformation mi) {
                 try {
-                    mAdapter.insertData(mi);
+                    mRecyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.insertData(mi);
+                        }
+                    });
+
                 }catch(IllegalStateException e){
                     Log2.log(0,this,"LibraryFragment>IllegalStateException caught.");
                 }
